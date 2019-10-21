@@ -4,15 +4,14 @@ import * as io from 'socket.io-client';
 @Injectable({
   providedIn: 'root'
 })
+
 export class SocketConnectService {
   private url = 'https://calm-eyrie-37824.herokuapp.com/blackjack';
   private socket;
   constructor() {
     this.socket = io(this.url);
   }
-  onConnect(){
-    this.socket.on('connect', function(){
-      console.log('connected: ' + this.connected);
-    });
+  getSocket() {
+    return this.socket;
   }
 }

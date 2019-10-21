@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SocketConnectService } from './socket-connect.service';
+import { SocketStatusComponent } from './socket-status/socket-status.component';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +7,8 @@ import { SocketConnectService } from './socket-connect.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Blackjack Angular 7 Client';
-  connect = 'Not Connected';
-  constructor(socketConnectService: SocketConnectService) {
-    socketConnectService.onConnect();
+  public title = 'Blackjack Angular 7 Client';
+  constructor() {
+    //
   }
 }
