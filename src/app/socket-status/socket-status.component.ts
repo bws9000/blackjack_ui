@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SocketConnectService } from '../socket-connect.service';
 
 @Component({
@@ -9,21 +9,21 @@ import { SocketConnectService } from '../socket-connect.service';
 })
 
 export class SocketStatusComponent implements OnInit {
-  private socket;
-  public socket_status = false;
-  constructor(socketConnectService: SocketConnectService) {
-    this.socket = socketConnectService.getSocket();
-  }
+  public socket_status;
+  constructor(private socketConnectService: SocketConnectService) { }
   ngOnInit() {
-    let that = this;
-    this.socket.on('connect', function () {
-      this.emit('authentication', { devuser: 'bws9000' });
-      this.on('authenticated', function () {
-        if (this.connected) {
-          that.socket_status = true;
-        }
-      });
+    this.socketConnectService.authConnect().then(value => {
+      this.socket_status = value;
+      this.getInitInfo();
     });
   }
-
+  getInitInfo() {
+    this.socketConnectService.getInitInfo().subscribe(res => {
+      if (res) {
+        console.log(res);
+      } else {
+        err => console.error(err);
+      }
+    });
+  }
 }
