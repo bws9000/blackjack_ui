@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import { resolve } from 'q';
 import { Observable } from 'rxjs';
+import { environment } from './../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class SocketConnectService {
   authConnect() {
     return new Promise(resolve => {
       this.socket.on('connect', function () {
-        this.emit('authentication', { devuser: 'bws9000' });
+        this.emit('authentication', { devuser: environment.DEV_PASS });
         this.on('authenticated', function () {
           if (this.connected) {
             resolve(true);
