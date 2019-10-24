@@ -12,10 +12,12 @@ export class SocketStatusComponent implements OnInit {
   public socket_status;
   constructor(private socketConnectService: SocketConnectService) { }
   ngOnInit() {
+    /*
     this.socketConnectService.authConnect().then(value => {
       this.socket_status = value;
       this.getInitInfo();
     });
+    */
   }
   getInitInfo() {
     this.socketConnectService.getInitInfo().subscribe(res => {
