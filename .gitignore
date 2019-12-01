@@ -9,6 +9,9 @@
 
 # dependencies
 /node_modules
+/dist
+NOTES.txt
+env.bat
 
 # profiling files
 chrome-profiler-events.json
