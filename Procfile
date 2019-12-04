@@ -1,1 +1,1 @@
-web: node socket_server.js
+web: node server.js
