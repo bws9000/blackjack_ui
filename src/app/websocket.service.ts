@@ -3,8 +3,6 @@ import * as io from 'socket.io-client';
 import {Observable} from "rxjs";
 import {environment} from '../environments/environment';
 
-//const SOCKET_SERVER = 'https://calm-eyrie-37824.herokuapp.com/blackjack';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -28,7 +26,6 @@ export class WebsocketService {
   connect() {
     this.socket = io(environment.devsocketurl);
     this.start = true;
-    //this.socket.emit('helloserver', {msg: 'client says hi'});
   }
 
   authConnect() {
