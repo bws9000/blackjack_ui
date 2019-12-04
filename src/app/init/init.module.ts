@@ -11,7 +11,8 @@ import {environment} from "../../environments/environment";
 })
 export class InitModule {
 
-  private devUrl = 'http://localhost:5000';
+  private url = (environment.production) ?
+    'http://localhost:5000' : 'https://bj-angular-client.herokuapp.com';
   env;
 
   constructor(private http: HttpClient) {
@@ -41,7 +42,7 @@ export class InitModule {
   getEnv() {
     return this
       .http
-      .get(`${this.devUrl}/env`, {responseType: 'json'});
+      .get(`${this.url}/env`, {responseType: 'json'});
   }
 
 }
