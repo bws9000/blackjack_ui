@@ -2,26 +2,17 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
-const socket = require('socket.io-client')
-('https://calm-eyrie-37824.herokuapp.com/blackjack');
+//hide from public git
+app.get('/env', (req, res) => res.send({
+  devpass:process.env.DEV_PASS,
+  socketurl:process.env.SOCKET_URL,
+  devsocketurl:process.env.DEV_SOCKET_URL
+}));
 
-socket.on('connect', function () {
-  socket.emit('authentication', {devuser: process.env.DEV_PASS });
-  socket.on('authenticated', function () {
-    console.log('authenticated');
-  });
+app.use(express.static(__dirname + '/dist/angulartemp'));
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname + '/dist/angulartemp/index.html'));
 });
 
-  /*
-  socket.on('connect', function(){ console.log('connected'); });
-  socket.on('event', function(data){});
-  socket.on('disconnect', function(){});
-  */
-
-  app.use(express.static(__dirname + '/dist/angulartemp'));
-
-  app.get('/*', function (req, res) {
-    res.sendFile(path.join(__dirname + '/dist/angulartemp/index.html'));
-  });
-
-  app.listen(process.env.PORT || 5000);
+app.listen(process.env.PORT || 5000);
