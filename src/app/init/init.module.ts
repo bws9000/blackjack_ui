@@ -40,7 +40,7 @@ export class InitModule {
   }
 
   getEnv() {
-    console.log('environment: ' + environment.socketurl);
+    console.log('environment: ' + this.url);
     return this
       .http
       .get(`${this.url}/env`, {responseType: 'json'});
