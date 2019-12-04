@@ -21,7 +21,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   onConnect(data: any) {
-    console.log('initEmit: ' + JSON.stringify(data));
+    //console.log('initEmit: ' + JSON.stringify(data));
     this.table = 'connected';
     this.tableDivBackground = 'darkgreen';
   }

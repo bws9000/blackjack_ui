@@ -21,7 +21,7 @@ export class InitModule {
   init() {
 
     return new Promise<void>((resolve, reject) => {
-      console.log("init()");
+      //console.log("init()");
 
       return this.getEnv()
         .subscribe((data: '') => {
@@ -30,9 +30,9 @@ export class InitModule {
           environment.devpass = this.env.devpass;
           environment.socketurl = this.env.socketurl;
           environment.devsocketurl = this.env.devsocketurl;
-          console.log(environment.devsocketurl);
-          console.log(environment.devpass);
-          console.log(environment.socketurl);
+          //console.log(environment.devsocketurl);
+          //console.log(environment.devpass);
+          //console.log(environment.socketurl);
           resolve();
         });
 
@@ -40,7 +40,7 @@ export class InitModule {
   }
 
   getEnv() {
-    console.log('environment: ' + this.url);
+    //console.log('environment: ' + this.url);
     return this
       .http
       .get(`${this.url}/env`, {responseType: 'json'});
