@@ -1,16 +1,22 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import * as io from 'socket.io-client';
-import {Observable} from "rxjs";
+import {Observable, of, Subject} from "rxjs";
 import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
-  private socket;
-  public start: boolean;
+
+  socket: io;
+  start: boolean;
+  startChange: Subject<boolean> = new Subject<boolean>();
 
   constructor() {
+    this.start = false;
+    this.startChange.subscribe((value) => {
+      this.start = value
+    });
   }
 
   public onEvent(event: string): Observable<string> {
@@ -19,29 +25,26 @@ export class WebsocketService {
     });
   }
 
-  public emit(event:string,data: any) {
+  public emit(event: string, data: any) {
     this.socket.emit(event, data);
   }
 
-  connect() {
-    this.socket = io(environment.devsocketurl);
-    this.start = true;
-  }
-
   authConnect() {
-    this.socket = io(environment.socketurl);
+    let that = this;
+    this.socket = io(environment.devsocketurl);
+    console.log('socket: ' + environment.devsocketurl);
     return new Promise(resolve => {
       this.socket.on('connect', function () {
         this.emit('authentication', {devuser: environment.devpass});
         this.on('authenticated', function () {
           if (this.connected) {
             resolve(true);
+            this.emit('init', {msg: ''});
             console.log('socket authenticated');
-            this.start = true;
+            that.startChange.next(true);
           }
         });
       });
     });
-
   }
 }

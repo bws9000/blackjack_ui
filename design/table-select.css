@@ -1,11 +1,6 @@
-@import "../node_modules/ng2-slim-loading-bar/style.css";
-
 html, body {
   height: 100%;
-}
-
-.container {
-  height: 100%;
+  margin: 0px;
 }
 
 /* test */
@@ -21,13 +16,13 @@ html, body {
 }
 
 .select_table {
+  margin-left: 1rem;
   margin-top: 1rem;
-  /*display: inline-block;*/
-  width: 55%;
+  display: inline-block;
+  width: 20%;
   min-width: 5rem;
   height: 100px;
   background-color: darkcyan;
-  margin-left:3rem;
 }
 
 /* stage */
@@ -42,6 +37,7 @@ html, body {
 }
 
 .stage_content {
+  display: inherit;
   margin-right: auto;
   margin-left: auto;
   position: relative;
@@ -53,9 +49,9 @@ html, body {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-
 /* bootstrap */
-.row {
+.row{
   width:70%;
-  position: relative;
+  background-color: crimson;
+  margin: 0 auto;
 }

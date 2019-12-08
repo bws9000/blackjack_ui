@@ -22,11 +22,13 @@
     "bootstrap": "^4.4.1",
     "core-js": "^2.5.4",
     "express": "^4.17.1",
+    "ng2-slim-loading-bar": "^4.0.0",
     "observable-webworker": "^3.2.3",
     "os": "^0.1.1",
     "path": "^0.12.7",
     "process": "^0.11.10",
     "rxjs": "~6.5.3",
+    "rxjs-compat": "^6.5.3",
     "socket.io-client": "^2.3.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

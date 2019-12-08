@@ -1,40 +1,64 @@
 import {AfterViewInit, Component, ElementRef, OnInit} from '@angular/core';
-import {InitModule} from "./init/init.module";
+import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
+
+import {
+  NavigationCancel,
+  Event,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router
+} from '@angular/router';
 import {WebsocketService} from "./websocket.service";
 
 @Component({
-  providers: [InitModule, WebsocketService],
+  providers: [WebsocketService],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  table: string = 'connecting...';
-  tableDivBackground: string ='';
-
-  constructor(private initModule: InitModule,
+  constructor(private elementRef: ElementRef,
+              private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
-              private elementRef: ElementRef) {
-    //wss.connect();
-    wss.authConnect();
+              private router: Router) {
+    this.router.events.subscribe((event: Event) => {
+      this.navigationInterceptor(event);
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
   }
 
   onConnect(data: any) {
-    //console.log('initEmit: ' + JSON.stringify(data));
-    this.table = 'connected';
-    this.tableDivBackground = 'darkgreen';
+    let result = JSON.stringify((data));
+    console.log(result);
   }
 
   ngOnInit(): void {
-    this.wss.emit('init', {msg: ''});
+    if (this.wss.authConnect()) {
+      console.log('connected now');
+    }
     this.wss
       .onEvent('initEmit')
       .subscribe(data => this.onConnect(data));
   }
 
-  ngAfterViewInit(): void {
-    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
+  private navigationInterceptor(event: Event): void {
+    if (event instanceof NavigationStart) {
+      this.loadingBar.start();
+    }
+    if (event instanceof NavigationEnd) {
+      this.loadingBar.complete();
+    }
+    if (event instanceof NavigationCancel) {
+      this.loadingBar.stop();
+    }
+    if (event instanceof NavigationError) {
+      this.loadingBar.stop();
+    }
   }
 
 }

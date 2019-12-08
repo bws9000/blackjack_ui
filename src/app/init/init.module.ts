@@ -11,17 +11,16 @@ import {environment} from "../../environments/environment";
 })
 export class InitModule {
 
-  private url = (environment.production) ?
-    'http://localhost:5000' : 'https://bj-angular-client.herokuapp.com';
+  private appUrl = (environment.production) ?
+    'https://bj-angular-client.herokuapp.com' : 'http://localhost:5000';
   env;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   init() {
 
     return new Promise<void>((resolve, reject) => {
-      //console.log("init()");
+      console.log("init()");
 
       return this.getEnv()
         .subscribe((data: '') => {
@@ -40,10 +39,10 @@ export class InitModule {
   }
 
   getEnv() {
-    //console.log('environment: ' + this.url);
+    console.log('environment: ' + this.appUrl);
     return this
       .http
-      .get(`${this.url}/env`, {responseType: 'json'});
+      .get(`${this.appUrl}/env`, {responseType: 'json'});
   }
 
 }
