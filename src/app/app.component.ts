@@ -28,10 +28,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
+    //this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
   }
 
   logEvent(data: any) {
+    let result = JSON.stringify((data));
+    console.log(result);
+  }
+
+  joinTableOne(data) {
+    this.router.navigate(['/tables/tableOne']);
     let result = JSON.stringify((data));
     console.log(result);
   }
@@ -49,7 +55,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       //joinTableOneEmit
       this.wss
         .onEvent('joinTableOneEmit')
-        .subscribe(data => this.logEvent(data));
+        .subscribe(data => this.joinTableOne(data));
 
       //joinTableTwoEmit
       this.wss

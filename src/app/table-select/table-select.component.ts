@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import * as tempTables from "../../assets/tempTables.json";
 import Table from "../Table";
 import {WebsocketService} from "../websocket.service";
 
@@ -17,8 +16,8 @@ export class TableSelectComponent implements OnInit {
               private wss: WebsocketService) {
     let that = this;
     setTimeout(function () {
-      that.tables = Table.fromJSON(tempTables);
-      console.log(that.tables);
+      //that.tables = Table.fromJSON(tempTables);
+      //console.log(that.tables);
     }, 9000);
   }
 
