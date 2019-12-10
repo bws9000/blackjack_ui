@@ -10,12 +10,15 @@ import {SocketObservable} from "./SocketObservable";
 export class WebsocketService{
 
   public socket: io;
+  socketUrl:string;
   start: boolean = false;
   startChange: Subject<boolean> = new Subject<boolean>();
   eventMap: Map<string, SocketObservable> = new Map<string, SocketObservable>();
 
   constructor() {
     console.log('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
+    this.socketUrl = (environment.production) ?
+      'https://calm-eyrie-37824.herokuapp.com/blackjack' : 'http://localhost:3000/blackjack';
     this.start = false;
     this.startChange.subscribe((value) => {
       this.start = value
@@ -37,8 +40,10 @@ export class WebsocketService{
 
   authConnect() {
     let that = this;
-    this.socket = io(environment.devsocketurl);
-    console.log('socket: ' + environment.devsocketurl);
+
+    this.socket = io(this.socketUrl);
+    console.log('socket: ' + this.socketUrl);
+
     return new Promise(resolve => {
       this.socket.on('connect', function () {
         that.emit('authentication', {devuser: environment.devpass});
