@@ -30,6 +30,10 @@ html, body {
   margin-left:3rem;
 }
 
+#table_create{
+  background-color: cornflowerblue;
+}
+
 /* stage */
 .inner_stage {
   background-color: #999;

@@ -1,28 +1,34 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import * as io from 'socket.io-client';
-import {Observable, of, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {environment} from '../environments/environment';
+import {SocketObservable} from "./SocketObservable";
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketService {
+export class WebsocketService{
 
-  socket: io;
-  start: boolean;
+  public socket: io;
+  start: boolean = false;
   startChange: Subject<boolean> = new Subject<boolean>();
+  eventMap: Map<string, SocketObservable> = new Map<string, SocketObservable>();
 
   constructor() {
+    console.log('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
     this.start = false;
     this.startChange.subscribe((value) => {
       this.start = value
     });
   }
 
-  public onEvent(event: string): Observable<string> {
-    return new Observable<string>(observer => {
-      this.socket.on(event, (data: string) => observer.next(data));
-    });
+  getSocket(){
+    return this.socket;
+  }
+
+  public onEvent(event: string): Observable<any> {
+    let so = this.eventMap.get(event);
+    return so.getEvent();
   }
 
   public emit(event: string, data: any) {
@@ -35,7 +41,7 @@ export class WebsocketService {
     console.log('socket: ' + environment.devsocketurl);
     return new Promise(resolve => {
       this.socket.on('connect', function () {
-        this.emit('authentication', {devuser: environment.devpass});
+        that.emit('authentication', {devuser: environment.devpass});
         this.on('authenticated', function () {
           if (this.connected) {
             resolve(true);
@@ -46,5 +52,13 @@ export class WebsocketService {
         });
       });
     });
+  }
+
+  public initEvents() {
+    this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
+    //this.eventMap.set('createTableEmit', new SocketObservable('createTableEmit', this.socket))
+    this.eventMap.set('joinTableOneEmit', new SocketObservable('joinTableOneEmit',this.socket));
+    this.eventMap.set('joinTableTwoEmit', new SocketObservable('joinTableTwoEmit',this.socket))
+    this.eventMap.set('joinTableThreeEmit', new SocketObservable('joinTableThreeEmit',this.socket));;
   }
 }

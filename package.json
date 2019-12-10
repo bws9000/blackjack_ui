@@ -2,6 +2,7 @@
   "name": "angulartemp",
   "version": "0.0.0",
   "scripts": {
+    "heroku-postbuild": "ng build --prod",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -19,6 +20,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "angular-in-memory-web-api": "^0.9.0",
     "bootstrap": "^4.4.1",
     "core-js": "^2.5.4",
     "express": "^4.17.1",

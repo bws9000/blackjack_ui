@@ -8,6 +8,7 @@ import {AppComponent} from './app.component';
 import {InitModule} from "./init/init.module";
 import { TableSelectComponent } from './table-select/table-select.component';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
+import {WebsocketService} from "./websocket.service";
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -29,7 +30,8 @@ export function initialize(initModule: InitModule) {
     SlimLoadingBarModule
   ],
   providers: [InitModule,
-    {provide: APP_INITIALIZER, useFactory: initialize, deps: [InitModule], multi: true}],
+    {provide: APP_INITIALIZER, useFactory: initialize, deps: [InitModule], multi: true}
+    ,WebsocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -12,7 +12,6 @@ import {
 import {WebsocketService} from "./websocket.service";
 
 @Component({
-  providers: [WebsocketService],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -32,18 +31,36 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
   }
 
-  onConnect(data: any) {
+  logEvent(data: any) {
     let result = JSON.stringify((data));
     console.log(result);
   }
 
-  ngOnInit(): void {
-    if (this.wss.authConnect()) {
-      console.log('connected now');
+  async ngOnInit(): Promise<void> {
+    let result = await this.wss.authConnect();
+    if (result) {
+      this.wss.initEvents();
+
+      //initEmit
+      this.wss
+        .onEvent('initEmit')
+        .subscribe(data => this.logEvent(data));
+
+      //joinTableOneEmit
+      this.wss
+        .onEvent('joinTableOneEmit')
+        .subscribe(data => this.logEvent(data));
+
+      //joinTableTwoEmit
+      this.wss
+        .onEvent('joinTableTwoEmit')
+        .subscribe(data => this.logEvent(data));
+
+      //joinTableThreeEmit
+      this.wss
+        .onEvent('joinTableThreeEmit')
+        .subscribe(data => this.logEvent(data));
     }
-    this.wss
-      .onEvent('initEmit')
-      .subscribe(data => this.onConnect(data));
   }
 
   private navigationInterceptor(event: Event): void {
