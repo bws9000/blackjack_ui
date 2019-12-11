@@ -12,7 +12,7 @@ import {environment} from "../../environments/environment";
 export class InitModule {
 
   private appUrl = (environment.production) ?
-    'https://bj-angular-client.herokuapp.com' : 'http://localhost:5000';
+    'https://multiplayer.blackjackgame.us' : 'http://localhost:5000';
   env;
 
   constructor(private http: HttpClient) {}

@@ -62,8 +62,12 @@ export class WebsocketService{
   public initEvents() {
     this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
     //this.eventMap.set('createTableEmit', new SocketObservable('createTableEmit', this.socket))
+
     this.eventMap.set('joinTableOneEmit', new SocketObservable('joinTableOneEmit',this.socket));
+    this.eventMap.set('leftTableOneEmit', new SocketObservable('leftTableOneEmit',this.socket));
+
     this.eventMap.set('joinTableTwoEmit', new SocketObservable('joinTableTwoEmit',this.socket));
+
     this.eventMap.set('joinTableThreeEmit', new SocketObservable('joinTableThreeEmit',this.socket));
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {WebsocketService} from "../websocket.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TableDetailComponent implements OnInit {
 
-  constructor() { }
+  constructor(private wss:WebsocketService) {
+
+  }
+
+  leaveTable(){
+    this.wss.emit('leaveTableOne',{left:'tableone'});
+  }
 
   ngOnInit() {
   }

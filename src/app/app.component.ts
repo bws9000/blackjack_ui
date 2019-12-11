@@ -36,11 +36,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log(result);
   }
 
+  ///////////////////////////////////////////////////////
   joinTableOne(data) {
     this.router.navigate(['/tables/tableOne']);
     let result = JSON.stringify((data));
     console.log(result);
   }
+  leftTableOne(data){
+    this.router.navigate(['/tables']);
+    let result = JSON.stringify((data));
+    console.log(result);
+  }
+  ////////////////////////////////////////////////////////
 
   async ngOnInit(): Promise<void> {
     let result = await this.wss.authConnect();
@@ -56,6 +63,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.wss
         .onEvent('joinTableOneEmit')
         .subscribe(data => this.joinTableOne(data));
+
+      //leftTableOneEmit
+      this.wss
+        .onEvent('leftTableOneEmit')
+        .subscribe(data => this.leftTableOne(data));
 
       //joinTableTwoEmit
       this.wss
