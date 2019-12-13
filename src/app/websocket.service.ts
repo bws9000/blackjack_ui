@@ -16,7 +16,7 @@ export class WebsocketService{
   eventMap: Map<string, SocketObservable> = new Map<string, SocketObservable>();
 
   constructor() {
-    console.log('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
+    this.logStuff('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
     this.socketUrl = (environment.production) ?
       'https://calm-eyrie-37824.herokuapp.com/blackjack' : 'http://localhost:3000/blackjack';
     this.start = false;
@@ -42,7 +42,7 @@ export class WebsocketService{
     let that = this;
 
     this.socket = io(this.socketUrl);
-    console.log('socket: ' + this.socketUrl);
+    this.logStuff('socket: ' + this.socketUrl);
 
     return new Promise(resolve => {
       this.socket.on('connect', function () {
@@ -51,7 +51,7 @@ export class WebsocketService{
           if (this.connected) {
             resolve(true);
             this.emit('init', {msg: ''});
-            console.log('socket authenticated');
+            that.logStuff('socket authenticated');
             that.startChange.next(true);
           }
         });
@@ -69,5 +69,11 @@ export class WebsocketService{
     this.eventMap.set('joinTableTwoEmit', new SocketObservable('joinTableTwoEmit',this.socket));
 
     this.eventMap.set('joinTableThreeEmit', new SocketObservable('joinTableThreeEmit',this.socket));
+  }
+
+  logStuff(stuff:any){
+    if(!environment.production){
+      console.log(stuff);
+    }
   }
 }

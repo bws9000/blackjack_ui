@@ -20,8 +20,7 @@ export class InitModule {
   init() {
 
     return new Promise<void>((resolve, reject) => {
-      console.log("init()");
-
+      this.logStuff("init()");
       return this.getEnv()
         .subscribe((data: '') => {
           let s = JSON.stringify(data);
@@ -39,10 +38,16 @@ export class InitModule {
   }
 
   getEnv() {
-    console.log('environment: ' + this.appUrl);
+    this.logStuff('environment: ' + this.appUrl);
     return this
       .http
       .get(`${this.appUrl}/env`, {responseType: 'json'});
+  }
+
+  logStuff(stuff:any){
+    if(!environment.production){
+      console.log(stuff);
+    }
   }
 
 }

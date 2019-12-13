@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {WebsocketService} from "../websocket.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-socket-connect',
@@ -32,6 +33,12 @@ export class SocketConnectComponent implements OnInit, AfterViewInit {
         this.connected = 'connected';
       }
     });
+  }
+
+  logStuff(stuff:any){
+    if(!environment.production){
+      console.log(stuff);
+    }
   }
 
 }

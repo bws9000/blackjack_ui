@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {WebsocketService} from "../websocket.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-table-detail',
@@ -17,6 +18,12 @@ export class TableDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  logStuff(stuff:any){
+    if(!environment.production){
+      console.log(stuff);
+    }
   }
 
 }

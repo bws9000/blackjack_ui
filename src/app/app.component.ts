@@ -10,6 +10,7 @@ import {
   Router
 } from '@angular/router';
 import {WebsocketService} from "./websocket.service";
+import {environment} from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -33,19 +34,19 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   logEvent(data: any) {
     let result = JSON.stringify((data));
-    console.log(result);
+    this.logStuff(result);
   }
 
   ///////////////////////////////////////////////////////
   joinTableOne(data) {
     this.router.navigate(['/tables/tableOne']);
     let result = JSON.stringify((data));
-    console.log(result);
+    this.logStuff(result);
   }
   leftTableOne(data){
     this.router.navigate(['/tables']);
     let result = JSON.stringify((data));
-    console.log(result);
+    this.logStuff(result);
   }
   ////////////////////////////////////////////////////////
 
@@ -93,6 +94,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
     if (event instanceof NavigationError) {
       this.loadingBar.stop();
+    }
+  }
+
+  logStuff(stuff:any){
+    if(!environment.production){
+      console.log(stuff);
     }
   }
 
