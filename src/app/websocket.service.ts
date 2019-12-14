@@ -12,7 +12,7 @@ export class WebsocketService{
   public socket: io;
   socketUrl:string;
   start: boolean = false;
-  startChange: Subject<boolean> = new Subject<boolean>();
+  public startChange: Subject<boolean> = new Subject<boolean>();
   eventMap: Map<string, SocketObservable> = new Map<string, SocketObservable>();
 
   constructor() {
@@ -21,7 +21,7 @@ export class WebsocketService{
       'https://calm-eyrie-37824.herokuapp.com/blackjack' : 'http://localhost:3000/blackjack';
     this.start = false;
     this.startChange.subscribe((value) => {
-      this.start = value
+      this.start = value;
     });
   }
 
@@ -35,6 +35,7 @@ export class WebsocketService{
   }
 
   public emit(event: string, data: any) {
+    this.startChange.next(false);
     this.socket.emit(event, data);
   }
 

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 
 import {
@@ -11,6 +11,7 @@ import {
 } from '@angular/router';
 import {WebsocketService} from "./websocket.service";
 import {environment} from "../environments/environment";
+import {SocketConnectComponent} from "./socket-connect/socket-connect.component";
 
 @Component({
   selector: 'app-root',
@@ -19,13 +20,25 @@ import {environment} from "../environments/environment";
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  constructor(private elementRef: ElementRef,
-              private loadingBar: SlimLoadingBarService,
+  loadingWheelVisible: string;
+
+  constructor(private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
               private router: Router) {
+
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
     });
+
+    this.wss.startChange.subscribe(value => {
+      this.logStuff('wheel state change: ' + value);
+      if (value) {
+        this.loadingWheelVisible = 'hidden';
+      }else{
+        this.loadingWheelVisible = 'visible';
+      }
+    });
+
   }
 
   ngAfterViewInit(): void {
@@ -39,20 +52,27 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ///////////////////////////////////////////////////////
   joinTableOne(data) {
+    this.wss.startChange.next(true);
     this.router.navigate(['/tables/tableOne']);
     let result = JSON.stringify((data));
     this.logStuff(result);
   }
-  leftTableOne(data){
+
+  leftTableOne(data) {
     this.router.navigate(['/tables']);
     let result = JSON.stringify((data));
     this.logStuff(result);
   }
+
   ////////////////////////////////////////////////////////
 
   async ngOnInit(): Promise<void> {
+
+    let that = this;
+    this.wss.startChange.next(false);
     let result = await this.wss.authConnect();
     if (result) {
+      this.wss.startChange.next(true);
       this.wss.initEvents();
 
       //initEmit
@@ -97,8 +117,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  logStuff(stuff:any){
-    if(!environment.production){
+  logStuff(stuff: any) {
+    if (!environment.production) {
       console.log(stuff);
     }
   }

@@ -16,10 +16,12 @@ export class TableSelectComponent implements OnInit {
   constructor(private http: HttpClient,
               private wss: WebsocketService) {
     let that = this;
+    /*
     setTimeout(function () {
-      //that.tables = Table.fromJSON(tempTables);
-      //this.logStuff(that.tables);
+      that.tables = Table.fromJSON(tempTables);
+      this.logStuff(that.tables);
     }, 9000);
+    */
   }
 
   joinRoomOne() {

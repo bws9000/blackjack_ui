@@ -6,9 +6,6 @@ import {TableDetailComponent} from "./table-detail/table-detail.component";
 
 const routes: Routes = [
   {
-    path: '', component: SocketConnectComponent
-  },
-  {
     path: 'tables', component: TableSelectComponent
   },
   {
