@@ -16,6 +16,9 @@ export class TableDetailComponent implements OnInit {
   leaveTable(){
     this.wss.emit('leaveTableOne',{left:'tableone'});
   }
+  sitTable(table:any){
+    this.logStuff('sitting at table ' + table);
+  }
 
   ngOnInit() {
   }

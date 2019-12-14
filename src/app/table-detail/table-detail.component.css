@@ -1,3 +1,11 @@
+.testCard {
+  background-color: cornsilk;
+  border: 1px #999999 solid;
+  width: 100%;
+  height: 100%;
+  font-size: 1em;
+}
+
 .gameTable {
   height: 94%;
   position: relative;
@@ -10,21 +18,23 @@
   bottom: 0;
   width: 100%;
   height: 75%;
-  background-color: lightgreen;
+  background-color: lightpink;
 }
 
 .cardBox {
   display: inline-block;
+  min-width: 30px;
   width: 16%;
-  height:19%;
+  min-height: 25px;
+  height: 19%;
   background-color: cornflowerblue;
-  position:relative;
+  position: relative;
 }
 
-.cardRowDefault{
-  width:100%;
-  height:50%;
-  position:relative;
+.cardRowDefault {
+  width: 100%;
+  height: 50%;
+  position: relative;
 }
 
 .playerBox {
@@ -34,13 +44,13 @@
   position: relative;
   display: inline-block;
   vertical-align: top;
-  text-align:right;
+  text-align: right;
 }
 
-.playerInnerBox{
-  background-color:blueviolet;
-  position:relative;
-  height:50%;
+.playerInnerBox {
+  background-color: blueviolet;
+  position: relative;
+  height: 50%;
 }
 
 
@@ -72,7 +82,7 @@
 @media (min-width: 768px) and (max-width: 1024px) {
 */
 @media (min-width: 320px) and (max-width: 1024px) {
-  .gameTable{
+  .gameTable {
     background-color: #000000;
   }
 
@@ -80,8 +90,8 @@
     width: 75%;
     height: 100%;
     background-color: blue;
-    position:relative;
-    display:inline-block;
+    position: relative;
+    display: inline-block;
   }
 
   .playerBox {
@@ -91,28 +101,28 @@
     position: relative;
   }
 
-  .playerInnerBox{
-    background-color:blueviolet;
-    position:relative;
-    width:24%;
-    height:100%;
-    display:inherit;
+  .playerInnerBox {
+    background-color: blueviolet;
+    position: relative;
+    width: 24%;
+    height: 100%;
+    display: inherit;
     vertical-align: top;
   }
 
-  .cardRowDefault{
-    width:74%;
-    height:100%;
-    position:relative;
-    display:inherit;
+  .cardRowDefault {
+    width: 74%;
+    height: 100%;
+    position: relative;
+    display: inherit;
   }
 
   .cardBox {
     display: inline-block;
     width: 8%;
-    height:32%;
+    height: 32%;
     background-color: cornflowerblue;
-    position:relative;
+    position: relative;
   }
 }
 
@@ -123,7 +133,7 @@
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
   /* */
-  .gameTable{
+  .gameTable {
     background-color: #000000;
   }
 }

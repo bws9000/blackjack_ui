@@ -59,6 +59,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   leftTableOne(data) {
+    this.wss.startChange.next(true);
     this.router.navigate(['/tables']);
     let result = JSON.stringify((data));
     this.logStuff(result);

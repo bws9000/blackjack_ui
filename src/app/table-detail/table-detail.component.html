@@ -1,14 +1,14 @@
 <div class="gameTable">
-  <div style="background-color: black; color:white;" (click)="leaveTable()">LEAVE TABLE</div>
+  <div style="cursor: pointer;background-color: black; color:white;" (click)="leaveTable()">LEAVE TABLE</div>
   <!-- player grid -->
   <div class="playerAreaContainer">
     <div class="playerBox">
       <!-- card holder -->
       <div class="cardRowDefault">
-        <div class="cardBox">1</div>
-        <div class="cardBox">2</div>
-        <div class="cardBox">3</div>
-        <div class="cardBox">4</div>
+        <div class="cardBox"><div class="testCard">10&clubs;</div></div>
+        <div class="cardBox"><div class="testCard">10&diams;</div></div>
+        <div class="cardBox"><div class="testCard">10&hearts;</div></div>
+        <div class="cardBox"><div class="testCard">10&spades;</div></div>
         <div class="cardBox">5</div>
         <div class="cardBox">6</div>
         <div class="cardBox">7</div>
@@ -27,7 +27,9 @@
         <div class="cardBox">20</div>
         <div class="cardBox">21</div>
       </div>
-      <div class="playerInnerBox">hi</div>
+      <div class="playerInnerBox">
+        <div style="cursor: pointer;background-color: black; color:white;" (click)="sitTable(1)">SIT TABLE ONE</div>
+      </div>
       <!-- card holder -->
     </div>
     <div class="playerBox">
