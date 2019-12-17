@@ -1,3 +1,25 @@
+.leaveTable{
+  cursor: pointer;
+  border:solid darkgreen;
+  background-color: black;
+  color:white;
+}
+.leaveTable:hover{
+  background-color: darkcyan;
+}
+.sitLeave{
+  cursor: pointer;
+  background-color: black;
+  color:white;
+}
+.sitLeave:hover{
+  background-color: darkcyan;
+}
+.tableHeader > div{
+  display:inline-block;
+  color:white;
+}
+
 .testCard {
   background-color: cornsilk;
   border: 1px #999999 solid;

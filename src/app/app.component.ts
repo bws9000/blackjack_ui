@@ -65,6 +65,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.logStuff(result);
   }
 
+  satDownAtTableOneEmit(data){
+    this.wss.startChange.next(true);
+    this.logStuff('sat down at table one ' + data);
+  }
   ////////////////////////////////////////////////////////
 
   async ngOnInit(): Promise<void> {
@@ -76,6 +80,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.wss.startChange.next(true);
       this.wss.initEvents();
 
+
+      /////////////////// User Events /////////////////////////
+      /////////////////////////////////////////////////////////
       //initEmit
       this.wss
         .onEvent('initEmit')
@@ -91,6 +98,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         .onEvent('leftTableOneEmit')
         .subscribe(data => this.leftTableOne(data));
 
+      //satDownAtTableOneEmit
+      this.wss
+        .onEvent('satDownAtTableOneEmit')
+        .subscribe(data => this.satDownAtTableOneEmit(data));
+
       //joinTableTwoEmit
       this.wss
         .onEvent('joinTableTwoEmit')
@@ -100,6 +112,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.wss
         .onEvent('joinTableThreeEmit')
         .subscribe(data => this.logEvent(data));
+
+      ////////////////// Environment Updates //////////////////////
+      /////////////////////////////////////////////////////////////
+      //
     }
   }
 

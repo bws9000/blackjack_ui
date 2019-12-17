@@ -1,5 +1,9 @@
 <div class="gameTable">
-  <div style="cursor: pointer;background-color: black; color:white;" (click)="leaveTable()">LEAVE TABLE</div>
+  <div class="tableHeader">
+    <div class="leaveTable" (click)="leaveTable()">LEAVE TABLE</div>
+    <div>&nbsp;( Watchers: {{this.watchers}} )</div>
+    <div>&nbsp;( Players: {{this.players}} )</div>
+  </div>
   <!-- player grid -->
   <div class="playerAreaContainer">
     <div class="playerBox">
@@ -28,7 +32,7 @@
         <div class="cardBox">21</div>
       </div>
       <div class="playerInnerBox">
-        <div style="cursor: pointer;background-color: black; color:white;" (click)="sitTable(1)">SIT TABLE ONE</div>
+        <div class="sitLeave" (click)="sitLeaveTable(0)">{{this.sitOrLeaveText}}</div>
       </div>
       <!-- card holder -->
     </div>
