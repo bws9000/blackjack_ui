@@ -60,19 +60,23 @@ export class WebsocketService{
     });
   }
 
+  disconnect(){
+    this.socket.io.disconnect();
+  }
+
   public initEvents() {
     //USER EVENTS
-    this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
+    //this.eventMap.set('joinTableTwoEmit', new SocketObservable('joinTableTwoEmit',this.socket));
+    //this.eventMap.set('joinTableThreeEmit', new SocketObservable('joinTableThreeEmit',this.socket));
     //this.eventMap.set('createTableEmit', new SocketObservable('createTableEmit', this.socket))
+    this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
+    this.eventMap.set('memberOfRoomEmit', new SocketObservable('memberOfRoomEmit', this.socket));
     this.eventMap.set('joinTableOneEmit', new SocketObservable('joinTableOneEmit',this.socket));
     this.eventMap.set('leftTableOneEmit', new SocketObservable('leftTableOneEmit',this.socket));
-    this.eventMap.set('joinTableTwoEmit', new SocketObservable('joinTableTwoEmit',this.socket));
-    this.eventMap.set('joinTableThreeEmit', new SocketObservable('joinTableThreeEmit',this.socket));
+    this.eventMap.set('standUpTableOneEmit', new SocketObservable('standUpTableOneEmit',this.socket));
     this.eventMap.set('satDownAtTableOneEmit', new SocketObservable('satDownAtTableOneEmit',this.socket));
     //ENVIRONMENT EVENTS
-    this.eventMap.set('watchersUpdatedEmit', new SocketObservable('watchersUpdatedEmit',this.socket));
-    this.eventMap.set('playersUpdatedEmit', new SocketObservable('playersUpdatedEmit',this.socket));
-
+    this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat',this.socket));
   }
 
   logStuff(stuff:any){

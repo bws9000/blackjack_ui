@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ///////////////////////////////////////////////////////
   joinTableOne(data) {
     this.wss.startChange.next(true);
-    this.router.navigate(['/tables/tableOne']);
+    this.router.navigate(['/tables/tableone']);
     let result = JSON.stringify((data));
     this.logStuff(result);
   }
@@ -63,11 +63,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/tables']);
     let result = JSON.stringify((data));
     this.logStuff(result);
-  }
-
-  satDownAtTableOneEmit(data){
-    this.wss.startChange.next(true);
-    this.logStuff('sat down at table one ' + data);
   }
   ////////////////////////////////////////////////////////
 
@@ -97,21 +92,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.wss
         .onEvent('leftTableOneEmit')
         .subscribe(data => this.leftTableOne(data));
-
-      //satDownAtTableOneEmit
-      this.wss
-        .onEvent('satDownAtTableOneEmit')
-        .subscribe(data => this.satDownAtTableOneEmit(data));
-
-      //joinTableTwoEmit
-      this.wss
-        .onEvent('joinTableTwoEmit')
-        .subscribe(data => this.logEvent(data));
-
-      //joinTableThreeEmit
-      this.wss
-        .onEvent('joinTableThreeEmit')
-        .subscribe(data => this.logEvent(data));
 
       ////////////////// Environment Updates //////////////////////
       /////////////////////////////////////////////////////////////
