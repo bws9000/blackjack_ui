@@ -98,6 +98,7 @@ export class TableDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     //leave room/table
+    this.logStuff('NG ON DESTROY CALLED');
     this.wss.emit('leaveTableOne', {room: 'tableone'});
   }
 
