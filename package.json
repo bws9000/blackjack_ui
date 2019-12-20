@@ -5,7 +5,7 @@
     "heroku-postbuild": "ng build --prod",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --output-hashing=all -prod",
+    "build": "ng build --output-hashing=all",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
