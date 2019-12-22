@@ -3,6 +3,7 @@ import {WebsocketService} from "../websocket.service";
 import {environment} from "../../environments/environment";
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
+import {StatusUpdateService} from "../status-update.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -15,13 +16,11 @@ export class TableDetailComponent implements OnInit, OnDestroy {
   watchers: number;
   players: number;
 
-  constructor(private wss: WebsocketService,
+  constructor(private wss: WebsocketService, private sus: StatusUpdateService,
               private router: Router, private _location: Location) {
     this.sitOrLeaveText = 'SIT DOWN';
     this.watchers = 0;
     this.players = 0;
-
-
   }
 
   sitStandUpTable(table: any) {
@@ -34,7 +33,7 @@ export class TableDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  leaveTable(){
+  leaveTable() {
     this.wss.emit('leaveTableOne', {room: 'tableone'});
   }
 
@@ -51,7 +50,8 @@ export class TableDetailComponent implements OnInit, OnDestroy {
   }
 
   satDownAtTableOneEmit(data) {
-    this.wss.startChange.next(true);
+    this.wss.startChange.next(true);//hide loading wheel
+    this.sus.showStatus();
     this.logStuff('sat down at table one ' + JSON.stringify(data));
   }
 
@@ -62,7 +62,7 @@ export class TableDetailComponent implements OnInit, OnDestroy {
 
   memberOfRoomEmit(data) {
     this.wss.startChange.next(true);
-    if(!data.member){
+    if (!data.member) {
       this.router.navigate(['/tables']);
       alert('you are no longer at this table');
     }
