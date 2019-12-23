@@ -153,11 +153,10 @@
   }
 
   .cardBox {
-    display: inline-block;
-    width: 4%;
-    height: 22%;
-    background-color: cornflowerblue;
-    position: relative;
+    min-width: 10px;
+    width: 8%;
+    min-height: 20px;
+    height: 19%;
   }
 
   .sitLeave {
