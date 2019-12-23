@@ -16,11 +16,13 @@ export class TableDetailComponent implements OnInit, OnDestroy {
   watchers: number;
   players: number;
 
-  constructor(private wss: WebsocketService, private sus: StatusUpdateService,
+  constructor(private wss: WebsocketService, private statusUpdateService: StatusUpdateService,
               private router: Router, private _location: Location) {
     this.sitOrLeaveText = 'SIT DOWN';
     this.watchers = 0;
     this.players = 0;
+
+    this.statusUpdateService.hideNavBar(false);
   }
 
   sitStandUpTable(table: any) {
@@ -35,6 +37,7 @@ export class TableDetailComponent implements OnInit, OnDestroy {
 
   leaveTable() {
     this.wss.emit('leaveTableOne', {room: 'tableone'});
+    this.statusUpdateService.hideNavBar(true);
   }
 
   logEvent(data: any) {
@@ -51,7 +54,7 @@ export class TableDetailComponent implements OnInit, OnDestroy {
 
   satDownAtTableOneEmit(data) {
     this.wss.startChange.next(true);//hide loading wheel
-    this.sus.showStatus();
+    this.statusUpdateService.showStatus();
     this.logStuff('sat down at table one ' + JSON.stringify(data));
   }
 
@@ -100,6 +103,7 @@ export class TableDetailComponent implements OnInit, OnDestroy {
     //leave room/table
     this.logStuff('NG ON DESTROY CALLED');
     this.wss.emit('leaveTableOne', {room: 'tableone'});
+    this.statusUpdateService.hideNavBar(true);
   }
 
   logStuff(stuff: any) {

@@ -10,6 +10,7 @@ import { TableSelectComponent } from './table-select/table-select.component';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import {WebsocketService} from "./websocket.service";
 import { TableDetailComponent } from './table-detail/table-detail.component';
+import { ControlComponent } from './control/control.component';
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -22,7 +23,8 @@ export function initialize(initModule: InitModule) {
     AppComponent,
     SocketConnectComponent,
     TableSelectComponent,
-    TableDetailComponent
+    TableDetailComponent,
+    ControlComponent
   ],
   imports: [
     InitModule,

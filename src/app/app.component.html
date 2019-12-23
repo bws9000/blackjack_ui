@@ -1,5 +1,5 @@
 <ng2-slim-loading-bar color="blue"></ng2-slim-loading-bar>
-<nav class="navbar navbar-expand-sm bg-light">
+<nav [hidden]="isHidden" class="navbar navbar-expand-sm bg-light">
   <div class="container-fluid">
     <a routerLink="" class="nav-link" routerLinkActive="active">
       blackjack
@@ -24,6 +24,6 @@
   </div>
 </nav>
 <router-outlet></router-outlet>
-<div [style.visibility]="this.statusBoxVisible" class="statusupdate"><div class="status_update_box">{{this.status}}</div></div>
+<app-control></app-control>
 <div [style.visibility]="this.loadingWheelVisible" class="temp_loading temp_style-2"><div class="temp_loading-wheel"></div></div>
 
