@@ -11,6 +11,7 @@ import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 import {WebsocketService} from "./websocket.service";
 import { TableDetailComponent } from './table-detail/table-detail.component';
 import { ControlComponent } from './control/control.component';
+import { PlayerboxComponent } from './playerbox/playerbox.component';
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -24,7 +25,8 @@ export function initialize(initModule: InitModule) {
     SocketConnectComponent,
     TableSelectComponent,
     TableDetailComponent,
-    ControlComponent
+    ControlComponent,
+    PlayerboxComponent
   ],
   imports: [
     InitModule,

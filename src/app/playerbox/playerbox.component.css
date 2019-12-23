@@ -1,18 +1,15 @@
-
-.leaveTable {
+.sitLeave {
+  width: 50%;
+  float: right;
   cursor: pointer;
-  border: solid darkgreen;
   background-color: black;
+  border-radius: 15px;
+  text-align: center;
   color: white;
 }
 
-.leaveTable:hover {
+.sitLeave:hover {
   background-color: darkcyan;
-}
-
-.tableHeader > div {
-  display: inline-block;
-  color: white;
 }
 
 .testCard {
@@ -24,19 +21,39 @@
   background-repeat: no-repeat;
 }
 
-.gameTable {
-  height: 94%;
+.cardBox {
+  display: inline-block;
+  min-width: 30px;
+  width: 15%;
+  min-height: 20px;
+  height: 18%;
+  /* background-color: cornflowerblue; */
   position: relative;
-  background-color: darkgreen;
-  overflow: hidden;
 }
 
-.playerAreaContainer {
-  position: absolute;
-  bottom: 0;
+.cardRowDefault {
   width: 100%;
-  height: 75%;
-  /* background-color: lightpink; */
+  height: 50%;
+  position: relative;
+}
+
+.playerBox {
+  width: 19%;
+  height: 100%;
+  /* background-color: skyblue; */
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  text-align: right;
+  border-right: 1px solid black;
+  margin-right: 1%;
+}
+
+.playerInnerBox {
+  /* background-color: #422518; */
+  background-image: url("../../assets/ui1/playerbox1.png");
+  position: relative;
+  height: 50%;
 }
 
 
@@ -69,12 +86,19 @@
 */
 @media (min-width: 320px) and (max-width: 1024px) {
 
-  .playerAreaContainer {
-    width: 75%;
-    height: 100%;
-    background-color: blue;
+  .playerBox {
+    width: 100%;
+    height: 19%;
+    border-bottom: 1px solid black;
     position: relative;
-    display: inline-block;
+  }
+
+  .playerInnerBox {
+    position: relative;
+    width: 24%;
+    height: 100%;
+    display: inherit;
+    vertical-align: top;
   }
 
   .cardRowDefault {
@@ -116,8 +140,17 @@
   .tableHeader{
     display:none;
   }
-  .playerAreaContainer {
-    width: 85%;
+
+  .playerBox {
+    height: 20%;
+    border-bottom: 1px solid black;
+  }
+
+  .cardBox {
+    min-width: 17px;
+    width: 8%;
+    min-height: 20px;
+    height: 19%;
   }
 
 }

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {WebsocketService} from "../websocket.service";
 import {environment} from "../../environments/environment";
 import {Router} from '@angular/router';
@@ -11,28 +11,18 @@ import {StatusUpdateService} from "../status-update.service";
   styleUrls: ['./table-detail.component.css']
 })
 export class TableDetailComponent implements OnInit, OnDestroy {
-  sitOrLeave: boolean;
-  sitOrLeaveText: string;
+  @Input() player: string;
   watchers: number;
   players: number;
 
   constructor(private wss: WebsocketService, private statusUpdateService: StatusUpdateService,
               private router: Router, private _location: Location) {
-    this.sitOrLeaveText = 'SIT DOWN';
+
+
     this.watchers = 0;
     this.players = 0;
 
     this.statusUpdateService.hideNavBar(false);
-  }
-
-  sitStandUpTable(table: any) {
-    this.sitOrLeave = (this.sitOrLeave != true);
-    this.sitOrLeaveText = (this.sitOrLeave) ? 'STAND UP' : 'SIT DOWN';
-    if (!this.sitOrLeave) {
-      this.wss.emit('standUpTableOne', {sit: 0});
-    } else {
-      this.wss.emit('sitTableOne', {left: 0});
-    }
   }
 
   leaveTable() {
