@@ -1,28 +1,32 @@
 
-.leaveTable{
+.leaveTable {
   cursor: pointer;
-  border:solid darkgreen;
+  border: solid darkgreen;
   background-color: black;
-  color:white;
+  color: white;
 }
-.leaveTable:hover{
+
+.leaveTable:hover {
   background-color: darkcyan;
 }
-.sitLeave{
-  width:50%;
-  float:right;
+
+.sitLeave {
+  width: 50%;
+  float: right;
   cursor: pointer;
   background-color: black;
   border-radius: 15px;
-  text-align:center;
-  color:white;
+  text-align: center;
+  color: white;
 }
-.sitLeave:hover{
+
+.sitLeave:hover {
   background-color: darkcyan;
 }
-.tableHeader > div{
-  display:inline-block;
-  color:white;
+
+.tableHeader > div {
+  display: inline-block;
+  color: white;
 }
 
 .testCard {
@@ -74,7 +78,7 @@
   vertical-align: top;
   text-align: right;
   border-right: 1px solid black;
-  margin-right:1%;
+  margin-right: 1%;
 }
 
 .playerInnerBox {
@@ -156,9 +160,9 @@
     position: relative;
   }
 
-  .sitLeave{
-    float:none;
-    width:100%;
+  .sitLeave {
+    float: none;
+    width: 100%;
   }
 }
 
@@ -178,9 +182,29 @@
 
 @media (min-width: 481px) and (max-width: 767px) {
   /* */
-  .gameTable {
-    background-color: #f8f9fa;
+  .tableHeader{
+    display:none;
   }
+  .gameTable {
+    background-color: greenyellow;
+  }
+
+  .playerAreaContainer {
+    width: 85%;
+  }
+
+  .playerBox {
+    height: 20%;
+  }
+
+  .cardBox {
+    min-width: 17px;
+    width: 8%;
+    min-height: 20px;
+    height: 19%;
+    background-color: #000;
+  }
+
 }
 
 /*
