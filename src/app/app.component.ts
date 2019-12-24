@@ -93,11 +93,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
 
-      //socketReconnect
-      this.wss
-        .onEvent('socketReconnect')
-        .subscribe(data => this.logEvent(data));
-
       //initEmit
       this.wss
         .onEvent('initEmit')
@@ -112,12 +107,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.wss
         .onEvent('leftTableOneEmit')
         .subscribe(data => this.leftTableOne(data));
-
-
-      //socketReconnect
-      this.wss
-        .onEvent('socketReconnect')
-        .subscribe(data => this.logEvent(data));
 
       ////////////////// Environment Updates //////////////////////
       /////////////////////////////////////////////////////////////

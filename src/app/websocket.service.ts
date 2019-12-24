@@ -16,6 +16,8 @@ export class WebsocketService{
   eventMap: Map<string, SocketObservable> = new Map<string, SocketObservable>();
 
   constructor() {
+    let that = this;
+
     this.logStuff('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
     this.socketUrl = (environment.production) ?
       'https://calm-eyrie-37824.herokuapp.com/blackjack' : 'http://localhost:3000/blackjack';
@@ -23,8 +25,17 @@ export class WebsocketService{
     this.startChange.subscribe((value) => {
       this.start = value;
     });
+
+    //on reconnect
+    this.socket.on('reconnect', function () {
+      console.log('you have been reconnected');
+      that.reconnected();
+    });
   }
 
+  reconnected(){
+    this.socket.emit('user-reconnected', {user:'reconnect'});
+  }
   getSocket(){
     return this.socket;
   }
