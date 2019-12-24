@@ -77,6 +77,7 @@ export class WebsocketService{
     this.eventMap.set('satDownAtTableOneEmit', new SocketObservable('satDownAtTableOneEmit',this.socket));
     //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat',this.socket));
+    this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));
   }
 
   logStuff(stuff:any){
