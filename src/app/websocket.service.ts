@@ -34,7 +34,7 @@ export class WebsocketService{
   }
 
   reconnected(){
-    this.socket.emit('user-reconnected', {user:'reconnect'});
+    this.socket.emit('userReconnected', {user:'reconnect'});
   }
   getSocket(){
     return this.socket;
