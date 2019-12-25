@@ -26,11 +26,6 @@ export class WebsocketService{
       this.start = value;
     });
 
-    //on reconnect
-    this.socket.on('reconnect', function () {
-      console.log('you have been reconnected');
-      that.reconnected();
-    });
   }
 
   reconnected(){
@@ -67,6 +62,11 @@ export class WebsocketService{
             that.startChange.next(true);
           }
         });
+      });
+      //on reconnect
+      this.socket.on('reconnect', function () {
+        console.log('you have been reconnected');
+        that.reconnected();
       });
     });
   }
