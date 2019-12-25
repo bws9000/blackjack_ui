@@ -31,6 +31,7 @@ export class WebsocketService{
   reconnected(){
     this.socket.emit('userReconnected', {user:'reconnect'});
   }
+
   getSocket(){
     return this.socket;
   }
@@ -51,24 +52,24 @@ export class WebsocketService{
     this.socket = io(this.socketUrl);
     this.logStuff('socket: ' + this.socketUrl);
 
-    return new Promise(resolve => {
-      this.socket.on('connect', function () {
-        that.emit('authentication', {devuser: environment.devpass});
-        this.on('authenticated', function () {
-          if (this.connected) {
-            resolve(true);
-            this.emit('init', {msg: ''});
-            that.logStuff('socket authenticated');
-            that.startChange.next(true);
-          }
+      return new Promise(resolve => {
+        this.socket.once('connect', function () {
+          that.emit('authentication', {devuser: environment.devpass});
+          this.on('authenticated', function () {
+            if (this.connected) {
+              resolve(true);
+              this.emit('init', {msg: ''});
+              that.logStuff('socket authenticated');
+              that.startChange.next(true);
+            }
+          });
+        });
+        //on reconnect
+        this.socket.on('reconnect', function () {
+          console.log('you have been reconnected');
+          that.reconnected();
         });
       });
-      //on reconnect
-      this.socket.on('reconnect', function () {
-        console.log('you have been reconnected');
-        that.reconnected();
-      });
-    });
   }
 
   disconnect(){

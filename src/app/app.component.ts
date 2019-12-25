@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
+import { Location } from '@angular/common';
 
 import {
   NavigationCancel,
@@ -21,12 +22,13 @@ import {StatusUpdateService} from "./status-update.service";
 export class AppComponent implements OnInit, AfterViewInit {
 
   loadingWheelVisible: string;
-  isHidden:boolean;
+  isHidden: boolean;
 
   constructor(private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
-              private router: Router) {
+              private router: Router,
+              private location: Location) {
 
 
     this.router.events.subscribe((event: Event) => {
@@ -59,33 +61,42 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ///////////////////////////////////////////////////////
   joinTableOne(data) {
-    this.wss.startChange.next(true);
-    this.router.navigate(['/tables/tableone']);
+    this.router.navigate(['/tables/tableone']).then(r=>{
+      this.wss.startChange.next(true);
+    });
     let result = JSON.stringify((data));
     this.logStuff(result);
   }
 
   leftTableOne(data) {
-    this.wss.startChange.next(true);
-    this.router.navigate(['/tables']);
+    this.router.navigate(['/tables']).then(r=>{
+      this.wss.startChange.next(true);
+    });
     let result = JSON.stringify((data));
     this.logStuff(result);
   }
 
   socketReconnect(data) {
-    this.router.navigate(['']);
+    this.router.navigate(['']).then(r=>{
+      this.wss.startChange.next(true);
+      this.connect().then(r=>{
+        console.log('CONNECTION TYPE: Reconnection Occured.');
+      })
+    });
+    this.logStuff('Reconnection occured: Booted from room'); //temp
     let result = JSON.stringify((data));
     this.logStuff(result);
   }
 
   ////////////////////////////////////////////////////////
 
-  async ngOnInit(): Promise<void> {
+  async connect(): Promise<void> {
 
-    let that = this;
     this.wss.startChange.next(false);
+
     let result = await this.wss.authConnect();
     if (result) {
+
       this.wss.startChange.next(true);
       this.wss.initEvents();
 
@@ -108,10 +119,21 @@ export class AppComponent implements OnInit, AfterViewInit {
         .onEvent('leftTableOneEmit')
         .subscribe(data => this.leftTableOne(data));
 
+      //leftTableOneEmit
+      this.wss
+        .onEvent('socketReconnect')
+        .subscribe(data => this.socketReconnect(data));
+
       ////////////////// Environment Updates //////////////////////
       /////////////////////////////////////////////////////////////
       //
     }
+  }
+
+  ngOnInit(){
+    this.connect().then(r=>{
+      console.log('RECONNECTION TYPE: Initial Connection Occured.');
+    })
   }
 
   private navigationInterceptor(event: Event): void {
