@@ -14,7 +14,7 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   constructor(private socketUpdateService: StatusUpdateService) {
 
-    this.startcount = 11;
+    this.startcount = 3;
     this.socketUpdateService.updateStatusSubject.subscribe(value => {
       if (value) {
         this.statusBoxVisible = 'hidden';
@@ -33,7 +33,7 @@ export class ControlComponent implements OnInit, OnDestroy {
       that.startcount--;
       that.status = 'Waiting for players to join: ' + that.startcount;
       if (that.startcount < 1) {
-        that.startcount = 11;
+        that.startcount = 3;
         that.statusBoxVisible = 'hidden';
         clearInterval(intv);
       }

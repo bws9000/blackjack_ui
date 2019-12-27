@@ -1,0 +1,21 @@
+.sit {
+  width: 50%;
+  float: right;
+  cursor: pointer;
+  background-color: black;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+}
+
+.sit:hover {
+  background-color: darkcyan;
+}
+
+
+@media (min-width: 320px) and (max-width: 1024px) {
+  .sit {
+    float: none;
+    width: 100%;
+  }
+}

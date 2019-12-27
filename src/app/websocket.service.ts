@@ -14,6 +14,7 @@ export class WebsocketService{
   start: boolean = false;
   public startChange: Subject<boolean> = new Subject<boolean>();
   eventMap: Map<string, SocketObservable> = new Map<string, SocketObservable>();
+  socketId: string;
 
   constructor() {
     let that = this;
@@ -26,6 +27,12 @@ export class WebsocketService{
       this.start = value;
     });
 
+  }
+
+  socketBroadcastMatch(localSocketId){
+    this.logStuff('> ' + this.socketId);
+    this.logStuff('> ' + localSocketId);
+    return this.socketId == localSocketId;
   }
 
   reconnected(){

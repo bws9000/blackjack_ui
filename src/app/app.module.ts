@@ -12,6 +12,7 @@ import {WebsocketService} from "./websocket.service";
 import { TableDetailComponent } from './table-detail/table-detail.component';
 import { ControlComponent } from './control/control.component';
 import { PlayerboxComponent } from './playerbox/playerbox.component';
+import { SitComponent } from './sit/sit.component';
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -26,7 +27,8 @@ export function initialize(initModule: InitModule) {
     TableSelectComponent,
     TableDetailComponent,
     ControlComponent,
-    PlayerboxComponent
+    PlayerboxComponent,
+    SitComponent
   ],
   imports: [
     InitModule,

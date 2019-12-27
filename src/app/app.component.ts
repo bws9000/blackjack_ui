@@ -54,11 +54,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     //this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
   }
 
-  logEvent(data: any) {
-    let result = JSON.stringify((data));
-    this.logStuff(result);
-  }
-
   ///////////////////////////////////////////////////////
   joinTableOne(data) {
     this.router.navigate(['/tables/tableone']).then(r=>{
@@ -80,7 +75,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.router.navigate(['']).then(r=>{
       this.wss.startChange.next(true);
       this.connect().then(r=>{
-        console.log('CONNECTION TYPE: Reconnection Occured.');
+        this.logStuff('CONNECTION TYPE: Reconnection Occured.');
       })
     });
     this.logStuff('Reconnection occured: Booted from room'); //temp
@@ -88,6 +83,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.logStuff(result);
   }
 
+  init(data){
+    this.wss.socketId = data.socketid;
+  }
   ////////////////////////////////////////////////////////
 
   async connect(): Promise<void> {
@@ -107,7 +105,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       //initEmit
       this.wss
         .onEvent('initEmit')
-        .subscribe(data => this.logEvent(data));
+        .subscribe(data => this.init(data));
 
       //joinTableOneEmit
       this.wss
@@ -132,7 +130,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(){
     this.connect().then(r=>{
-      console.log('RECONNECTION TYPE: Initial Connection Occured.');
+      this.logStuff('RECONNECTION TYPE: Initial Connection Occured.');
     })
   }
 

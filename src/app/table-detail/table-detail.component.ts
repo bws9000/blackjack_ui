@@ -4,6 +4,7 @@ import {environment} from "../../environments/environment";
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {StatusUpdateService} from "../status-update.service";
+import {SeatService} from "../seat.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -14,13 +15,17 @@ export class TableDetailComponent implements OnInit, OnDestroy {
   @Input() player: string;
   watchers: number;
   players: number;
+  playerSeats: Object;
 
-  constructor(private wss: WebsocketService, private statusUpdateService: StatusUpdateService,
+  constructor(private wss: WebsocketService,
+              private statusUpdateService: StatusUpdateService,
+              private seatService: SeatService,
               private router: Router, private _location: Location) {
 
 
     this.watchers = 0;
     this.players = 0;
+    this.playerSeats = {};
 
     this.statusUpdateService.hideNavBar(false);
   }
@@ -30,27 +35,32 @@ export class TableDetailComponent implements OnInit, OnDestroy {
     this.statusUpdateService.hideNavBar(true);
   }
 
-  logEvent(data: any) {
-    let result = JSON.stringify((data));
-    this.logStuff(result);
-  }
-
   //EVENTS
   tableDetailHeartBeat(data) {
+
     this.watchers = data.watcherCount;
     this.players = data.playerCount;
-    this.logStuff('w: ' + this.watchers + ' p: ' + this.players);
+    this.logStuff('w: ' + this.watchers + ' p: ' + this.players );
+
+    let playerSeats = JSON.parse(data.playerSeats);
+    this.seatService.updateSeats(playerSeats);
   }
 
   satDownAtTableOneEmit(data) {
-    this.wss.startChange.next(true);//hide loading wheel
-    this.statusUpdateService.showStatus();
-    this.logStuff('sat down at table one ' + JSON.stringify(data));
+    if (this.wss.socketBroadcastMatch(data.socketid)) {
+      this.wss.startChange.next(true);
+      this.statusUpdateService.showStatus();
+    } else {
+      this.seatService.sitDown(false, data.sitting);
+    }
   }
 
   standUpTableOneEmit(data) {
-    this.wss.startChange.next(true);
-    this.logStuff('left table one ' + JSON.stringify(data));
+    if (this.wss.socketBroadcastMatch(data.socketid)) {
+      this.wss.startChange.next(true);
+    } else {
+      this.seatService.standUp(false, data.standing);
+    }
   }
 
   memberOfRoomEmit(data) {

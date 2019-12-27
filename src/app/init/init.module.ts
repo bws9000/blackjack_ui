@@ -20,7 +20,7 @@ export class InitModule {
   init() {
 
     return new Promise<void>((resolve, reject) => {
-      this.logStuff("init()");
+      this.logStuff("init.module");
       return this.getEnv()
         .subscribe((data: '') => {
           let s = JSON.stringify(data);
