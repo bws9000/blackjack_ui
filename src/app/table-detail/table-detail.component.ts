@@ -11,6 +11,7 @@ import {SeatService} from "../seat.service";
   templateUrl: './table-detail.component.html',
   styleUrls: ['./table-detail.component.css']
 })
+
 export class TableDetailComponent implements OnInit, OnDestroy {
   @Input() player: string;
   watchers: number;
@@ -40,27 +41,25 @@ export class TableDetailComponent implements OnInit, OnDestroy {
 
     this.watchers = data.watcherCount;
     this.players = data.playerCount;
-    this.logStuff('w: ' + this.watchers + ' p: ' + this.players );
+    this.logStuff('w: ' + this.watchers + ' p: ' + this.players);
 
     let playerSeats = JSON.parse(data.playerSeats);
     this.seatService.updateSeats(playerSeats);
   }
 
   satDownAtTableOneEmit(data) {
-    if (this.wss.socketBroadcastMatch(data.socketid)) {
+    if (!data.broadcast) {
       this.wss.startChange.next(true);
       this.statusUpdateService.showStatus();
-    } else {
-      this.seatService.sitDown(false, data.sitting);
     }
+    this.seatService.sitDown(data.sitting, data.broadcast);
   }
 
   standUpTableOneEmit(data) {
-    if (this.wss.socketBroadcastMatch(data.socketid)) {
+    if (!data.broadcast){
       this.wss.startChange.next(true);
-    } else {
-      this.seatService.standUp(false, data.standing);
     }
+    this.seatService.standUp(data.standing, data.broadcast);
   }
 
   memberOfRoomEmit(data) {

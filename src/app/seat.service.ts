@@ -12,18 +12,25 @@ export class SeatService {
   hide: Subject<string> = new Subject<string>();
   show: Subject<string> = new Subject<string>();
   playerSeats: Subject<Array<any>> = new Subject<Array<any>>();
+  sitState: Subject<Object> = new Subject<Object>();
+  standState: Subject<Object> = new Subject<Object>();
+  initState: Subject<Object> = new Subject<Object>();
 
   constructor(private wss:WebsocketService) {
   }
 
-  sitDown(doEmit, seat) {
-    let send = {seat: seat, doEmit: doEmit};
-    this.sitButton.next(send);
+  initTableState(data){
+    this.initState.next(data);
   }
 
-  standUp(doEmit, seat) {
-    let send = {seat: seat, doEmit: doEmit};
-    this.standButton.next(send);
+  sitDown(seat, bc) {
+    let data = {sitting: seat, broadcast: bc};
+    this.sitState.next(data);
+  }
+
+  standUp(seat, bc) {
+    let data = {sitting: seat, broadcast: bc};
+    this.standState.next(data);
   }
 
   hideSeats(id) {

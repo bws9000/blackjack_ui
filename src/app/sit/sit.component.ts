@@ -15,6 +15,7 @@ export class SitComponent implements OnInit {
   isHidden: boolean;
   opHidden: boolean;
   id: string;
+  seated: string[];
 
   constructor(private wss: WebsocketService,
               private seatService: SeatService) {
@@ -24,76 +25,75 @@ export class SitComponent implements OnInit {
     this.sitOrLeaveText = 'SIT DOWN';
     this.sitOrLeave = false;
 
-    //for recievers
-    this.seatService.sitButton.subscribe(v => {
-      let j = JSON.stringify(v);
-      let o = JSON.parse(j);
-      let seat = o.seat;
-      if (seat == this.id) {
-        this.isHidden = true;
-      }
+    this.seatService.initState.subscribe(value =>{
+        this.logStuff('INIT SEAT STATE: ' + JSON.stringify(value));
     });
 
-    this.seatService.standButton.subscribe(v => {
-      let j = JSON.stringify(v);
-      let o = JSON.parse(j);
-      let seat = o.seat;
-      if (seat == this.id) {
-        this.isHidden = false;
-        this.opHidden = true;
-      }
-    });
 
     this.seatService.playerSeats.subscribe(value => {
-      let sid = this.wss.socketId;
+      let s = [];
       for (let i = 0; i < value.length; i++) {
-        let socketid = value[i][0];
-        let seat = value[i][1];
-        if(this.id == seat && sid != socketid){
+        s.push(value[i][0]);
+      }
+      this.seated = s;
+    });
+
+
+    this.seatService.standState.subscribe(v => {
+      let j = JSON.stringify(v);
+      let o = JSON.parse(j);
+      let seat = o.sitting;
+      let broadcast = o.broadcast;
+
+      if(!broadcast){
+        if (this.id != seat && this.opHidden) {
+          this.isHidden = false;
+        }
+      }else{
+        if(this.id == seat){
+          if(this.seated.includes(this.wss.socketId)) { //table/socket where sitting
+            this.opHidden = true;
+          }else{
+            this.opHidden = true;
+            this.isHidden = false;
+          }
+        }
+      }
+
+    });
+
+
+    this.seatService.sitState.subscribe(v => {
+
+      let j = JSON.stringify(v);
+      let o = JSON.parse(j);
+      let seat = o.sitting;
+      let broadcast = o.broadcast;
+
+      if (!broadcast) {
+        this.isHidden = seat != this.id;
+
+      } else {
+        if (seat == this.id) {
           this.isHidden = true;
           this.opHidden = false;
         }
       }
     });
-
-    //for sender
-    this.seatService.show.subscribe(v => {
-      if (v !== this.id) {
-        this.isHidden = false;
-      }
-    });
-
-    this.seatService.hide.subscribe(v => {
-      if (v !== this.id) {
-        this.isHidden = true;
-      }
-    });
   }
 
-  sitStand(doEmit) {
+  sitStand() {
     if (!this.sitOrLeave) {
-      if (doEmit) {
-        this.wss.emit('sitTableOne', {player: this.id});
-        this.hideTheRest(this.id);
+      this.wss.emit('sitTableOne', {player: this.id});
+      if (!this.sitOrLeave) {
+        this.sitOrLeaveText = 'STAND UP';
+        this.sitOrLeave = true;
       }
-      this.sitOrLeaveText = 'STAND UP';
-      this.sitOrLeave = true;
     } else {
-      if (doEmit) {
-        this.wss.emit('standUpTableOne', {player: this.id});
-        this.showTheRest(this.id);
-      }
+      this.wss.emit('standUpTableOne', {player: this.id});
       this.sitOrLeaveText = 'SIT DOWN';
       this.sitOrLeave = false;
     }
-  }
-
-  hideTheRest(id) {
-    this.seatService.hideSeats(id);
-  }
-
-  showTheRest(id) {
-    this.seatService.showSeats(id);
   }
 
   ngOnInit() {

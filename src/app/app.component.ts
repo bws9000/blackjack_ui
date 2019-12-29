@@ -13,6 +13,7 @@ import {
 import {WebsocketService} from "./websocket.service";
 import {environment} from "../environments/environment";
 import {StatusUpdateService} from "./status-update.service";
+import {SeatService} from "./seat.service";
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
               private router: Router,
-              private location: Location) {
+              private location: Location,
+              private seatService: SeatService) {
 
 
     this.router.events.subscribe((event: Event) => {
@@ -58,6 +60,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   joinTableOne(data) {
     this.router.navigate(['/tables/tableone']).then(r=>{
       this.wss.startChange.next(true);
+      this.seatService.initTableState(data);
     });
     let result = JSON.stringify((data));
     this.logStuff(result);
