@@ -58,12 +58,15 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ///////////////////////////////////////////////////////
   joinTableOne(data) {
-    this.router.navigate(['/tables/tableone']).then(r=>{
+    this.router.navigate(['/tables/tableone']).then(async r=>{
       this.wss.startChange.next(true);
-      this.seatService.initTableState(data);
+      let playerSeats = JSON.parse(data.playerSeats);
+      let s = [];
+      for (let i = 0; i < playerSeats.length; i++) {
+        s.push(playerSeats[i][1]);
+      }
+      await this.seatService.setInitState(s);
     });
-    let result = JSON.stringify((data));
-    this.logStuff(result);
   }
 
   leftTableOne(data) {
