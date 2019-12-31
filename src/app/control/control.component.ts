@@ -1,5 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StatusUpdateService} from "../status-update.service";
+import {WebsocketService} from "../websocket.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-control',
@@ -12,10 +14,12 @@ export class ControlComponent implements OnInit, OnDestroy {
   status: string;
   startcount: number;
 
-  constructor(private socketUpdateService: StatusUpdateService) {
+  constructor(private statusUpdateService: StatusUpdateService,
+              private wss: WebsocketService) {
 
-    this.startcount = 3;
-    this.socketUpdateService.updateStatusSubject.subscribe(value => {
+    this.setStartCount();
+
+    this.statusUpdateService.updateStatusSubject.subscribe(value => {
       if (value) {
         this.statusBoxVisible = 'hidden';
       } else {
@@ -23,18 +27,27 @@ export class ControlComponent implements OnInit, OnDestroy {
         this.startBox();
       }
     });
-    this.socketUpdateService.hideStatus();
+    this.statusUpdateService.hideStatus();
     this.status = 'Waiting for players to join:';
+  }
+
+  setStartCount(){
+    this.startcount = 31;
+    if (!environment.production) {
+      this.startcount = 2;
+    }
   }
 
   startBox() {
     let that = this;
     let intv = setInterval(function () {
       that.startcount--;
-      that.status = 'Waiting for players to join: ' + that.startcount;
+      that.status = 'Waiting for more players to join: ' + that.startcount;
       if (that.startcount < 1) {
-        that.startcount = 3;
+        that.setStartCount();
         that.statusBoxVisible = 'hidden';
+        that.statusUpdateService.tablePlaying = true;
+        that.wss.emit('tablePlaying', {tablePlaying: true});
         clearInterval(intv);
       }
     }, 1000);
@@ -45,6 +58,12 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     //console.log('destroyed');
+  }
+
+  logStuff(stuff: any) {
+    if (!environment.production) {
+      console.log(stuff);
+    }
   }
 
 }

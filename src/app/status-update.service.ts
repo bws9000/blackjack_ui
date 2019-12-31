@@ -6,22 +6,14 @@ import {Subject} from "rxjs";
 })
 export class StatusUpdateService {
 
+  public tablePlaying:boolean;
+
   updateStatusSubject: Subject<boolean> = new Subject<boolean>();
   navBarVisible: Subject<boolean> = new Subject<boolean>();
-
   showAllSeatsAfterStandUp: Subject<Object> = new Subject<Object>();
 
   constructor() {
-  }
-
-  showSeats(data) {
-    //
-    let v = data.value;
-    let de = data.doEmit;
-    let sol = data.sitOrLeave;
-    let seat = data.player;//seat
-    let send = {value: v, doEmit: de, sitOrLeave: sol, player: seat};
-    this.showAllSeatsAfterStandUp.next(send);
+    this.tablePlaying = false;
   }
 
   //navbar
