@@ -13,6 +13,8 @@ import { TableDetailComponent } from './table-detail/table-detail.component';
 import { ControlComponent } from './control/control.component';
 import { PlayerboxComponent } from './playerbox/playerbox.component';
 import { SitComponent } from './sit/sit.component';
+import { PlayerHandComponent } from './player-hand/player-hand.component';
+import { DealerHandComponent } from './dealer-hand/dealer-hand.component';
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -28,7 +30,9 @@ export function initialize(initModule: InitModule) {
     TableDetailComponent,
     ControlComponent,
     PlayerboxComponent,
-    SitComponent
+    SitComponent,
+    PlayerHandComponent,
+    DealerHandComponent
   ],
   imports: [
     InitModule,
