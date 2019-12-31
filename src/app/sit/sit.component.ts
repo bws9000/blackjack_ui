@@ -45,12 +45,28 @@ export class SitComponent implements OnInit {
 
   async playerSeats(){
     this.seatService.playerSeats.subscribe(value => {
-      let s = [];
+      let sid = [];
+      let seatNum = [];
       for (let i = 0; i < value.length; i++) {
-        s.push(value[i][0]);
+        sid.push(value[i][0]);
+        seatNum.push(value[i][1]);
       }
-      this.seated = s;
-    });
+      this.seated = sid; //socketid
+      if(!seatNum.length){
+        this.opHidden = true;
+        this.isHidden = false;
+      }
+      for(let i=0;i<seatNum.length;i++){
+        if(this.opHidden == false){
+          if(!seatNum.includes(this.id)){
+            this.opHidden = true;
+            if (!this.seated.includes(this.localSocket)) { //table/socket where sitting
+              this.isHidden = false;
+            }
+          }
+        }
+      }
+     });
   }
 
   async sitdown(){
@@ -119,7 +135,7 @@ export class SitComponent implements OnInit {
     this.isHidden = false;
 
     let currentSeats = this.seatService.getInitState();
-    if (currentSeats.length > 0) {
+    if (currentSeats.length >= 0) {
       for(let i=0;i<currentSeats.length;i++){
         if(this.id == currentSeats[i]){
           this.isHidden = true;
