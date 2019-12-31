@@ -122,8 +122,8 @@ export class SitComponent implements OnInit {
     if (currentSeats.length > 0) {
       for(let i=0;i<currentSeats.length;i++){
         if(this.id == currentSeats[i]){
-          //this.isHidden = true;
-          //this.opHidden = false;
+          this.isHidden = true;
+          this.opHidden = false;
         }
       }
     }
