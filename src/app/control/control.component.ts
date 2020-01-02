@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StatusUpdateService} from "../status-update.service";
 import {WebsocketService} from "../websocket.service";
 import {environment} from "../../environments/environment";
+import {TableService} from "../table.service";
 
 @Component({
   selector: 'app-control',
@@ -15,7 +16,8 @@ export class ControlComponent implements OnInit, OnDestroy {
   startcount: number;
 
   constructor(private statusUpdateService: StatusUpdateService,
-              private wss: WebsocketService) {
+              private wss: WebsocketService,
+              private tableService: TableService) {
 
     this.setStartCount();
 
@@ -40,6 +42,7 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   startBox() {
     let that = this;
+    let table = this.tableService.tableNum;
     let intv = setInterval(function () {
       that.startcount--;
       that.status = 'Waiting for more players to join: ' + that.startcount;
@@ -47,7 +50,7 @@ export class ControlComponent implements OnInit, OnDestroy {
         that.setStartCount();
         that.statusBoxVisible = 'hidden';
         that.statusUpdateService.tablePlaying = true;
-        that.wss.emit('tablePlaying', {tablePlaying: true});
+        that.wss.emit('tablePlaying', {table: table});
         clearInterval(intv);
       }
     }, 1000);

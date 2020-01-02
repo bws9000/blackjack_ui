@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {SeatService} from "../seat.service";
 import {WebsocketService} from "../websocket.service";
+import {TableService} from "../table.service";
 
 @Component({
   selector: 'app-sit',
@@ -16,19 +17,22 @@ export class SitComponent implements OnInit {
   opHidden: boolean;
   id: string;
   seated: string[];
-  localSocket:string;
+  localSocket: string;
+  table: number;
 
   constructor(private wss: WebsocketService,
-                    private seatService: SeatService) {
+              private seatService: SeatService,
+              private tableService: TableService) {
 
     this.isHidden = true;
     this.opHidden = true;
     this.sitOrLeaveText = 'SIT DOWN';
     this.sitOrLeave = false;
     this.localSocket = this.wss.socketId;
+    this.table = tableService.tableNum;
 
 
-    this.playerSeats().then(r =>{
+    this.playerSeats().then(r => {
       //do something ?
     });
 
@@ -43,7 +47,7 @@ export class SitComponent implements OnInit {
 
   }
 
-  async playerSeats(){
+  async playerSeats() {
     this.seatService.playerSeats.subscribe(value => {
       let sid = [];
       let seatNum = [];
@@ -52,13 +56,13 @@ export class SitComponent implements OnInit {
         seatNum.push(value[i][1]);
       }
       this.seated = sid; //socketid
-      if(!seatNum.length){
+      if (!seatNum.length) {
         this.opHidden = true;
         this.isHidden = false;
       }
-      for(let i=0;i<seatNum.length;i++){
-        if(this.opHidden == false){
-          if(!seatNum.includes(this.id)){
+      for (let i = 0; i < seatNum.length; i++) {
+        if (this.opHidden == false) {
+          if (!seatNum.includes(this.id)) {
             this.opHidden = true;
             if (!this.seated.includes(this.localSocket)) { //table/socket where sitting
               this.isHidden = false;
@@ -66,10 +70,10 @@ export class SitComponent implements OnInit {
           }
         }
       }
-     });
+    });
   }
 
-  async sitdown(){
+  async sitdown() {
     this.seatService.sitState.subscribe(v => {
 
       let j = JSON.stringify(v);
@@ -89,7 +93,7 @@ export class SitComponent implements OnInit {
     });
   }
 
-  async standup(){
+  async standup() {
     this.seatService.standState.subscribe(v => {
       let j = JSON.stringify(v);
       let o = JSON.parse(j);
@@ -116,13 +120,20 @@ export class SitComponent implements OnInit {
 
   sitStand() {
     if (!this.sitOrLeave) {
-      this.wss.emit('sitTableOne', {player: this.id});
+      let tableNum = this.tableService.tableNum;
+      this.wss.emit('sitTable', {
+        player: this.id,
+        tableNum: this.table
+      });
       if (!this.sitOrLeave) {
         this.sitOrLeaveText = 'STAND UP';
         this.sitOrLeave = true;
       }
     } else {
-      this.wss.emit('standUpTableOne', {player: this.id});
+      this.wss.emit('standUpTable', {
+        player: this.id,
+        tableNum: this.table
+      });
       this.sitOrLeaveText = 'SIT DOWN';
       this.sitOrLeave = false;
     }
@@ -136,8 +147,8 @@ export class SitComponent implements OnInit {
 
     let currentSeats = this.seatService.getInitState();
     if (currentSeats.length >= 0) {
-      for(let i=0;i<currentSeats.length;i++){
-        if(this.id == currentSeats[i]){
+      for (let i = 0; i < currentSeats.length; i++) {
+        if (this.id == currentSeats[i]) {
           this.isHidden = true;
           this.opHidden = false;
         }

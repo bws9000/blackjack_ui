@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import Table from "../Table";
 import {WebsocketService} from "../websocket.service";
 import {environment} from "../../environments/environment";
+import {TableService} from "../table.service";
 
 @Component({
   selector: 'app-table-select',
@@ -14,18 +15,17 @@ export class TableSelectComponent implements OnInit {
   tables: Table;
 
   constructor(private http: HttpClient,
-              private wss: WebsocketService) {
-    let that = this;
+              private wss: WebsocketService,
+              private ts: TableService) {
   }
 
-  joinRoomOne() {
-    this.wss.emit('joinTableOne', {room: 1});
+  joinRoom(roomNum) {
+    this.ts.tableNum = roomNum;
+    this.wss.emit('joinTable', {room: roomNum});
   }
-  joinRoomTwo() {
-    this.wss.emit('joinTableTwo', {room: 2});
-  }
-  joinRoomThree(){
-    this.wss.emit('joinTableThree',{room: 3});
+
+  createTable(){
+    alert('Not Yet Available');
   }
 
   ngOnInit() {

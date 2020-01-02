@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {StatusUpdateService} from "../status-update.service";
 import {SeatService} from "../seat.service";
+import {TableService} from "../table.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -21,24 +22,30 @@ export class TableDetailComponent implements OnInit, OnDestroy {
   constructor(private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
               private seatService: SeatService,
+              private tableService: TableService,
               private router: Router, private _location: Location) {
 
 
-    this.watchers = 0;
-    this.players = 0;
+    //this.watchers = 0;
+    //this.players = 0;
     this.playerSeats = {};
 
     this.statusUpdateService.hideNavBar(false);
   }
 
   leaveTable() {
-    this.wss.emit('leaveTableOne', {room: 'tableone'});
-    this.statusUpdateService.hideNavBar(true);
+    this.router.navigate(['/tables']).then((r) => {
+      this.logStuff('no longer in room: table' + this.tableService.tableNum);
+    });
+
+    //NG DESTROY GETS CALLED BELOW NOT NEEDED/
+    //let table = this.tableService.tableNum;
+    //this.wss.emit('leaveTable', {table: table});
+    //this.statusUpdateService.hideNavBar(true);
   }
 
   //EVENTS
   tableDetailHeartBeat(data) {
-
     this.watchers = data.watcherCount;
     this.players = data.playerCount;
     this.logStuff('w: ' + this.watchers + ' p: ' + this.players);
@@ -47,26 +54,33 @@ export class TableDetailComponent implements OnInit, OnDestroy {
     this.seatService.updateSeats(playerSeats);
   }
 
-  satDownAtTableOneEmit(data) {
+  satDownTableEmit(data) {
     if (!data.broadcast) {
       this.wss.startChange.next(true);
       this.statusUpdateService.showStatus();
     }
-    this.seatService.sitDown(data.sitting, data.broadcast);
+    this.seatService.sitDown(
+      data.sitting,
+      data.broadcast,
+      data.tableName);
   }
 
-  standUpTableOneEmit(data) {
-    if (!data.broadcast){
+  standUpTableEmit(data) {
+    if (!data.broadcast) {
       this.wss.startChange.next(true);
     }
-    this.seatService.standUp(data.standing, data.broadcast);
+    this.seatService.standUp(
+      data.standing,
+      data.broadcast,
+      data.tableName);
   }
 
   memberOfRoomEmit(data) {
     this.wss.startChange.next(true);
     if (!data.member) {
-      this.router.navigate(['/tables']);
-      alert('you are no longer at this table');
+      this.router.navigate(['/tables']).then((r) => {
+        this.logStuff('no longer in room: ' + JSON.stringify(data));
+      });
     }
   }
 
@@ -74,19 +88,20 @@ export class TableDetailComponent implements OnInit, OnDestroy {
 
     if (this.wss.start) {
 
-      this.wss.emit('verifyRoomMember', {room: 'tableone'});
+      let tableNum = this.tableService.tableNum;
+      this.wss.emit('verifyRoomMember', {room: tableNum});
 
       this.wss
         .onEvent('memberOfRoomEmit')
         .subscribe(data => this.memberOfRoomEmit(data));
 
       this.wss
-        .onEvent('satDownAtTableOneEmit')
-        .subscribe(data => this.satDownAtTableOneEmit(data));
+        .onEvent('satDownTableEmit')
+        .subscribe(data => this.satDownTableEmit(data));
 
       this.wss
-        .onEvent('standUpTableOneEmit')
-        .subscribe(data => this.standUpTableOneEmit(data));
+        .onEvent('standUpTableEmit')
+        .subscribe(data => this.standUpTableEmit(data));
 
       this.wss
         .onEvent('tableDetailHeartBeat')
@@ -94,14 +109,17 @@ export class TableDetailComponent implements OnInit, OnDestroy {
 
 
     } else {
-      this.router.navigate(['/tables']);
+      this.router.navigate(['/tables']).then((r) => {
+        //do something...
+      })
     }
   }
 
   ngOnDestroy() {
     //leave room/table
+    let table = this.tableService.tableNum;
     this.logStuff('NG ON DESTROY CALLED');
-    this.wss.emit('leaveTableOne', {room: 'tableone'});
+    this.wss.emit('leaveTable', {table: table});
     this.statusUpdateService.hideNavBar(true);
   }
 

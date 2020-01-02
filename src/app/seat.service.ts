@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
 import {WebsocketService} from "./websocket.service";
+import {TableService} from "./table.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,29 +14,39 @@ export class SeatService {
   //initState: Subject<Array<any>> = new Subject<Array<any>>();
   is: Array<any>;
 
-  constructor(private wss:WebsocketService) {
+  constructor(private wss: WebsocketService,
+              private tableService: TableService) {
     let is = [];
   }
 
-  setInitState(data){
+  setInitState(data, tableNum) {
     this.is = data;
+    this.tableService.tableNum = tableNum;
   }
 
-  getInitState(){
+  getInitState() {
     return this.is;
   }
 
-  sitDown(seat, bc) {
-    let data = {sitting: seat, broadcast: bc};
+  sitDown(seat, bc, tableName: string) {
+    let data = {
+      sitting: seat,
+      broadcast: bc,
+      tableName: tableName
+    };
     this.sitState.next(data);
   }
 
-  standUp(seat, bc) {
-    let data = {sitting: seat, broadcast: bc};
+  standUp(seat, bc, tableName: string) {
+    let data = {
+      sitting: seat,
+      broadcast: bc,
+      tableName: tableName
+    };
     this.standState.next(data);
   }
 
-  updateSeats(playerSeats){
+  updateSeats(playerSeats) {
     this.playerSeats.next(playerSeats);
   }
 }

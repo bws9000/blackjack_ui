@@ -91,10 +91,10 @@ export class WebsocketService{
     this.eventMap.set('getHandsEmit',new SocketObservable('getHandsEmit', this.socket));
     this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
     this.eventMap.set('memberOfRoomEmit', new SocketObservable('memberOfRoomEmit', this.socket));
-    this.eventMap.set('joinTableOneEmit', new SocketObservable('joinTableOneEmit',this.socket));
-    this.eventMap.set('leftTableOneEmit', new SocketObservable('leftTableOneEmit',this.socket));
-    this.eventMap.set('standUpTableOneEmit', new SocketObservable('standUpTableOneEmit',this.socket));
-    this.eventMap.set('satDownAtTableOneEmit', new SocketObservable('satDownAtTableOneEmit',this.socket));
+    this.eventMap.set('joinTableEmit', new SocketObservable('joinTableEmit',this.socket));
+    this.eventMap.set('leftTableEmit', new SocketObservable('leftTableEmit',this.socket));
+    this.eventMap.set('standUpTableEmit', new SocketObservable('standUpTableEmit',this.socket));
+    this.eventMap.set('satDownTableEmit', new SocketObservable('satDownTableEmit',this.socket));
     //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat',this.socket));
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));
