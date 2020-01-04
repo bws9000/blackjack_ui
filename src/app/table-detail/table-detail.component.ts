@@ -32,7 +32,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
     location.onPopState(() => {
       this.router.navigate(['/']).then((r) => {
-        //
+        this.leaveTable();
       });
     });
 
