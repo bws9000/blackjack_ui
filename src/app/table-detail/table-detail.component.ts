@@ -6,6 +6,7 @@ import {Location} from '@angular/common';
 import {StatusUpdateService} from "../status-update.service";
 import {SeatService} from "../seat.service";
 import {TableService} from "../table.service";
+import { PlatformLocation } from '@angular/common'
 
 @Component({
   selector: 'app-table-detail',
@@ -26,7 +27,14 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private statusUpdateService: StatusUpdateService,
               private seatService: SeatService,
               private tableService: TableService,
-              private router: Router, private _location: Location) {
+              private router: Router,
+              private location: PlatformLocation) {
+
+    location.onPopState(() => {
+      this.router.navigate(['/']).then((r) => {
+        //
+      });
+    });
 
     this.playerSeats = {};
     this.statusUpdateService.hideNavBar(false);
@@ -43,6 +51,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
     });
   }
+
+
 
   leaveTable() {
     this.router.navigate(['/tables']).then((r) => {
