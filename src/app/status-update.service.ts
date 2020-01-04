@@ -10,10 +10,14 @@ export class StatusUpdateService {
 
   updateStatusSubject: Subject<boolean> = new Subject<boolean>();
   navBarVisible: Subject<boolean> = new Subject<boolean>();
-  showAllSeatsAfterStandUp: Subject<Object> = new Subject<Object>();
+  watchersPlayers: Subject<Object> = new Subject<Object>();
 
   constructor() {
     this.tablePlaying = false;
+  }
+
+  watchPlay(value){
+    this.watchersPlayers.next(value);
   }
 
   //navbar

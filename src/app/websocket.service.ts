@@ -29,18 +29,8 @@ export class WebsocketService{
 
   }
 
-  socketBroadcastMatch(localSocketId){
-    this.logStuff('> ' + this.socketId);
-    this.logStuff('> ' + localSocketId);
-    return this.socketId == localSocketId;
-  }
-
   reconnected(){
     this.socket.emit('userReconnected', {user:'reconnect'});
-  }
-
-  getSocket(){
-    return this.socket;
   }
 
   public onEvent(event: string): Observable<any> {
@@ -85,8 +75,6 @@ export class WebsocketService{
 
   public initEvents() {
     //USER EVENTS
-    //this.eventMap.set('joinTableTwoEmit', new SocketObservable('joinTableTwoEmit',this.socket));
-    //this.eventMap.set('joinTableThreeEmit', new SocketObservable('joinTableThreeEmit',this.socket));
     //this.eventMap.set('createTableEmit', new SocketObservable('createTableEmit', this.socket))
     this.eventMap.set('getHandsEmit',new SocketObservable('getHandsEmit', this.socket));
     this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));

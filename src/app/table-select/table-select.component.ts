@@ -29,6 +29,7 @@ export class TableSelectComponent implements OnInit {
   }
 
   ngOnInit() {
+    //
   }
 
   logStuff(stuff:any){

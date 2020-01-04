@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {WebsocketService} from "../websocket.service";
 import {environment} from "../../environments/environment";
 import {Router} from '@angular/router';
@@ -13,11 +13,14 @@ import {TableService} from "../table.service";
   styleUrls: ['./table-detail.component.css']
 })
 
-export class TableDetailComponent implements OnInit, OnDestroy {
+export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
   @Input() player: string;
-  watchers: number;
-  players: number;
+  watchers: any;
+  players: any;
   playerSeats: Object;
+
+  socketid:any;
+  broadcast:any;
 
   constructor(private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
@@ -25,17 +28,27 @@ export class TableDetailComponent implements OnInit, OnDestroy {
               private tableService: TableService,
               private router: Router, private _location: Location) {
 
-
-    //this.watchers = 0;
-    //this.players = 0;
     this.playerSeats = {};
-
     this.statusUpdateService.hideNavBar(false);
+
+    this.statusUpdateService.watchersPlayers.subscribe(value => {
+      let j = JSON.stringify(value);
+      let o = JSON.parse(j);
+
+      this.socketid = o.socketid;
+      this.broadcast = o.broadcast;
+
+      this.watchers = o.watcherCount;
+      this.players = o.playerCount;
+
+    });
   }
 
   leaveTable() {
     this.router.navigate(['/tables']).then((r) => {
       this.logStuff('no longer in room: table' + this.tableService.tableNum);
+      let table = this.tableService.tableNum;
+      this.wss.emit('leaveTable', {table: table});
     });
 
     //NG DESTROY GETS CALLED BELOW NOT NEEDED/
@@ -45,19 +58,21 @@ export class TableDetailComponent implements OnInit, OnDestroy {
   }
 
   //EVENTS
+  /*
   tableDetailHeartBeat(data) {
     this.watchers = data.watcherCount;
     this.players = data.playerCount;
     this.logStuff('w: ' + this.watchers + ' p: ' + this.players);
-
     let playerSeats = JSON.parse(data.playerSeats);
     this.seatService.updateSeats(playerSeats);
   }
+  */
 
   satDownTableEmit(data) {
-    if (!data.broadcast) {
+    let broadcast = JSON.parse(data.broadcast);
+    if (!broadcast) {
       this.wss.startChange.next(true);
-      this.statusUpdateService.showStatus();
+      //this.statusUpdateService.showStatus();
     }
     this.seatService.sitDown(
       data.sitting,
@@ -89,6 +104,7 @@ export class TableDetailComponent implements OnInit, OnDestroy {
     if (this.wss.start) {
 
       let tableNum = this.tableService.tableNum;
+
       this.wss.emit('verifyRoomMember', {room: tableNum});
 
       this.wss
@@ -103,9 +119,11 @@ export class TableDetailComponent implements OnInit, OnDestroy {
         .onEvent('standUpTableEmit')
         .subscribe(data => this.standUpTableEmit(data));
 
+      /*
       this.wss
         .onEvent('tableDetailHeartBeat')
         .subscribe(data => this.tableDetailHeartBeat(data));
+      */
 
 
     } else {
@@ -127,6 +145,10 @@ export class TableDetailComponent implements OnInit, OnDestroy {
     if (!environment.production) {
       console.log(stuff);
     }
+  }
+
+  ngAfterViewChecked(): void {
+    //console.log('VIEWCHECKED');
   }
 
 }

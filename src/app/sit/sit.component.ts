@@ -32,22 +32,6 @@ export class SitComponent implements OnInit {
     this.table = tableService.tableNum;
 
 
-    this.playerSeats().then(r => {
-      //do something ?
-    });
-
-    this.standup().then(r => {
-      //do something ?
-    });
-
-    this.sitdown().then(r => {
-      //do something ?
-    })
-
-
-  }
-
-  async playerSeats() {
     this.seatService.playerSeats.subscribe(value => {
       let sid = [];
       let seatNum = [];
@@ -71,19 +55,19 @@ export class SitComponent implements OnInit {
         }
       }
     });
-  }
 
-  async sitdown() {
+
     this.seatService.sitState.subscribe(v => {
 
       let j = JSON.stringify(v);
       let o = JSON.parse(j);
       let seat = o.sitting;
-      let broadcast = o.broadcast;
+      let broadcast = JSON.parse(o.broadcast);
 
       if (!broadcast) {
-        this.isHidden = seat != this.id;
-
+        if(seat != this.id){
+          this.isHidden = true;
+        }
       } else {
         if (seat == this.id) {
           this.isHidden = true;
@@ -91,9 +75,7 @@ export class SitComponent implements OnInit {
         }
       }
     });
-  }
 
-  async standup() {
     this.seatService.standState.subscribe(v => {
       let j = JSON.stringify(v);
       let o = JSON.parse(j);
@@ -114,8 +96,8 @@ export class SitComponent implements OnInit {
           }
         }
       }
-
     });
+
   }
 
   sitStand() {

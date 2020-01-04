@@ -47,6 +47,7 @@ export class SeatService {
   }
 
   updateSeats(playerSeats) {
-    this.playerSeats.next(playerSeats);
+    let ps = JSON.parse(playerSeats);
+    this.playerSeats.next(ps);
   }
 }

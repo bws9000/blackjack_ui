@@ -24,6 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   loadingWheelVisible: string;
   isHidden: boolean;
+  count: number;
 
   constructor(private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
@@ -31,7 +32,6 @@ export class AppComponent implements OnInit, AfterViewInit {
               private router: Router,
               private location: Location,
               private seatService: SeatService) {
-
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -58,6 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ///////////////////////////////////////////////////////
   joinTable(data) {
+
     let tableNum = data.tableNum;
     let tableName = 'table' + tableNum;
     this.router.navigate(['/tables/' + tableName]).then(async r => {
@@ -89,6 +90,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.logStuff('Reconnection occured: Booted from room'); //temp
     let result = JSON.stringify((data));
     this.logStuff(result);
+  }
+
+  tableDetailHeartBeat(data) {
+    this.count++;
+    this.logStuff('c: ' + this.count);
+    this.logStuff('w: ' + data.watcherCount + ' p: ' + data.playerCount);
+    this.statusUpdateService.watchPlay(data);
+    this.seatService.updateSeats(data.playerSeats);
   }
 
   init(data) {
@@ -131,6 +140,10 @@ export class AppComponent implements OnInit, AfterViewInit {
         .onEvent('socketReconnect')
         .subscribe(data => this.socketReconnect(data));
 
+      this.wss
+        .onEvent('tableDetailHeartBeat')
+        .subscribe(data => this.tableDetailHeartBeat(data));
+
       ////////////////// Environment Updates //////////////////////
       /////////////////////////////////////////////////////////////
       //
@@ -138,6 +151,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+
+    this.count = 0;
+
     this.connect().then(r => {
       this.logStuff('RECONNECTION TYPE: Initial Connection Occured.');
     })
