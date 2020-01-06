@@ -30,7 +30,7 @@ export class WebsocketService{
   }
 
   reconnected(){
-    this.socket.emit('userReconnected', {user:'reconnect'});
+    this.socket.emit('userReconnected', {room:'reconnect'});
   }
 
   public onEvent(event: string): Observable<any> {

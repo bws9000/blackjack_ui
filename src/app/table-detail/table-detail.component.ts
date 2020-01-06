@@ -52,8 +52,6 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     });
   }
 
-
-
   leaveTable() {
     this.router.navigate(['/tables']).then((r) => {
       this.logStuff('no longer in room: table' + this.tableService.tableNum);

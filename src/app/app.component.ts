@@ -96,6 +96,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.count++;
     this.logStuff('c: ' + this.count);
     this.logStuff('w: ' + data.watcherCount + ' p: ' + data.playerCount);
+    this.logStuff('BROADCAST: ' + data.broadcast);
+    this.logStuff('ROOM: ' + data.room);
     this.statusUpdateService.watchPlay(data);
     this.seatService.updateSeats(data.playerSeats);
   }
