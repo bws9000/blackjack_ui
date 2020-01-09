@@ -13,6 +13,7 @@ export class SeatService {
   standState: Subject<Object> = new Subject<Object>();
   //initState: Subject<Array<any>> = new Subject<Array<any>>();
   is: Array<any>;
+  sitting:boolean;
 
   constructor(private wss: WebsocketService,
               private tableService: TableService) {

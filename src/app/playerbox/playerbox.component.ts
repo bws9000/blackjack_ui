@@ -3,6 +3,7 @@ import {WebsocketService} from "../websocket.service";
 import {environment} from "../../environments/environment";
 import {StatusUpdateService} from "../status-update.service";
 import {SeatService} from "../seat.service";
+import {PlayerboxService} from "../playerbox.service";
 
 @Component({
   selector: 'app-playerbox',
@@ -14,46 +15,50 @@ export class PlayerboxComponent implements OnInit {
   @Input() player: string;
   @Input() seat: string;
 
+  //playerInnerBox
+  background: string;
+  sitting: boolean;
+
   constructor(private wss: WebsocketService,
-              private seatService:SeatService,
-              private statusUpdateService: StatusUpdateService) {
+              private playerboxService: PlayerboxService) {
+
+    this.playerboxService.playerSeats.subscribe(value => {
+
+      this.sitting = false;
+
+      if (value.length) {
+        for (let i = 0; i < value.length; i++) {
+          let seat = value[i][1];
+          if (seat === this.player) {
+            this.sitting = true;
+          }
+        }
+      } else {
+        this.sitting = false;
+      }
+
+    });
 
   }
 
-  getHands(data){
+  playerInnerbox() {
+    if (this.sitting) {
+      return 'playerbox1.png';
+    } else {
+      return 'playerbox2.png';
+    }
+  }
+
+  getHands(data) {
     this.wss.startChange.next(true);
     let d = JSON.stringify(data);
     this.logStuff(d);
   }
 
   ngOnInit() {
-
     this.wss
       .onEvent('getHandsEmit')
       .subscribe(data => this.getHands(data));
-
-    /*
-    switch (this.player) {
-      case "0":
-        this.logStuff('Player ' + this.player + ' Ready');
-        break;
-      case "1":
-        this.logStuff('Player ' + this.player + ' Ready');
-        break;
-      case "2":
-        this.logStuff('Player ' + this.player + ' Ready');
-        break;
-      case "3":
-        this.logStuff('Player ' + this.player + ' Ready');
-        break;
-      case "4":
-        this.logStuff('Player ' + this.player + ' Ready');
-        break;
-      default:
-        break;
-    }
-    */
-
   }
 
   logStuff(stuff: any) {

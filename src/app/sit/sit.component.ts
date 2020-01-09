@@ -137,28 +137,6 @@ export class SitComponent implements OnInit {
       }
     }
 
-    /*
-    switch (this.seat) {
-      case "0":
-        this.logStuff('Seat ' + this.seat + ' Ready');
-        break;
-      case "1":
-        this.logStuff('Seat ' + this.seat + ' Ready');
-        break;
-      case "2":
-        this.logStuff('Seat ' + this.seat + ' Ready');
-        break;
-      case "3":
-        this.logStuff('Seat ' + this.seat + ' Ready');
-        break;
-      case "4":
-        this.logStuff('Seat ' + this.seat + ' Ready');
-        break;
-      default:
-        break;
-    }
-    */
-
   }
 
   logStuff(stuff) {

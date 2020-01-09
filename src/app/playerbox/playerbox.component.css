@@ -25,8 +25,8 @@
 }
 
 .playerInnerBox {
-  /* background-color: #422518; */
-  background: url("../../assets/ui1/playerbox1.png") no-repeat;
+  /* background: url("../../assets/ui1/playerbox1.png") no-repeat; */
+  background-repeat: no-repeat;
   background-size:contain;
   position: relative;
   height: 50%;

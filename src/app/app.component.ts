@@ -14,6 +14,7 @@ import {WebsocketService} from "./websocket.service";
 import {environment} from "../environments/environment";
 import {StatusUpdateService} from "./status-update.service";
 import {SeatService} from "./seat.service";
+import {PlayerboxService} from "./playerbox.service";
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               private statusUpdateService: StatusUpdateService,
               private router: Router,
               private location: Location,
-              private seatService: SeatService) {
+              private seatService: SeatService,
+              private playerboxService: PlayerboxService) {
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -98,8 +100,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.logStuff('w: ' + data.watcherCount + ' p: ' + data.playerCount);
     this.logStuff('BROADCAST: ' + data.broadcast);
     this.logStuff('ROOM: ' + data.room);
+    this.logStuff('client socket: ' + this.wss.socketId);
     this.statusUpdateService.watchPlay(data);
     this.seatService.updateSeats(data.playerSeats);
+    this.playerboxService.seats(data.playerSeats);
   }
 
   init(data) {
