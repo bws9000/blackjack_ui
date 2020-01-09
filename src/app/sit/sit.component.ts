@@ -122,8 +122,8 @@ export class SitComponent implements OnInit {
   }
 
   ngOnInit() {
+    //this.logStuff('>' + this.seat);
 
-    this.logStuff('>' + this.seat);
     this.id = this.seat;
     this.isHidden = false;
 

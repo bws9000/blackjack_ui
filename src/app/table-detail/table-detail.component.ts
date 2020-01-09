@@ -58,29 +58,15 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       let table = this.tableService.tableNum;
       this.wss.emit('leaveTable', {table: table});
     });
-
-    //NG DESTROY GETS CALLED BELOW NOT NEEDED/
-    //let table = this.tableService.tableNum;
-    //this.wss.emit('leaveTable', {table: table});
-    //this.statusUpdateService.hideNavBar(true);
   }
-
-  //EVENTS
-  /*
-  tableDetailHeartBeat(data) {
-    this.watchers = data.watcherCount;
-    this.players = data.playerCount;
-    this.logStuff('w: ' + this.watchers + ' p: ' + this.players);
-    let playerSeats = JSON.parse(data.playerSeats);
-    this.seatService.updateSeats(playerSeats);
-  }
-  */
 
   satDownTableEmit(data) {
     let broadcast = JSON.parse(data.broadcast);
     if (!broadcast) {
       this.wss.startChange.next(true);
-      //this.statusUpdateService.showStatus();
+      if(data.playerCount === 1) {
+        this.statusUpdateService.showStatus();
+      }
     }
     this.seatService.sitDown(
       data.sitting,
@@ -126,12 +112,6 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       this.wss
         .onEvent('standUpTableEmit')
         .subscribe(data => this.standUpTableEmit(data));
-
-      /*
-      this.wss
-        .onEvent('tableDetailHeartBeat')
-        .subscribe(data => this.tableDetailHeartBeat(data));
-      */
 
 
     } else {

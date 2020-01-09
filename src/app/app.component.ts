@@ -96,11 +96,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   tableDetailHeartBeat(data) {
     this.count++;
-    this.logStuff('c: ' + this.count);
-    this.logStuff('w: ' + data.watcherCount + ' p: ' + data.playerCount);
-    this.logStuff('BROADCAST: ' + data.broadcast);
-    this.logStuff('ROOM: ' + data.room);
-    this.logStuff('client socket: ' + this.wss.socketId);
+    //this.logStuff('c: ' + this.count);
+    //this.logStuff('w: ' + data.watcherCount + ' p: ' + data.playerCount);
+    //this.logStuff('BROADCAST: ' + data.broadcast);
+    //this.logStuff('ROOM: ' + data.room);
+    //this.logStuff('client socket: ' + this.wss.socketId);
     this.statusUpdateService.watchPlay(data);
     this.seatService.updateSeats(data.playerSeats);
     this.playerboxService.seats(data.playerSeats);

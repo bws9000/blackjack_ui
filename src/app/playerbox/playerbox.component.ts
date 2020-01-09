@@ -33,8 +33,6 @@ export class PlayerboxComponent implements OnInit {
             this.sitting = true;
           }
         }
-      } else {
-        this.sitting = false;
       }
 
     });

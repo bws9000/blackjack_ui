@@ -190,7 +190,7 @@
 
   /* */
   .tableHeader {
-    display: none;
+    /* display: none; */
   }
 
   .playerAreaContainer {

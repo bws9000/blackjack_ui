@@ -9,6 +9,7 @@ import {TableService} from "../table.service";
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
+
 export class ControlComponent implements OnInit, OnDestroy {
 
   statusBoxVisible: string;
@@ -34,9 +35,9 @@ export class ControlComponent implements OnInit, OnDestroy {
   }
 
   setStartCount(){
-    this.startcount = 31;
+    this.startcount = 61;
     if (!environment.production) {
-      this.startcount = 2;
+      this.startcount = 10;
     }
   }
 
@@ -45,7 +46,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     let table = this.tableService.tableNum;
     let intv = setInterval(function () {
       that.startcount--;
-      that.status = 'Waiting for more players to join: ' + that.startcount;
+      that.status = 'game starting in: ' + that.startcount + ' seconds';
       if (that.startcount < 1) {
         that.setStartCount();
         that.statusBoxVisible = 'hidden';
