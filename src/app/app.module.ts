@@ -8,7 +8,7 @@ import {AppComponent} from './app.component';
 import {InitModule} from "./init/init.module";
 import { TableSelectComponent } from './table-select/table-select.component';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
-import {WebsocketService} from "./websocket.service";
+import {WebsocketService} from "./services/websocket.service";
 import { TableDetailComponent } from './table-detail/table-detail.component';
 import { ControlComponent } from './control/control.component';
 import { PlayerboxComponent } from './playerbox/playerbox.component';

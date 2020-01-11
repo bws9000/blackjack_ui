@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {StatusUpdateService} from "../status-update.service";
-import {WebsocketService} from "../websocket.service";
+import {StatusUpdateService} from "../services/status-update.service";
+import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
-import {TableService} from "../table.service";
+import {TableService} from "../services/table.service";
 
 @Component({
   selector: 'app-control',

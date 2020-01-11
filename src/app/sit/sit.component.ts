@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {SeatService} from "../seat.service";
-import {WebsocketService} from "../websocket.service";
-import {TableService} from "../table.service";
+import {SeatService} from "../services/seat.service";
+import {WebsocketService} from "../services/websocket.service";
+import {TableService} from "../services/table.service";
 
 @Component({
   selector: 'app-sit',

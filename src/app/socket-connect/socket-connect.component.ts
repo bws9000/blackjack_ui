@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-import {WebsocketService} from "../websocket.service";
+import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
 
 @Component({

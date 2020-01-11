@@ -1,5 +1,5 @@
 import {InMemoryDbService} from "angular-in-memory-web-api";
-import Table from './Table';
+import Table from '../Table';
 import {Injectable} from '@angular/core';
 
 @Injectable({

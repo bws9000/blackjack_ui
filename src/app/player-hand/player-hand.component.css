@@ -3,11 +3,12 @@
   height: 100%;
   font-size: 1em;
   background-size: contain;
-  background-image: url("../../assets/deck1/0.png");
+  /* background-image: url("../../assets/deck1/0.png"); */
   background-repeat: no-repeat;
 }
 
 .cardBox {
+  border-right: solid black 1px;
   display: inline-block;
   min-width: 30px;
   width: 15%;

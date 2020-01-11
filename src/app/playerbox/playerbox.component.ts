@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {WebsocketService} from "../websocket.service";
+import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
-import {StatusUpdateService} from "../status-update.service";
-import {SeatService} from "../seat.service";
-import {PlayerboxService} from "../playerbox.service";
+import {StatusUpdateService} from "../services/status-update.service";
+import {SeatService} from "../services/seat.service";
+import {PlayerboxService} from "../services/playerbox.service";
 
 @Component({
   selector: 'app-playerbox',
@@ -14,6 +14,7 @@ export class PlayerboxComponent implements OnInit {
 
   @Input() player: string;
   @Input() seat: string;
+  @Input() hand: string;
 
   //playerInnerBox
   background: string;
@@ -47,16 +48,10 @@ export class PlayerboxComponent implements OnInit {
     }
   }
 
-  getHands(data) {
-    this.wss.startChange.next(true);
-    let d = JSON.stringify(data);
-    this.logStuff(d);
-  }
+
 
   ngOnInit() {
-    this.wss
-      .onEvent('getHandsEmit')
-      .subscribe(data => this.getHands(data));
+
   }
 
   logStuff(stuff: any) {

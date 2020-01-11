@@ -10,11 +10,11 @@ import {
   NavigationStart,
   Router
 } from '@angular/router';
-import {WebsocketService} from "./websocket.service";
+import {WebsocketService} from "./services/websocket.service";
 import {environment} from "../environments/environment";
-import {StatusUpdateService} from "./status-update.service";
-import {SeatService} from "./seat.service";
-import {PlayerboxService} from "./playerbox.service";
+import {StatusUpdateService} from "./services/status-update.service";
+import {SeatService} from "./services/seat.service";
+import {PlayerboxService} from "./services/playerbox.service";
 
 @Component({
   selector: 'app-root',

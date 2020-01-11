@@ -1,12 +1,13 @@
 import {AfterViewChecked, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {WebsocketService} from "../websocket.service";
+import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {StatusUpdateService} from "../status-update.service";
-import {SeatService} from "../seat.service";
-import {TableService} from "../table.service";
+import {StatusUpdateService} from "../services/status-update.service";
+import {SeatService} from "../services/seat.service";
+import {TableService} from "../services/table.service";
 import { PlatformLocation } from '@angular/common'
+import {HandService} from "../services/hand.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -27,6 +28,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private statusUpdateService: StatusUpdateService,
               private seatService: SeatService,
               private tableService: TableService,
+              private handService: HandService,
               private router: Router,
               private location: PlatformLocation) {
 
@@ -93,6 +95,13 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     }
   }
 
+  getHands(data) {
+    this.wss.startChange.next(true);
+    this.handService.getPlayerHands(data.playerHands);
+    //let d = JSON.stringify(data);
+    //this.logStuff(d);
+  }
+
   ngOnInit() {
 
     if (this.wss.start) {
@@ -112,6 +121,10 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       this.wss
         .onEvent('standUpTableEmit')
         .subscribe(data => this.standUpTableEmit(data));
+
+      this.wss
+        .onEvent('getHandsEmit')
+        .subscribe(data => this.getHands(data));
 
 
     } else {

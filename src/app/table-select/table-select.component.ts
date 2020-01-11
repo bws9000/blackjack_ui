@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import Table from "../Table";
-import {WebsocketService} from "../websocket.service";
+import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
-import {TableService} from "../table.service";
+import {TableService} from "../services/table.service";
 import {PlatformLocation} from "@angular/common";
 import {Router} from "@angular/router";
 

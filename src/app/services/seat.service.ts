@@ -14,6 +14,7 @@ export class SeatService {
   //initState: Subject<Array<any>> = new Subject<Array<any>>();
   is: Array<any>;
   sitting:boolean;
+  currentSeat:number;
 
   constructor(private wss: WebsocketService,
               private tableService: TableService) {
@@ -35,6 +36,7 @@ export class SeatService {
       broadcast: bc,
       tableName: tableName
     };
+    this.currentSeat = seat;
     this.sitState.next(data);
   }
 
