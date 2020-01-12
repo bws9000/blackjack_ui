@@ -21,6 +21,7 @@ export class PlayerHandComponent implements OnInit {
               private seatService: SeatService) {
 
     //this.seat = +this.hand;
+
     this.handService.playerHands.subscribe(value => {
 
       this.logStuff(this.hand + ':::::' + this.seatService.currentSeat);

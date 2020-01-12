@@ -35,9 +35,9 @@ export class ControlComponent implements OnInit, OnDestroy {
   }
 
   setStartCount(){
-    this.startcount = 61;
+    this.startcount = 11;
     if (!environment.production) {
-      this.startcount = 10;
+      this.startcount = 3;
     }
   }
 

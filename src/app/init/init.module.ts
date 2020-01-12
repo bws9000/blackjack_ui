@@ -15,7 +15,9 @@ export class InitModule {
     'https://multiplayer.blackjackgame.us' : 'http://localhost:5000';
   env;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.preloadCards();
+  }
 
   init() {
 
@@ -37,6 +39,13 @@ export class InitModule {
     });
   }
 
+  preloadCards() {
+    let cardPreloadTest = [];
+    for (let i = 0; i < 52; i++) {
+      cardPreloadTest[i] = '../../assets/deck1/' + i + '.png';
+    }
+  }
+
   getEnv() {
     this.logStuff('environment: ' + this.appUrl);
     return this
@@ -44,8 +53,8 @@ export class InitModule {
       .get(`${this.appUrl}/env`, {responseType: 'json'});
   }
 
-  logStuff(stuff:any){
-    if(!environment.production){
+  logStuff(stuff: any) {
+    if (!environment.production) {
       console.log(stuff);
     }
   }
