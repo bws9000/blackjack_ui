@@ -84,6 +84,9 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       data.standing,
       data.broadcast,
       data.tableName);
+
+    //remove hands
+    this.handService.getPlayerHands(null);
   }
 
   memberOfRoomEmit(data) {

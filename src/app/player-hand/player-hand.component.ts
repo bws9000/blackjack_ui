@@ -24,13 +24,14 @@ export class PlayerHandComponent implements OnInit {
 
     this.handService.playerHands.subscribe(value => {
 
-      this.logStuff(this.hand + ':::::' + this.seatService.currentSeat);
-
       if (+this.hand == this.seatService.currentSeat) {
-
-        for (let i = 0; i < value.length; i++) {
-          this.cards = value[i].hand;
-          this.logStuff(value[i].hand);
+        if(value !== null) {
+          for (let i = 0; i < value.length; i++) {
+            this.cards = value[i].hand;
+            this.logStuff(value[i].hand);
+          }
+        }else{
+          this.cards = [99,99];//remove cards from view
         }
       }
     });

@@ -27,7 +27,7 @@ export class ControlComponent implements OnInit, OnDestroy {
         this.statusBoxVisible = 'hidden';
       } else {
         this.statusBoxVisible = 'visible';
-        this.startBox();
+        this.startBox(this.startcount);
       }
     });
     this.statusUpdateService.hideStatus();
@@ -35,25 +35,26 @@ export class ControlComponent implements OnInit, OnDestroy {
   }
 
   setStartCount(){
-    this.startcount = 11;
+    this.startcount = 10;
     if (!environment.production) {
       this.startcount = 3;
     }
   }
 
-  startBox() {
+  startBox(count) {
     let that = this;
     let table = this.tableService.tableNum;
+    that.status = 'Waiting for players to join:';
     let intv = setInterval(function () {
-      that.startcount--;
-      that.status = 'game starting in: ' + that.startcount + ' seconds';
-      if (that.startcount < 1) {
-        that.setStartCount();
+      if (count < 1) {
+        count = that.startcount;
         that.statusBoxVisible = 'hidden';
         that.statusUpdateService.tablePlaying = true;
         that.wss.emit('tablePlaying', {table: table});
         clearInterval(intv);
       }
+      that.status = 'game starting in: ' + count + ' seconds';
+      count--;
     }, 1000);
   }
 

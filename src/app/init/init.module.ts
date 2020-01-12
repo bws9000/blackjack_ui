@@ -16,7 +16,6 @@ export class InitModule {
   env;
 
   constructor(private http: HttpClient) {
-    this.preloadCards();
   }
 
   init() {
@@ -37,13 +36,6 @@ export class InitModule {
         });
 
     });
-  }
-
-  preloadCards() {
-    let cardPreloadTest = [];
-    for (let i = 0; i < 52; i++) {
-      cardPreloadTest[i] = '../../assets/deck1/' + i + '.png';
-    }
   }
 
   getEnv() {
