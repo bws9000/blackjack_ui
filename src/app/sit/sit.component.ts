@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {SeatService} from "../services/seat.service";
 import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
+import {StatusUpdateService} from "../services/status-update.service";
 
 @Component({
   selector: 'app-sit',
@@ -22,7 +23,8 @@ export class SitComponent implements OnInit {
 
   constructor(private wss: WebsocketService,
               private seatService: SeatService,
-              private tableService: TableService) {
+              private tableService: TableService,
+              private statusUpdateService: StatusUpdateService) {
 
     this.isHidden = true;
     this.opHidden = true;
@@ -54,6 +56,9 @@ export class SitComponent implements OnInit {
           }
         }
       }
+
+      //set "global" seatNum
+      this.statusUpdateService.currentSeatedPlayers = seatNum.length;
     });
 
 
@@ -65,7 +70,7 @@ export class SitComponent implements OnInit {
       let broadcast = JSON.parse(o.broadcast);
 
       if (!broadcast) {
-        if(seat != this.id){
+        if (seat != this.id) {
           this.isHidden = true;
         }
       } else {
@@ -96,13 +101,13 @@ export class SitComponent implements OnInit {
           }
         }
       }
+
     });
 
   }
 
   sitStand() {
     if (!this.sitOrLeave) {
-      let tableNum = this.tableService.tableNum;
       this.wss.emit('sitTable', {
         player: this.id,
         tableNum: this.table
@@ -122,12 +127,12 @@ export class SitComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.logStuff('>' + this.seat);
 
     this.id = this.seat;
     this.isHidden = false;
 
     let currentSeats = this.seatService.getInitState();
+
     if (currentSeats.length >= 0) {
       for (let i = 0; i < currentSeats.length; i++) {
         if (this.id == currentSeats[i]) {

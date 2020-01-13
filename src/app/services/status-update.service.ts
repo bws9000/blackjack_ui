@@ -6,7 +6,8 @@ import {Subject} from "rxjs";
 })
 export class StatusUpdateService {
 
-  public tablePlaying:boolean;
+  public tablePlaying: boolean;
+  public currentSeatedPlayers: number;
 
   updateStatusSubject: Subject<boolean> = new Subject<boolean>();
   navBarVisible: Subject<boolean> = new Subject<boolean>();
@@ -16,7 +17,7 @@ export class StatusUpdateService {
     this.tablePlaying = false;
   }
 
-  watchPlay(value){
+  watchPlay(value) {
     this.watchersPlayers.next(value);
   }
 

@@ -42,9 +42,9 @@ export class PlayerboxComponent implements OnInit {
 
   playerInnerbox() {
     if (this.sitting) {
-      return 'playerbox1.png';
+      return '1';
     } else {
-      return 'playerbox2.png';
+      return '2';
     }
   }
 

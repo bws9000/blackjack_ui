@@ -3,6 +3,7 @@ import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
 import {HandService} from "../services/hand.service";
 import {SeatService} from "../services/seat.service";
+import {StatusUpdateService} from "../services/status-update.service";
 
 @Component({
   selector: 'app-player-hand',
@@ -14,24 +15,23 @@ export class PlayerHandComponent implements OnInit {
 
   cards: [number, number];
 
-  //seat: number;
-
   constructor(private wss: WebsocketService,
               private handService: HandService,
-              private seatService: SeatService) {
+              private statusUpdateService: StatusUpdateService) {
 
-    //this.seat = +this.hand;
+    this.handService.standUp.subscribe(value => {
+      if (+this.hand == value) {
+        this.cards = [99, 99];
+      }
+      if (this.statusUpdateService.currentSeatedPlayers == 1) {
+        this.handService.dealerHandVisible(false);
+      }
+    });
 
     this.handService.playerHands.subscribe(value => {
-
-      if (+this.hand == this.seatService.currentSeat) {
-        if(value !== null) {
-          for (let i = 0; i < value.length; i++) {
-            this.cards = value[i].hand;
-            this.logStuff(value[i].hand);
-          }
-        }else{
-          this.cards = [99,99];//remove cards from view
+      for (let i = 0; i < value.length; i++) {
+        if (value[i].seat === this.hand) {
+          this.cards = value[i].hand;
         }
       }
     });

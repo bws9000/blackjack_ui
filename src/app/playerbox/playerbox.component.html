@@ -1,6 +1,6 @@
 <div class="playerBox">
   <app-player-hand hand="{{this.player}}"></app-player-hand>
-  <div class="playerInnerBox" [ngStyle]="{'background-image':'url(../../assets/ui1/'+playerInnerbox()+')'}">
+  <div class="playerInnerBox" [ngClass]="'_playerbox'+playerInnerbox()">
     <app-sit seat="{{this.player}}"></app-sit>
   </div>
 </div>
