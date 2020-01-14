@@ -101,8 +101,10 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   getHands(data) {
     this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
-    this.handService.getPlayerHands(data.playerHands);
-    this.handService.getDealerHand(data.dealerHand);
+
+    /* too soon, place bets first */
+    //this.handService.getPlayerHands(data.playerHands);
+    //this.handService.getDealerHand(data.dealerHand);
     //let d = JSON.stringify(data);
     //this.logStuff(d);
   }
