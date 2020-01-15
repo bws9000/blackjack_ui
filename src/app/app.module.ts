@@ -15,6 +15,7 @@ import { PlayerboxComponent } from './playerbox/playerbox.component';
 import { SitComponent } from './sit/sit.component';
 import { PlayerHandComponent } from './player-hand/player-hand.component';
 import { DealerHandComponent } from './dealer-hand/dealer-hand.component';
+import { PlaceBetsComponent } from './place-bets/place-bets.component';
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -32,7 +33,8 @@ export function initialize(initModule: InitModule) {
     PlayerboxComponent,
     SitComponent,
     PlayerHandComponent,
-    DealerHandComponent
+    DealerHandComponent,
+    PlaceBetsComponent
   ],
   imports: [
     InitModule,

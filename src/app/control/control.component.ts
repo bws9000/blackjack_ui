@@ -3,6 +3,7 @@ import {StatusUpdateService} from "../services/status-update.service";
 import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
 import {TableService} from "../services/table.service";
+import {PlaceBetsService} from "../services/place-bets.service";
 
 @Component({
   selector: 'app-control',
@@ -18,7 +19,8 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   constructor(private statusUpdateService: StatusUpdateService,
               private wss: WebsocketService,
-              private tableService: TableService) {
+              private tableService: TableService,
+              private placeBetsService: PlaceBetsService) {
 
     this.setStartCount();
 
@@ -37,7 +39,7 @@ export class ControlComponent implements OnInit, OnDestroy {
   setStartCount(){
     this.startcount = 10;
     if (!environment.production) {
-      this.startcount = 10;
+      this.startcount = 2;
     }
   }
 
@@ -51,6 +53,7 @@ export class ControlComponent implements OnInit, OnDestroy {
         that.statusBoxVisible = 'hidden';
         that.statusUpdateService.tablePlaying = true;
         that.wss.emit('tablePlaying', {table: table});
+        that.placeBetsService.setStatus(true);
         clearInterval(intv);
       }
       that.status = 'game starting in: ' + count + ' seconds';

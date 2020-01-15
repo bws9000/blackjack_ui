@@ -8,6 +8,7 @@ import {SeatService} from "../services/seat.service";
 import {TableService} from "../services/table.service";
 import { PlatformLocation } from '@angular/common'
 import {HandService} from "../services/hand.service";
+import {PlaceBetsService} from "../services/place-bets.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -30,7 +31,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private tableService: TableService,
               private handService: HandService,
               private router: Router,
-              private location: PlatformLocation) {
+              private location: PlatformLocation,
+              private placeBetsService: PlaceBetsService) {
 
     location.onPopState(() => {
       this.router.navigate(['/']).then((r) => {
@@ -102,9 +104,14 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
 
+
+    this.placeBetsService.updateBanks(data.playerBanks);
+
     /* too soon, place bets first */
     //this.handService.getPlayerHands(data.playerHands);
     //this.handService.getDealerHand(data.dealerHand);
+
+
     //let d = JSON.stringify(data);
     //this.logStuff(d);
   }

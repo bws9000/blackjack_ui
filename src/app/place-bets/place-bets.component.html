@@ -1,0 +1,19 @@
+<div [style.visibility]="this.placeBetsVisible" class="placeBetsUpdate">
+  <div class="placeBets_update_box">
+    <p>You have {{this.chips}} chips.</p>
+    <div>
+      <form>
+        <div class="form-group">
+          <label for="placeBetForm1">bet amount:</label>
+          <select class="form-control" id="placeBetForm1">
+            <option>5</option>
+            <option>25</option>
+            <option>50</option>
+            <option>{{this.chips}}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">place bet</button>
+      </form>
+    </div>
+  </div>
+</div>
