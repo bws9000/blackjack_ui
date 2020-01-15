@@ -8,6 +8,7 @@ export class PlaceBetsService {
 
   placeBetsStatus: Subject<boolean>= new Subject<boolean>();
   playerBanks: Subject<Array<any>> = new Subject<Array<any>>();
+  currentBet:number;
 
   constructor() {
 

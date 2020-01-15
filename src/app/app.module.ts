@@ -16,6 +16,7 @@ import { SitComponent } from './sit/sit.component';
 import { PlayerHandComponent } from './player-hand/player-hand.component';
 import { DealerHandComponent } from './dealer-hand/dealer-hand.component';
 import { PlaceBetsComponent } from './place-bets/place-bets.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -41,7 +42,8 @@ export function initialize(initModule: InitModule) {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    SlimLoadingBarModule
+    SlimLoadingBarModule,
+    ReactiveFormsModule
   ],
   providers: [InitModule,
     {provide: APP_INITIALIZER, useFactory: initialize, deps: [InitModule], multi: true}

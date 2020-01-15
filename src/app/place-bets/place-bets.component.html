@@ -2,10 +2,11 @@
   <div class="placeBets_update_box">
     <p>You have {{this.chips}} chips.</p>
     <div>
-      <form>
+      <form [formGroup]="placeBetForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="placeBetForm1">bet amount:</label>
-          <select class="form-control" id="placeBetForm1">
+          <select [(ngModel)]="selectedValue" formControlName="chips"
+                  class="form-control" id="placeBetForm1">
             <option>5</option>
             <option>25</option>
             <option>50</option>
