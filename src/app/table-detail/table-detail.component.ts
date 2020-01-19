@@ -136,20 +136,22 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   //CALLED FIRST WHEN 1st PLAYER SITS DOWN
   playersBetting(data) {
     this.wss.startChange.next(true);
-    let d = JSON.stringify(data);
     /////////////////////////////////////////////////
-    if(!data.broadcast) {
+    if (!data.broadcast) {
       this.tableService.tablePlaying = true;
       this.playerAction('betting');
     }
     /////////////////////////////////////////////////
-    this.logStuff(d);
+    //let d = JSON.stringify(data);
+    //this.logStuff(d);
   }
 
   //AFTER FIRST PLAYER
-  nextPlayerBetEmit(data){
+  nextPlayerBetEmit(data) {
     this.wss.startChange.next(true);
-    if(data.nextPlayer) {
+    if (this.seatService.currentSeat === data.nextPlayer) {
+      this.logStuff('nextplayer: ' + data.nextPlayer);
+      this.logStuff('current seat: ' + this.seatService.currentSeat);
       this.placeBetsService.setStatus(false, data.nextPlayer);
     }
     //this.logStuff('nextPlayerBetEmit:');
@@ -169,11 +171,12 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   actionStatusEmit(data) {
-    let broadcast = data.broadcast;
-    if(!broadcast) {
+
+    if (this.seatService.currentSeat === data.seat) {
       this.placeBetsService.currentBank = data.returnData;
       this.placeBetsService.setStatus(false, data.seat);
     }
+
     this.wss.startChange.next(true);
     this.logStuff('seat ' + data.seat + ' ' + data.action);
     this.playerboxService.setAction(data.seat);//graphic

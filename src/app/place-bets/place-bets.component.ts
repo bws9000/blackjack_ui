@@ -12,6 +12,7 @@ import {TableService} from "../services/table.service";
   templateUrl: './place-bets.component.html',
   styleUrls: ['./place-bets.component.css']
 })
+
 export class PlaceBetsComponent implements OnInit {
 
   betInProgress: boolean;
@@ -42,7 +43,7 @@ export class PlaceBetsComponent implements OnInit {
       let v = o.value;
       let s = o.seat;
 
-      if(this.placeBetsService.currentBet === undefined) {
+      if (this.placeBetsService.currentBet === undefined) {
         if (this.seatService.currentSeat !== undefined) {
           if (v) {
             this.placeBetsVisible = 'hidden';
@@ -53,10 +54,7 @@ export class PlaceBetsComponent implements OnInit {
           }
         }
       }
-
-
     });
-
 
     this.placeBetsService.playerBanks.subscribe(value => {
       let currentSeat = this.seatService.currentSeat;
@@ -75,21 +73,20 @@ export class PlaceBetsComponent implements OnInit {
     //let seat = this.seatService.currentSeat;
     //let status = 'player ' + this.seatService.currentSeat + ' bet ' + this.currentBet;
     let table = this.tableService.tableNum;
-    this.wss.emit('nextPlayerBet',{table:table});
+    this.wss.emit('nextPlayerBet', {table: table, socketId: this.wss.socketId});
   }
 
   getChips() {
     return this.placeBetsService.currentBank;
   }
 
-  ngOnInit() {
-
-  }
-
   logStuff(stuff: any) {
     if (!environment.production) {
       console.log(stuff);
     }
+  }
+
+  ngOnInit(): void {
   }
 
 }
