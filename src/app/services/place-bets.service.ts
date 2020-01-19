@@ -6,16 +6,22 @@ import {Subject} from "rxjs";
 })
 export class PlaceBetsService {
 
-  placeBetsStatus: Subject<boolean>= new Subject<boolean>();
+  placeBetsStatus: Subject<Object>= new Subject<Object>();
   playerBanks: Subject<Array<any>> = new Subject<Array<any>>();
-  currentBet:number;
+  public currentBank:number;
+  public currentBet:number;
 
   constructor() {
-
+    this.currentBet = undefined;
+    this.currentBank = undefined;
   }
 
-  setStatus(value){
-    this.placeBetsStatus.next(value);
+  setStatus(value,seat){
+    let data = {
+      value:value,
+      seat:seat
+    };
+    this.placeBetsStatus.next(data);
   }
 
   updateBanks(playerBanks) {

@@ -6,16 +6,14 @@ import {Subject} from "rxjs";
 })
 export class StatusUpdateService {
 
-  public tablePlaying: boolean;
   public currentSeatedPlayers: number;
 
   updateStatusSubject: Subject<boolean> = new Subject<boolean>();
   navBarVisible: Subject<boolean> = new Subject<boolean>();
   watchersPlayers: Subject<Object> = new Subject<Object>();
 
-  constructor() {
-    this.tablePlaying = false;
-  }
+  constructor() {}
+
 
   watchPlay(value) {
     this.watchersPlayers.next(value);

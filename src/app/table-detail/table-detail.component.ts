@@ -6,9 +6,11 @@ import {Location} from '@angular/common';
 import {StatusUpdateService} from "../services/status-update.service";
 import {SeatService} from "../services/seat.service";
 import {TableService} from "../services/table.service";
-import { PlatformLocation } from '@angular/common'
+import {PlatformLocation} from '@angular/common'
 import {HandService} from "../services/hand.service";
 import {PlaceBetsService} from "../services/place-bets.service";
+import {PlayerboxService} from "../services/playerbox.service";
+import {StatusMessageService} from "../services/status-message.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -22,8 +24,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   players: any;
   playerSeats: Object;
 
-  socketid:any;
-  broadcast:any;
+  socketid: any;
+  broadcast: any;
 
   constructor(private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
@@ -32,7 +34,11 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private handService: HandService,
               private router: Router,
               private location: PlatformLocation,
-              private placeBetsService: PlaceBetsService) {
+              private placeBetsService: PlaceBetsService,
+              private playerboxService: PlayerboxService,
+              private sms: StatusMessageService) {
+
+    this.logStuff('TABLE PLAYING: ' + this.tableService.tablePlaying);
 
     location.onPopState(() => {
       this.router.navigate(['/']).then((r) => {
@@ -68,10 +74,20 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     let broadcast = JSON.parse(data.broadcast);
     if (!broadcast) {
       this.wss.startChange.next(true);
-      if(data.playerCount === 1) {
+      ///////////////////////////////////////////////////////////////////
+      this.seatService.currentSeat = data.sitting; //where i am right now
+      ///////////////////////////////////////////////////////////////////
+      if (data.playerCount === 1) {
         this.statusUpdateService.showStatus();
       }
     }
+
+    if (!broadcast) {
+      if (this.tableService.tablePlaying) {
+
+      }
+    }
+
     this.seatService.sitDown(
       data.sitting,
       data.broadcast,
@@ -88,7 +104,11 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       data.tableName);
 
     //remove hands
+    if (this.seatService.currentSeats < 2) {
+      this.tableService.tablePlaying = false;
+    }
     this.handService.seatStand(data.standing);
+    this.playerboxService.reset();//graphic
   }
 
   memberOfRoomEmit(data) {
@@ -106,14 +126,59 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
 
     this.placeBetsService.updateBanks(data.playerBanks);
-
     /* too soon, place bets first */
     //this.handService.getPlayerHands(data.playerHands);
     //this.handService.getDealerHand(data.dealerHand);
-
-
     //let d = JSON.stringify(data);
     //this.logStuff(d);
+  }
+
+  //CALLED FIRST WHEN 1st PLAYER SITS DOWN
+  playersBetting(data) {
+    this.wss.startChange.next(true);
+    let d = JSON.stringify(data);
+    /////////////////////////////////////////////////
+    if(!data.broadcast) {
+      this.tableService.tablePlaying = true;
+      this.playerAction('betting');
+    }
+    /////////////////////////////////////////////////
+    this.logStuff(d);
+  }
+
+  //AFTER FIRST PLAYER
+  nextPlayerBetEmit(data){
+    this.wss.startChange.next(true);
+    if(data.nextPlayer) {
+      this.placeBetsService.setStatus(false, data.nextPlayer);
+    }
+    //this.logStuff('nextPlayerBetEmit:');
+    //this.logStuff(JSON.stringify(data));
+  }
+
+  playerAction(action) {
+    let seat = this.seatService.currentSeat;
+    let socketid = this.wss.socketId;
+    let table = this.tableService.tableNum;
+    this.wss.emit('playerAction', {
+      action: action,
+      id: socketid,
+      table: table,
+      seat: seat
+    });
+  }
+
+  actionStatusEmit(data) {
+    let broadcast = data.broadcast;
+    if(!broadcast) {
+      this.placeBetsService.currentBank = data.returnData;
+      this.placeBetsService.setStatus(false, data.seat);
+    }
+    this.wss.startChange.next(true);
+    this.logStuff('seat ' + data.seat + ' ' + data.action);
+    this.playerboxService.setAction(data.seat);//graphic
+    this.sms.statusMessage('Player ' + data.seat + ' is ' + data.action + '.');
+    this.logStuff('current seat: ' + this.seatService.currentSeat);
   }
 
   ngOnInit() {
@@ -140,6 +205,17 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
         .onEvent('getHandsEmit')
         .subscribe(data => this.getHands(data));
 
+      this.wss
+        .onEvent('playersBettingEmit')
+        .subscribe(data => this.playersBetting(data));
+
+      this.wss
+        .onEvent('actionStatusEmit')
+        .subscribe(data => this.actionStatusEmit(data));
+
+      this.wss
+        .onEvent('nextPlayerBetEmit')
+        .subscribe(data => this.nextPlayerBetEmit(data));
 
     } else {
       this.router.navigate(['/tables']).then((r) => {

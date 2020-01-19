@@ -4,6 +4,7 @@ import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
 import {TableService} from "../services/table.service";
 import {PlaceBetsService} from "../services/place-bets.service";
+import {SeatService} from "../services/seat.service";
 
 @Component({
   selector: 'app-control',
@@ -20,7 +21,8 @@ export class ControlComponent implements OnInit, OnDestroy {
   constructor(private statusUpdateService: StatusUpdateService,
               private wss: WebsocketService,
               private tableService: TableService,
-              private placeBetsService: PlaceBetsService) {
+              private placeBetsService: PlaceBetsService,
+              private seatService: SeatService) {
 
     this.setStartCount();
 
@@ -29,17 +31,21 @@ export class ControlComponent implements OnInit, OnDestroy {
         this.statusBoxVisible = 'hidden';
       } else {
         this.statusBoxVisible = 'visible';
-        this.startBox(this.startcount);
+        ///////////////////////////////////
+        if (this.seatService.currentSeats < 2) {
+          this.startBox(this.startcount);
+        }
+        ///////////////////////////////////
       }
     });
     this.statusUpdateService.hideStatus();
     this.status = 'Waiting for players to join:';
   }
 
-  setStartCount(){
+  setStartCount() {
     this.startcount = 10;
     if (!environment.production) {
-      this.startcount = 2;
+      this.startcount = 5;
     }
   }
 
@@ -49,12 +55,14 @@ export class ControlComponent implements OnInit, OnDestroy {
     that.status = 'Waiting for players to join:';
     let intv = setInterval(function () {
       if (count < 1) {
+        clearInterval(intv);
         count = that.startcount;
         that.statusBoxVisible = 'hidden';
-        that.statusUpdateService.tablePlaying = true;
-        that.wss.emit('tablePlaying', {table: table});
-        that.placeBetsService.setStatus(true);
-        clearInterval(intv);
+        that.tableService.tablePlaying = true; // <== * * * * * * * *
+        const gameStarted = that.tableService.tablePlaying;
+        const initSeat = that.seatService.currentSeat;
+        that.wss.emit('tableBetting',
+          {table: table, tablePlaying: gameStarted, seat: initSeat});
       }
       that.status = 'game starting in: ' + count + ' seconds';
       count--;

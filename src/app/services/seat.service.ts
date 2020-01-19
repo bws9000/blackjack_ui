@@ -14,11 +14,13 @@ export class SeatService {
   //initState: Subject<Array<any>> = new Subject<Array<any>>();
   is: Array<any>;
   sitting:boolean;
-  currentSeat:number;
+  public currentSeat:number;
+  public currentSeats:number;
 
   constructor(private wss: WebsocketService,
               private tableService: TableService) {
-    let is = [];
+
+    this.currentSeat = undefined;
   }
 
   setInitState(data, tableNum) {
@@ -36,7 +38,7 @@ export class SeatService {
       broadcast: bc,
       tableName: tableName
     };
-    this.currentSeat = seat;
+
     this.sitState.next(data);
   }
 
@@ -51,6 +53,7 @@ export class SeatService {
 
   updateSeats(playerSeats) {
     let ps = JSON.parse(playerSeats);
+    this.currentSeats = ps.length;
     this.playerSeats.next(ps);
   }
 }

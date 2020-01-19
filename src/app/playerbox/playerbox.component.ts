@@ -19,9 +19,22 @@ export class PlayerboxComponent implements OnInit {
   //playerInnerBox
   background: string;
   sitting: boolean;
+  action: boolean;
 
   constructor(private wss: WebsocketService,
               private playerboxService: PlayerboxService) {
+
+    this.playerboxService.playerAction.subscribe(value => {
+      if (this.player === value) {
+        this.action = true;
+        this.playerInnerbox();
+      }
+    });
+
+    this.playerboxService.resetSubject.subscribe(value => {
+      this.action = false;
+      this.playerInnerbox();
+    });
 
     this.playerboxService.playerSeats.subscribe(value => {
 
@@ -41,13 +54,16 @@ export class PlayerboxComponent implements OnInit {
   }
 
   playerInnerbox() {
-    if (this.sitting) {
-      return '1';
+    if (!this.action) {
+      if (this.sitting) {
+        return '1';
+      } else {
+        return '2';
+      }
     } else {
-      return '2';
+      return '3';
     }
   }
-
 
 
   ngOnInit() {
