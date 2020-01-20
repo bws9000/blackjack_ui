@@ -40,7 +40,8 @@ export class StatusMessageComponent implements OnInit {
     });
   }
 
-  betStatusEmit(data) {
+  actionStatusEmit(data) {
+    this.logStuff('actionStatusEmit');
     this.wss.startChange.next(true);
     this.showDialog(data.status);
     this.logStuff(JSON.stringify(data));
@@ -48,8 +49,8 @@ export class StatusMessageComponent implements OnInit {
 
   ngOnInit() {
     this.wss
-      .onEvent('betStatusEmit')
-      .subscribe(data => this.betStatusEmit(data));
+      .onEvent('actionStatusEmit')
+      .subscribe(data => this.actionStatusEmit(data));
   }
 
   logStuff(stuff: any) {

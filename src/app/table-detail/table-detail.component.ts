@@ -108,6 +108,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       this.tableService.tablePlaying = false;
     }
     this.handService.seatStand(data.standing);
+    this.seatService.currentSeat = undefined;
     this.playerboxService.reset();//graphic
   }
 
@@ -142,20 +143,28 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       this.playerAction('betting');
     }
     /////////////////////////////////////////////////
-    //let d = JSON.stringify(data);
-    //this.logStuff(d);
+    let d = JSON.stringify(data);
+    this.logStuff(d);
   }
 
   //AFTER FIRST PLAYER
   nextPlayerBetEmit(data) {
+
+    //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>');
+    //this.logStuff(JSON.stringify(data));
+    //this.logStuff('CURRENT SEAT: ' + this.seatService.currentSeat);
+    //this.logStuff('NEXT PLAYER: ' + data.nextPlayer);
+    //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>');
+
+    this.sms.statusMessage(data.status);
+
     this.wss.startChange.next(true);
-    if (this.seatService.currentSeat === data.nextPlayer) {
-      this.logStuff('nextplayer: ' + data.nextPlayer);
-      this.logStuff('current seat: ' + this.seatService.currentSeat);
+    if (this.seatService.currentSeat === data.nextPlayer
+      && this.seatService.currentSeat !== undefined) {
+      this.placeBetsService.currentBank = data.chips;
+      this.placeBetsService.setVisible(true);
       this.placeBetsService.setStatus(false, data.nextPlayer);
     }
-    //this.logStuff('nextPlayerBetEmit:');
-    //this.logStuff(JSON.stringify(data));
   }
 
   playerAction(action) {
@@ -172,19 +181,21 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   actionStatusEmit(data) {
 
+    this.wss.startChange.next(true);
+
     if (this.seatService.currentSeat === data.seat) {
       this.placeBetsService.currentBank = data.returnData;
+
+      this.placeBetsService.setVisible(true);
       this.placeBetsService.setStatus(false, data.seat);
     }
 
-    this.wss.startChange.next(true);
-    this.logStuff('seat ' + data.seat + ' ' + data.action);
     this.playerboxService.setAction(data.seat);//graphic
-    this.sms.statusMessage('Player ' + data.seat + ' is ' + data.action + '.');
-    this.logStuff('current seat: ' + this.seatService.currentSeat);
   }
 
   ngOnInit() {
+
+    this.placeBetsService.setVisible(false);
 
     if (this.wss.start) {
 

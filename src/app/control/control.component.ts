@@ -61,8 +61,14 @@ export class ControlComponent implements OnInit, OnDestroy {
         that.tableService.tablePlaying = true; // <== * * * * * * * *
         const gameStarted = that.tableService.tablePlaying;
         const initSeat = that.seatService.currentSeat;
+
         that.wss.emit('tableBetting',
-          {table: table, tablePlaying: gameStarted, seat: initSeat});
+          {
+            table: table,
+            tablePlaying: gameStarted,
+            seat: initSeat,
+            socketId:that.wss.socketId
+          });
       }
       that.status = 'game starting in: ' + count + ' seconds';
       count--;

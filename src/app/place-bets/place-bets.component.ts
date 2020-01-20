@@ -34,7 +34,13 @@ export class PlaceBetsComponent implements OnInit {
       chips: new FormControl()
     });
 
-    this.placeBetsVisible = 'hidden';
+    this.placeBetsService.visible.subscribe(value=>{
+      if(value){
+        this.placeBetsVisible = 'visible';
+      }else{
+        this.placeBetsVisible = 'hidden';
+      }
+    });
 
     this.placeBetsService.placeBetsStatus.subscribe(value => {
 
@@ -69,9 +75,7 @@ export class PlaceBetsComponent implements OnInit {
   onSubmit() {
     this.currentBet = this.placeBetForm.get('chips').value;
     this.placeBetsService.currentBet = this.currentBet;
-    this.placeBetsVisible = 'hidden';
-    //let seat = this.seatService.currentSeat;
-    //let status = 'player ' + this.seatService.currentSeat + ' bet ' + this.currentBet;
+    this.placeBetsService.setVisible(false);
     let table = this.tableService.tableNum;
     this.wss.emit('nextPlayerBet', {table: table, socketId: this.wss.socketId});
   }
