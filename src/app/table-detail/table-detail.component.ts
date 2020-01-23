@@ -11,6 +11,7 @@ import {HandService} from "../services/hand.service";
 import {PlaceBetsService} from "../services/place-bets.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {StatusMessageService} from "../services/status-message.service";
+import {PlayerDashService} from "../services/player-dash.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -36,6 +37,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private location: PlatformLocation,
               private placeBetsService: PlaceBetsService,
               private playerboxService: PlayerboxService,
+              private playerDashService: PlayerDashService,
               private sms: StatusMessageService) {
 
     this.logStuff('TABLE PLAYING: ' + this.tableService.tablePlaying);
@@ -131,6 +133,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     /* too soon, place bets first */
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
+
+    this.playerDashService.updateVisible(true);
     //let d = JSON.stringify(data);
     //this.logStuff(d);
   }

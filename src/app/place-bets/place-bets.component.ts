@@ -96,9 +96,11 @@ export class PlaceBetsComponent implements OnInit {
 
   timer(count) {
     let that = this;
+    that.countStatus = count;
     this.intv = setInterval(function () {
       if (count < 1) {
         clearInterval(this);
+        count = that.timerCount;
         //////clear seat//////////////////////////////////////////
         that.wss.emit('standUpTable', {
           player: that.seatService.currentSeat,
@@ -108,7 +110,6 @@ export class PlaceBetsComponent implements OnInit {
         that.playerboxService.reset(that.seatService.currentSeat);
         that.seatService.resetSeat(that.seatService.currentSeat);
         //////////////////////////////////////////////////////////
-        count = that.timerCount;
       }
       count--;
       that.countStatus = count;

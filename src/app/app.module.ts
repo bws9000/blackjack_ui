@@ -18,6 +18,7 @@ import { DealerHandComponent } from './dealer-hand/dealer-hand.component';
 import { PlaceBetsComponent } from './place-bets/place-bets.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StatusMessageComponent } from './status-message/status-message.component';
+import { PlayerDashComponent } from './player-dash/player-dash.component';
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -37,7 +38,8 @@ export function initialize(initModule: InitModule) {
     PlayerHandComponent,
     DealerHandComponent,
     PlaceBetsComponent,
-    StatusMessageComponent
+    StatusMessageComponent,
+    PlayerDashComponent
   ],
   imports: [
     InitModule,
