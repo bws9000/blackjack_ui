@@ -5,6 +5,7 @@ import {SeatService} from "../services/seat.service";
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
+import {PlayerboxService} from "../services/playerbox.service";
 
 
 @Component({
@@ -21,12 +22,17 @@ export class PlaceBetsComponent implements OnInit {
   chips: number;
   currentBet: number;
   selectedValue: number;
+  timerCount: number;
+  countStatus: number;
+  intv: number;
 
   constructor(private placeBetsService: PlaceBetsService,
               private seatService: SeatService,
               private tableService: TableService,
-              private wss: WebsocketService) {
+              private wss: WebsocketService,
+              private playerboxService: PlayerboxService) {
 
+    this.timerCount = 11;
     this.chips = this.placeBetsService.currentBank;
 
     this.selectedValue = 5;
@@ -34,11 +40,13 @@ export class PlaceBetsComponent implements OnInit {
       chips: new FormControl()
     });
 
-    this.placeBetsService.visible.subscribe(value=>{
-      if(value){
+    this.placeBetsService.visible.subscribe(value => {
+      if (value) {
         this.placeBetsVisible = 'visible';
-      }else{
+        this.timer(this.timerCount);
+      } else {
         this.placeBetsVisible = 'hidden';
+        clearInterval(this.intv);
       }
     });
 
@@ -77,7 +85,37 @@ export class PlaceBetsComponent implements OnInit {
     this.placeBetsService.currentBet = this.currentBet;
     this.placeBetsService.setVisible(false);
     let table = this.tableService.tableNum;
-    this.wss.emit('nextPlayerBet', {table: table, socketId: this.wss.socketId});
+    this.playerboxService.reset(this.seatService.currentSeat);
+    this.wss.emit('nextPlayerBet', {
+      table: table,
+      socketId: this.wss.socketId,
+      betfinished: this.seatService.currentSeat
+    });
+    clearInterval(this.intv);
+  }
+
+  timer(count) {
+    let that = this;
+    this.intv = setInterval(function () {
+      if (count < 1) {
+        clearInterval(this);
+        //////clear seat//////////////////////////////////////////
+        that.wss.emit('standUpTable', {
+          player: that.seatService.currentSeat,
+          tableNum: that.tableService.tableNum
+        });
+        that.placeBetsService.setVisible(false);
+        that.playerboxService.reset(that.seatService.currentSeat);
+        //////////////////////////////////////////////////////////
+        count = that.timerCount;
+      }
+      count--;
+      that.countStatus = count;
+    }, 1000);
+  }
+
+  getTime(){
+    return this.countStatus;
   }
 
   getChips() {
@@ -91,6 +129,7 @@ export class PlaceBetsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
 }

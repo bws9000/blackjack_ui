@@ -25,15 +25,27 @@ export class PlayerboxComponent implements OnInit {
               private playerboxService: PlayerboxService) {
 
     this.playerboxService.playerAction.subscribe(value => {
-      if (this.player === value) {
+
+      let j = JSON.stringify(value);
+      let o = JSON.parse(j);
+      let seat = o.seat;
+      //let broadcast = o.broadcast;
+
+      if (seat === this.player) {
         this.action = true;
         this.playerInnerbox();
       }
+
     });
 
     this.playerboxService.resetSubject.subscribe(value => {
-      this.action = false;
-      this.playerInnerbox();
+      let j = JSON.stringify(value);
+      let o = JSON.parse(j);
+      let seat = o.seat;
+      if(this.player === seat) {
+        this.action = false;
+        this.playerInnerbox();
+      }
     });
 
     this.playerboxService.playerSeats.subscribe(value => {

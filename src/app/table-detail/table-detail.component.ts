@@ -109,7 +109,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     }
     this.handService.seatStand(data.standing);
     this.seatService.currentSeat = undefined;
-    this.playerboxService.reset();//graphic
+    this.playerboxService.reset(this.seatService.currentSeat);//graphic
   }
 
   memberOfRoomEmit(data) {
@@ -149,7 +149,6 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   //AFTER FIRST PLAYER
   nextPlayerBetEmit(data) {
-
     //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>');
     //this.logStuff(JSON.stringify(data));
     //this.logStuff('CURRENT SEAT: ' + this.seatService.currentSeat);
@@ -157,6 +156,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>');
 
     this.sms.statusMessage(data.status);
+    this.playerboxService.setAction(data.nextPlayer, data.broadcast);//green graphic
+    this.playerboxService.reset(data.justBet);
 
     this.wss.startChange.next(true);
     if (this.seatService.currentSeat === data.nextPlayer
@@ -165,6 +166,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       this.placeBetsService.setVisible(true);
       this.placeBetsService.setStatus(false, data.nextPlayer);
     }
+
   }
 
   playerAction(action) {
@@ -190,7 +192,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       this.placeBetsService.setStatus(false, data.seat);
     }
 
-    this.playerboxService.setAction(data.seat);//graphic
+    this.playerboxService.setAction(data.seat, data.broadcast);//graphic
   }
 
   ngOnInit() {

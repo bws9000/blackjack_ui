@@ -82,6 +82,10 @@ export class SitComponent implements OnInit {
     });
 
     this.seatService.standState.subscribe(v => {
+
+      this.sitOrLeaveText = 'SIT DOWN';
+      this.sitOrLeave = false;
+
       let j = JSON.stringify(v);
       let o = JSON.parse(j);
       let seat = o.sitting;
@@ -121,8 +125,8 @@ export class SitComponent implements OnInit {
         player: this.id,
         tableNum: this.table
       });
-      this.sitOrLeaveText = 'SIT DOWN';
-      this.sitOrLeave = false;
+        this.sitOrLeaveText = 'SIT DOWN';
+        this.sitOrLeave = false;
     }
   }
 

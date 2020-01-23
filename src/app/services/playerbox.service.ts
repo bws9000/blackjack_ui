@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
+import {SeatService} from "./seat.service";
 
 @Injectable({
   providedIn: 'root'
@@ -7,22 +8,26 @@ import {Subject} from "rxjs";
 export class PlayerboxService {
 
   playerSeats: Subject<Array<any>> = new Subject<Array<any>>();
-  playerAction: Subject<string> = new Subject<string>();
-  resetSubject: Subject<boolean> = new Subject<boolean>();
+  playerAction: Subject<Object> = new Subject<Object>();
+  resetSubject: Subject<Object> = new Subject<Object>();
 
-  constructor() { }
+  constructor(private seatService:SeatService) {
 
-  seats(playerSeats){
+  }
+
+  seats(playerSeats) {
     let ps = JSON.parse(playerSeats);
     this.playerSeats.next(ps);
   }
 
-  setAction(seat){
-    this.playerAction.next(seat);
+  setAction(seat, broadcast) {
+    let data = {seat: seat, broadcast: broadcast};
+    this.playerAction.next(data);
   }
 
-  reset(){
-    this.resetSubject.next(true);
+  reset(seat) {
+    let data = {seat: seat};
+    this.resetSubject.next(data);
   }
 
 }
