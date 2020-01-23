@@ -3,6 +3,7 @@ import {SeatService} from "../services/seat.service";
 import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
 import {StatusUpdateService} from "../services/status-update.service";
+import {PlayerboxService} from "../services/playerbox.service";
 
 @Component({
   selector: 'app-sit',
@@ -24,6 +25,7 @@ export class SitComponent implements OnInit {
   constructor(private wss: WebsocketService,
               private seatService: SeatService,
               private tableService: TableService,
+              private playerboxService: PlayerboxService,
               private statusUpdateService: StatusUpdateService) {
 
     this.isHidden = true;
@@ -33,6 +35,13 @@ export class SitComponent implements OnInit {
     this.localSocket = this.wss.socketId;
     this.table = tableService.tableNum;
 
+
+    this.seatService.reset.subscribe(value =>{
+      if(this.id === value){
+        this.sitOrLeaveText = 'SIT DOWN';
+        this.sitOrLeave = false;
+      }
+    });
 
     this.seatService.playerSeats.subscribe(value => {
       let sid = [];
@@ -82,9 +91,6 @@ export class SitComponent implements OnInit {
     });
 
     this.seatService.standState.subscribe(v => {
-
-      this.sitOrLeaveText = 'SIT DOWN';
-      this.sitOrLeave = false;
 
       let j = JSON.stringify(v);
       let o = JSON.parse(j);

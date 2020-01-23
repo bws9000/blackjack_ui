@@ -8,6 +8,7 @@ import {TableService} from "./table.service";
 })
 export class SeatService {
 
+  reset: Subject<string> = new Subject<string>();
   playerSeats: Subject<Array<any>> = new Subject<Array<any>>();
   sitState: Subject<Object> = new Subject<Object>();
   standState: Subject<Object> = new Subject<Object>();
@@ -21,6 +22,10 @@ export class SeatService {
               private tableService: TableService) {
 
     this.currentSeat = undefined;
+  }
+
+  resetSeat(seat){
+    this.reset.next(seat);
   }
 
   setInitState(data, tableNum) {

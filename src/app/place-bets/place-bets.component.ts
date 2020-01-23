@@ -106,6 +106,7 @@ export class PlaceBetsComponent implements OnInit {
         });
         that.placeBetsService.setVisible(false);
         that.playerboxService.reset(that.seatService.currentSeat);
+        that.seatService.resetSeat(that.seatService.currentSeat);
         //////////////////////////////////////////////////////////
         count = that.timerCount;
       }

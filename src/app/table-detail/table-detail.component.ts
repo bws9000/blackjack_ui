@@ -109,7 +109,10 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     }
     this.handService.seatStand(data.standing);
     this.seatService.currentSeat = undefined;
-    this.playerboxService.reset(this.seatService.currentSeat);//graphic
+
+    //green graphic
+    this.playerboxService.reset(this.seatService.currentSeat);
+    this.playerboxService.reset(data.standing);
   }
 
   memberOfRoomEmit(data) {
@@ -124,12 +127,10 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   getHands(data) {
     this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
-
-
-    this.placeBetsService.updateBanks(data.playerBanks);
+    //this.placeBetsService.updateBanks(data.playerBanks);
     /* too soon, place bets first */
-    //this.handService.getPlayerHands(data.playerHands);
-    //this.handService.getDealerHand(data.dealerHand);
+    this.handService.getPlayerHands(data.playerHands);
+    this.handService.getDealerHand(data.dealerHand);
     //let d = JSON.stringify(data);
     //this.logStuff(d);
   }
@@ -165,6 +166,10 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       this.placeBetsService.currentBank = data.chips;
       this.placeBetsService.setVisible(true);
       this.placeBetsService.setStatus(false, data.nextPlayer);
+    }
+
+    if (data.status === 'ready to deal cards') {
+      this.wss.emit('tablePlaying', {table: this.tableService.tableNum});
     }
 
   }
