@@ -1,13 +1,28 @@
 <div [style.visibility]="this.playerDashVisible" class="playerDash">
   <div class="playerDash_box">
-
     <div class="temp_close playerdash_container" (click)="hide()">
       <div class="pd_row top">
         row 1
       </div>
       <div class="pd_row cards">
-        <div class="pd_col ccol"><app-player-hand hand="{{getSeat()}}"></app-player-hand></div>
-        <div class="pd_col ccol"><app-dealer-hand></app-dealer-hand></div>
+        <div class="pd_col ccol">
+          <!-- player cards -->
+          <div class="cardRowDefault">
+            <div class="cardBox" *ngFor="let card of cards">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
+          </div>
+          <!-- /cards -->
+        </div>
+        <div class="pd_col ccol">
+          <!-- dealer cards -->
+          <div class="cardRowDefault">
+            <div class="cardBox" *ngFor="let dcard of dcards">
+              <div class="testCard" [ngClass]="'_'+dcard"></div>
+            </div>
+          </div>
+          <!-- /dealer cards -->
+        </div>
       </div>
       <div class="pd_row actions">
         <div class="pd_col acol">Hit</div>
@@ -15,6 +30,5 @@
         <div class="pd_col acol">Double Down</div>
       </div>
     </div>
-
   </div>
 </div>

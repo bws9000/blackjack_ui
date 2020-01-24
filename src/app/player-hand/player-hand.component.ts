@@ -10,9 +10,8 @@ import {StatusUpdateService} from "../services/status-update.service";
   styleUrls: ['./player-hand.component.css']
 })
 export class PlayerHandComponent implements OnInit {
+
   @Input() hand: string;
-
-
   //cards: [number,number];
   cards: [number];
   interval;
@@ -22,7 +21,7 @@ export class PlayerHandComponent implements OnInit {
               private statusUpdateService: StatusUpdateService) {
 
     this.handService.standUp.subscribe(value => {
-      if(this.cards !== undefined) {
+      if (this.cards !== undefined) {
         if (+this.hand == value) {
           for (let i = 0; i < this.cards.length; i++) {
             this.cards[i] = 99;

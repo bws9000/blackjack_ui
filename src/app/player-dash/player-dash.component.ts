@@ -1,24 +1,46 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostBinding, Input, OnInit, ViewChild} from '@angular/core';
 import {PlayerDashService} from "../services/player-dash.service";
 import {SeatService} from "../services/seat.service";
 import {environment} from "../../environments/environment";
+import {PlayerHandComponent} from "../player-hand/player-hand.component";
+import {Style} from "@angular/cli/lib/config/schema";
+import {HandService} from "../services/hand.service";
 
 @Component({
   selector: 'app-player-dash',
   templateUrl: './player-dash.component.html',
-  styleUrls: ['./player-dash.component.css']
+  styleUrls: ['./player-dash.component.css'],
 })
+
 export class PlayerDashComponent implements OnInit {
 
+  cards: [number];
+  dcards: [number,number];
   @Input() player: string;
   @Input() dash: string;
   playerDashVisible: string;
   seat: string;
 
   constructor(private playerDashService: PlayerDashService,
-              private seatService: SeatService) {
+              private seatService: SeatService,
+              private handService: HandService) {
 
     this.playerDashVisible = 'hidden';
+
+    this.handService.dealerHand.subscribe(value => {
+      if (value !== null) {
+        this.dcards = [98, value[0].hand[1]];
+      }
+    });
+
+    this.handService.playerHands.subscribe(value => {
+      let that = this;
+      for (let i = 0; i < value.length; i++) {
+        if (value[i].seat === this.dash) {
+          that.cards = value[i].hand;
+        }
+      }
+    });
 
     this.playerDashService.visible.subscribe(value => {
       if (value) {

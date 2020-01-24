@@ -4,6 +4,7 @@ import {Subject} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
+
 export class PlayerDashService {
 
   visible: Subject<Object> = new Subject<Object>();
