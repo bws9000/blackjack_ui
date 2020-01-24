@@ -6,12 +6,16 @@ import {Subject} from "rxjs";
 })
 export class PlayerDashService {
 
-  visible: Subject<boolean> = new Subject<boolean>();
+  visible: Subject<Object> = new Subject<Object>();
 
   constructor() {
   }
 
-  updateVisible(value){
-    this.visible.next(value);
+  updateVisible(value,seat){
+    let data = {
+      value:value,
+      seat:seat
+    };
+    this.visible.next(data);
   }
 }

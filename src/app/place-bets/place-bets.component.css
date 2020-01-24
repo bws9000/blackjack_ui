@@ -8,6 +8,7 @@
   bottom: 0;
   left: 0;
   background-color: rgba(0,0,0,.5);
+  z-index: 999999;
 }
 .placeBets_update_box {
   width:300px;

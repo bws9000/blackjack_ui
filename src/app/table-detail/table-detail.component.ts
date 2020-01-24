@@ -28,6 +28,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   socketid: any;
   broadcast: any;
 
+  dashinterval;
+
   constructor(private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
               private seatService: SeatService,
@@ -127,14 +129,21 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   getHands(data) {
+
     this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
     //this.placeBetsService.updateBanks(data.playerBanks);
     /* too soon, place bets first */
+
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
 
-    this.playerDashService.updateVisible(true);
+
+    let that = this;
+    setTimeout(()=>{
+      that.playerDashService.updateVisible(true,data.justBet);
+    },900);
+
     //let d = JSON.stringify(data);
     //this.logStuff(d);
   }
@@ -168,12 +177,15 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     if (this.seatService.currentSeat === data.nextPlayer
       && this.seatService.currentSeat !== undefined) {
       this.placeBetsService.currentBank = data.chips;
-      this.placeBetsService.setVisible(true);
+      this.placeBetsService.setVisible(true,data.justBet);
       this.placeBetsService.setStatus(false, data.nextPlayer);
     }
 
     if (data.status === 'ready to deal cards') {
-      this.wss.emit('tablePlaying', {table: this.tableService.tableNum});
+      this.wss.emit('tablePlaying', {
+        table: this.tableService.tableNum,
+        seat:data.justBet
+      });
     }
 
   }
@@ -197,7 +209,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     if (this.seatService.currentSeat === data.seat) {
       this.placeBetsService.currentBank = data.returnData;
 
-      this.placeBetsService.setVisible(true);
+      this.placeBetsService.setVisible(true,this.seatService.currentSeat);
       this.placeBetsService.setStatus(false, data.seat);
     }
 
@@ -206,7 +218,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   ngOnInit() {
 
-    this.placeBetsService.setVisible(false);
+    this.placeBetsService.setVisible(false,this.seatService.currentSeat);
 
     if (this.wss.start) {
 

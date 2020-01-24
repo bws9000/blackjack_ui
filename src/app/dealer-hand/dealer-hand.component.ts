@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HandService} from "../services/hand.service";
-import {Status} from "tslint/lib/runner";
-import {StatusUpdateService} from "../services/status-update.service";
 
 @Component({
   selector: 'app-dealer-hand',
