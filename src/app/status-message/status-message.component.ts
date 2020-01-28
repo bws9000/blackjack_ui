@@ -41,16 +41,12 @@ export class StatusMessageComponent implements OnInit {
   }
 
   actionStatusEmit(data) {
-    this.logStuff('actionStatusEmit');
     this.wss.startChange.next(true);
     this.showDialog(data.status);
-    this.logStuff(JSON.stringify(data));
   }
 
   ngOnInit() {
-    this.wss
-      .onEvent('actionStatusEmit')
-      .subscribe(data => this.actionStatusEmit(data));
+
   }
 
   logStuff(stuff: any) {

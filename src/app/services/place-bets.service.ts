@@ -10,6 +10,7 @@ export class PlaceBetsService {
   placeBetsStatus: Subject<Object>= new Subject<Object>();
   playerBanks: Subject<Array<any>> = new Subject<Array<any>>();
   visible: Subject<Object> = new Subject<Object>();
+  intv:number;
 
   public currentBank:number;
   public currentBet:number;
@@ -19,10 +20,11 @@ export class PlaceBetsService {
     this.currentBank = undefined;
   }
 
-  setVisible(value,seat){
+  setVisible(value,seat,table){
     let data = {
       value:value,
-      seat:seat
+      seat:seat,
+      table:table
     };
     this.visible.next(data);
   }

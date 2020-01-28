@@ -16,6 +16,7 @@ export class PlayerboxComponent implements OnInit {
   @Input() seat: string;
   @Input() hand: string;
   @Input() dash: string;
+  @Input() controlNum: string;
 
   //playerInnerBox
   background: string;

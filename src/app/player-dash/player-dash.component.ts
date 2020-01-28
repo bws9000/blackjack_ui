@@ -5,6 +5,7 @@ import {environment} from "../../environments/environment";
 import {PlayerHandComponent} from "../player-hand/player-hand.component";
 import {Style} from "@angular/cli/lib/config/schema";
 import {HandService} from "../services/hand.service";
+import {PlaceBetsService} from "../services/place-bets.service";
 
 @Component({
   selector: 'app-player-dash',
@@ -14,10 +15,10 @@ import {HandService} from "../services/hand.service";
 
 export class PlayerDashComponent implements OnInit {
 
-  cards: [number];
-  dcards: [number,number];
   @Input() player: string;
   @Input() dash: string;
+  cards: [number];
+  dcards: [number, number];
   playerDashVisible: string;
   seat: string;
 
@@ -44,7 +45,7 @@ export class PlayerDashComponent implements OnInit {
 
     this.playerDashService.visible.subscribe(value => {
       if (value) {
-        if(+this.dash == this.seatService.currentSeat) {
+        if (+this.dash == this.seatService.currentSeat) {
           this.show();
         }
       } else {
@@ -54,7 +55,7 @@ export class PlayerDashComponent implements OnInit {
 
   }
 
-  getSeat(){
+  getSeat() {
     return this.dash;
   }
 
@@ -67,7 +68,6 @@ export class PlayerDashComponent implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   logStuff(stuff: any) {

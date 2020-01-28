@@ -1,10 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {StatusUpdateService} from "../services/status-update.service";
 import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
 import {TableService} from "../services/table.service";
 import {PlaceBetsService} from "../services/place-bets.service";
 import {SeatService} from "../services/seat.service";
+import {Subscription} from "rxjs";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 
 @Component({
   selector: 'app-control',
@@ -14,32 +16,53 @@ import {SeatService} from "../services/seat.service";
 
 export class ControlComponent implements OnInit, OnDestroy {
 
+  @Input() player: string;
+  @Input() controlNum: string;
   statusBoxVisible: string;
   status: string;
   startcount: number;
+  intv: number;
+  active:boolean;
+  tableName: string;
+
+  userSubscription: Subscription;
 
   constructor(private statusUpdateService: StatusUpdateService,
               private wss: WebsocketService,
               private tableService: TableService,
               private placeBetsService: PlaceBetsService,
-              private seatService: SeatService) {
+              private seatService: SeatService,
+              private route:ActivatedRoute) {
 
     this.setStartCount();
+    clearInterval(this.intv);
 
-    this.statusUpdateService.updateStatusSubject.subscribe(value => {
-      if (value) {
-        this.statusBoxVisible = 'hidden';
-      } else {
-        this.statusBoxVisible = 'visible';
-        ///////////////////////////////////
-        if (this.seatService.currentSeats < 2) {
-          this.startBox(this.startcount);
-        }
-        ///////////////////////////////////
-      }
-    });
-    this.statusUpdateService.hideStatus();
-    this.status = 'Waiting for players to join:';
+    this.userSubscription = this.route.params.subscribe(
+      (params: Params) => {
+
+        this.tableName = params.tableId;
+
+        this.statusUpdateService.updateStatusSubject.subscribe(value => {
+          let currentTable = 'table'+this.tableService.tableNum;
+          if(currentTable === params.tableId) {
+            if (value) {
+              this.statusBoxVisible = 'hidden';
+            } else {
+              if (+this.controlNum == this.seatService.currentSeat) {
+                this.active = true;
+                this.statusBoxVisible = 'visible';
+                ///////////////////////////////////
+                if (this.seatService.currentSeats < 2) {
+                  this.startBox();
+                }
+                ///////////////////////////////////
+              }
+            }
+          }
+        });
+        this.statusUpdateService.hideStatus();
+        this.status = 'Waiting for players to join:';
+      });
   }
 
   setStartCount() {
@@ -49,16 +72,31 @@ export class ControlComponent implements OnInit, OnDestroy {
     }
   }
 
-  startBox(count) {
+  startBox() {
+
     let that = this;
     let table = this.tableService.tableNum;
     that.status = 'Waiting for players to join:';
-    let intv = setInterval(function () {
-      if (count < 1) {
-        clearInterval(intv);
-        count = that.startcount;
+
+    clearInterval(this.intv);
+
+    this.intv = setInterval(function () {
+      if (that.startcount < 1) {
+
+        clearInterval(this);
+        clearInterval(that.intv);
+        that.setStartCount();
+
+        that.logStuff('************************');
+        that.logStuff('active: ' + that.active);
+        that.logStuff('currentTable: ' + that.tableService.tableNum);
+        that.logStuff('currentSeat: ' + that.seatService.currentSeat);
+        that.logStuff('controlNum: ' + that.controlNum);
+        that.logStuff('count: ' + that.startcount);
+        that.logStuff('************************');
+
         that.statusBoxVisible = 'hidden';
-        that.tableService.tablePlaying = true; // <== * * * * * * * *
+        that.tableService.tablePlaying = true;
         const gameStarted = that.tableService.tablePlaying;
         const initSeat = that.seatService.currentSeat;
 
@@ -67,19 +105,22 @@ export class ControlComponent implements OnInit, OnDestroy {
             table: table,
             tablePlaying: gameStarted,
             seat: initSeat,
-            socketId:that.wss.socketId
+            socketId: that.wss.socketId
           });
       }
-      that.status = 'game starting in: ' + count + ' seconds';
-      count--;
+      that.status = 'game starting in: ' + that.startcount + ' seconds';
+      that.startcount--;
     }, 1000);
   }
 
   ngOnInit() {
+    clearInterval(this.intv);
   }
 
   ngOnDestroy() {
-    //console.log('destroyed');
+    this.userSubscription.unsubscribe();
+    clearInterval(this.intv);
+    this.active = false;
   }
 
   logStuff(stuff: any) {
