@@ -122,7 +122,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
           }
         });
 
-        
+
       });
 
 

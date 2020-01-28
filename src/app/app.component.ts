@@ -173,7 +173,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   actionStatusEmit(data) {
 
-    console.log('>>>>>>>>>actionStatusEmit');
+    //console.log('>>>>>>>>>actionStatusEmit');
 
     this.wss.startChange.next(true);
 

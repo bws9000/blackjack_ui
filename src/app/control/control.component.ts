@@ -34,6 +34,8 @@ export class ControlComponent implements OnInit, OnDestroy {
               private seatService: SeatService,
               private route:ActivatedRoute) {
 
+    this.statusBoxVisible = 'hidden';
+
     this.setStartCount();
     clearInterval(this.intv);
 
