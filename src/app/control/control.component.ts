@@ -89,6 +89,7 @@ export class ControlComponent implements OnInit, OnDestroy {
         clearInterval(that.intv);
         that.setStartCount();
 
+        /*
         that.logStuff('************************');
         that.logStuff('active: ' + that.active);
         that.logStuff('currentTable: ' + that.tableService.tableNum);
@@ -96,6 +97,7 @@ export class ControlComponent implements OnInit, OnDestroy {
         that.logStuff('controlNum: ' + that.controlNum);
         that.logStuff('count: ' + that.startcount);
         that.logStuff('************************');
+        */
 
         that.statusBoxVisible = 'hidden';
         that.tableService.tablePlaying = true;

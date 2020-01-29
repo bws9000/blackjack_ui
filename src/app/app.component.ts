@@ -145,49 +145,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     //this.logStuff(d);
   }
 
-  //CALLED FIRST WHEN 1st PLAYER SITS DOWN
+  //1st PLAYER SITS DOWN
   playersBetting(data) {
     this.wss.startChange.next(true);
-    /////////////////////////////////////////////////
     if (!data.broadcast) {
       this.tableService.tablePlaying = true;
-      this.playerAction('betting');
+      this.placeBetsService.setVisible(true, data.initSeat ,data.table);
+    }else{
+      this.sms.statusMessage(data.status);//player x is betting
     }
-    /////////////////////////////////////////////////
-    let d = JSON.stringify(data);
-    this.logStuff(d);
+    //let d = JSON.stringify(data);
+    //this.logStuff(d);
   }
 
-  playerAction(action) {
-    let seat = this.seatService.currentSeat;
-    let socketid = this.wss.socketId;
-    let table = this.tableService.tableNum;
-    this.wss.emit('playerAction', {
-      action: action,
-      id: socketid,
-      table: table,
-      seat: seat
-    });
-  }
-
-
-  actionStatusEmit(data) {
-
-    //console.log('>>>>>>>>>actionStatusEmit');
-
-    this.wss.startChange.next(true);
-
-    if (this.seatService.currentSeat === data.seat) {
-      this.placeBetsService.currentBank = data.returnData;
-      this.placeBetsService.setVisible(true,
-        this.seatService.currentSeat,data.tableName);
-      this.placeBetsService.setStatus(false, data.seat);
-    }
-
-    this.playerboxService.setAction(data.seat, data.broadcast);//graphic
-  }
-
-  //AFTER FIRST PLAYER
   nextPlayerBetEmit(data) {
 
     this.sms.statusMessage(data.status);
@@ -203,10 +173,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       });
     }
 
+
     if (this.seatService.currentSeat === data.nextPlayer
       && this.seatService.currentSeat !== undefined) {
       this.placeBetsService.currentBank = data.chips;
-      this.placeBetsService.setVisible(true,data.justBet,'table'+this.tableService.tableNum);
+      this.placeBetsService.setVisible(true, data.nextPlayer ,data.table);
       this.placeBetsService.setStatus(false, data.nextPlayer);
     }
 
@@ -232,6 +203,35 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.playerboxService.reset(this.seatService.currentSeat);
     this.playerboxService.reset(data.standing);
   }
+
+
+  /*
+  playerAction(action) {
+    let seat = this.seatService.currentSeat;
+    let socketid = this.wss.socketId;
+    let table = this.tableService.tableNum;
+    this.wss.emit('playerAction', {
+      action: action,
+      id: socketid,
+      table: table,
+      seat: seat
+    });
+  }
+  */
+
+
+
+  /*
+  actionStatusEmit(data) {
+    this.wss.startChange.next(true);
+    if (this.seatService.currentSeat === data.seat) {
+      this.placeBetsService.currentBank = data.returnData;
+      this.placeBetsService.setVisible(true, this.seatService.currentSeat,data.tableName);
+      this.placeBetsService.setStatus(false, data.seat);
+    }
+    this.playerboxService.setAction(data.seat, data.broadcast);//graphic
+  }
+  */
 
   satDownTableEmit(data) {
 
@@ -311,9 +311,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         .onEvent('nextPlayerBetEmit')
         .subscribe(data => this.nextPlayerBetEmit(data));
 
+      /*
       this.wss
         .onEvent('actionStatusEmit')
         .subscribe(data => this.actionStatusEmit(data));
+      */
 
       this.wss
         .onEvent('playersBettingEmit')

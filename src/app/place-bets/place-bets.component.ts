@@ -62,7 +62,6 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
           let currentTable = 'table' + this.tableService.tableNum;
           if (currentTable === params.tableId) {
 
-
             let j = JSON.stringify(value);
             let o = JSON.parse(j);
             let t = o.table;
@@ -70,12 +69,13 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
             let s = o.seat;
 
             /*
-            alert('-v: ' + v +
+            this.logStuff('-v: ' + v +
               ' -seat: ' + s +
               ' -current seat: ' + this.seatService.currentSeat +
               ' -current-table: ' + this.tableService.tableNum +
               ' -tableName: ' + t);
-            */
+             */
+
 
             if (v) {
               if (s == this.seatService.currentSeat) {
@@ -135,6 +135,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     let table = this.tableService.tableNum;
     this.playerboxService.reset(this.seatService.currentSeat);
     this.wss.emit('nextPlayerBet', {
+      currentSeat:this.seatService.currentSeat,
       table: table,
       socketId: this.wss.socketId,
       betfinished: this.seatService.currentSeat
