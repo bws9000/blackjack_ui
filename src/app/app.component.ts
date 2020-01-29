@@ -205,34 +205,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
 
-  /*
-  playerAction(action) {
-    let seat = this.seatService.currentSeat;
-    let socketid = this.wss.socketId;
-    let table = this.tableService.tableNum;
-    this.wss.emit('playerAction', {
-      action: action,
-      id: socketid,
-      table: table,
-      seat: seat
-    });
-  }
-  */
-
-
-
-  /*
-  actionStatusEmit(data) {
-    this.wss.startChange.next(true);
-    if (this.seatService.currentSeat === data.seat) {
-      this.placeBetsService.currentBank = data.returnData;
-      this.placeBetsService.setVisible(true, this.seatService.currentSeat,data.tableName);
-      this.placeBetsService.setStatus(false, data.seat);
-    }
-    this.playerboxService.setAction(data.seat, data.broadcast);//graphic
-  }
-  */
-
   satDownTableEmit(data) {
 
     let broadcast = JSON.parse(data.broadcast);

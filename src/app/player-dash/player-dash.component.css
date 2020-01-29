@@ -10,8 +10,8 @@
   z-index: 999999;
 }
 .playerDash_box {
-  width:calc(100%/1.5);
-  height:calc(100%/1.5);
+  width:calc(100%/1.2);
+  height:calc(100%/1.2);
   overflow:hidden;
   margin:auto;
   padding: 1vw;
@@ -21,10 +21,11 @@
   bottom:0;
   left:0;
   right:0;
-  background-color: cornsilk;
+  background-color: black;
   border-radius: 10px;
   text-align: center;
 }
+
 .temp_close{
   cursor: pointer;
   margin-bottom:1vw;
@@ -34,27 +35,46 @@
 .playerdash_container{
   width:100%;
   height:100%;
-  background-color: cornsilk;
+  background-color: black;
 }
 
 .top{
   height:5%;
-  background-color: cyan;
+  color:cornsilk;
+}
+.inner_top_header{
+  width:100%;
+}
+.inner_top_header_dealer{
+  text-align:center;
+  width:29%;
+  float:left;
+}
+.inner_top_header_player{
+  text-align:center;
+  width:69%;
+  float:left;
 }
 .cards{
   background-color: black;
   height:69%;
 }
 .actions{
-  background-color: cyan;
   height:25%;
 }
+
 .acol{
   width:32%;
   height:100%;
 }
-.ccol{
-  width:49%;
+
+.pcol{
+  width:69%;
+  height:100%;
+}
+
+.dcol{
+  width:29%;
   height:100%;
 }
 
@@ -65,7 +85,37 @@
 .pd_col{
   float:left;
   margin:1px;
-  background-color: deeppink;
+  background-color: darkgreen;
+}
+
+.command_col{
+  display:inline-block;
+  margin:1px;
+}
+
+.inner_actions{
+  height: 100%;
+  width:100%;
+  text-align:center;
+  margin: auto 1.5em;
+}
+
+.command {
+  width: 80%;
+  height: 80%;
+  position: relative;
+  cursor: pointer;
+  background-color: saddlebrown;
+  border-radius: 45px;
+  text-align: center;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+.command:hover{
+  background-color: #A0522D;
 }
 
 
@@ -93,6 +143,7 @@
 }
 
 .cardRowDefault {
+  padding-top:0.5vw;
   width: 100%;
   height: 50%;
   position: relative;

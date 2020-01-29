@@ -59,6 +59,14 @@ export class PlayerDashComponent implements OnInit {
     return this.dash;
   }
 
+  hit(){
+    alert('hit');
+  }
+
+  other(){
+    alert('dd / split');
+  }
+
   hide() {
     this.playerDashVisible = 'hidden';
   }

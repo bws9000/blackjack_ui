@@ -1,11 +1,14 @@
 <div [style.visibility]="this.playerDashVisible" class="playerDash">
   <div class="playerDash_box">
-    <div class="temp_close playerdash_container" (click)="hide()">
+    <div class="playerdash_container">
       <div class="pd_row top">
-        row 1
+      <div class="inner_top_header">
+        <div class="inner_top_header_player">your cards</div>
+        <div class="inner_top_header_dealer">dealer cards</div>
+      </div>
       </div>
       <div class="pd_row cards">
-        <div class="pd_col ccol">
+        <div class="pd_col pcol">
           <!-- player cards -->
           <div class="cardRowDefault">
             <div class="cardBox" *ngFor="let card of cards">
@@ -14,7 +17,7 @@
           </div>
           <!-- /cards -->
         </div>
-        <div class="pd_col ccol">
+        <div class="pd_col dcol">
           <!-- dealer cards -->
           <div class="cardRowDefault">
             <div class="cardBox" *ngFor="let dcard of dcards">
@@ -25,9 +28,11 @@
         </div>
       </div>
       <div class="pd_row actions">
-        <div class="pd_col acol">Hit</div>
-        <div class="pd_col acol">Stand</div>
-        <div class="pd_col acol">Double Down</div>
+        <div class="inner_actions">
+        <div class="command_col acol"><div class="command" (click)="hit()">HIT</div></div>
+        <div class="command_col acol"><div class="command" (click)="hide()" >STAND</div></div>
+        <div class="command_col acol"><div class="command" (click)="other()">DD/SPLIT</div></div>
+        </div>
       </div>
     </div>
   </div>
