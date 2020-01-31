@@ -3,6 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {TableSelectComponent} from "./table-select/table-select.component";
 import {SocketConnectComponent} from "./socket-connect/socket-connect.component";
 import {TableDetailComponent} from "./table-detail/table-detail.component";
+import {AppComponent} from "./app.component";
 
 const routes: Routes = [
   {
@@ -14,7 +15,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes,{onSameUrlNavigation: 'reload'})],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

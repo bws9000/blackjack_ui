@@ -5,8 +5,9 @@ import {environment} from "../../environments/environment";
 import {TableService} from "../services/table.service";
 import {PlaceBetsService} from "../services/place-bets.service";
 import {SeatService} from "../services/seat.service";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Params, Router} from "@angular/router";
+import "rxjs-compat/add/observable/timer";
 
 @Component({
   selector: 'app-control',
@@ -21,9 +22,13 @@ export class ControlComponent implements OnInit, OnDestroy {
   statusBoxVisible: string;
   status: string;
   startcount: number;
-  intv: number;
   active:boolean;
   tableName: string;
+  test:string;
+
+  //new counter
+  private timer;
+  private subTimer: Subscription;
 
   userSubscription: Subscription;
 
@@ -37,7 +42,6 @@ export class ControlComponent implements OnInit, OnDestroy {
     this.statusBoxVisible = 'hidden';
 
     this.setStartCount();
-    clearInterval(this.intv);
 
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
@@ -47,15 +51,20 @@ export class ControlComponent implements OnInit, OnDestroy {
         this.statusUpdateService.updateStatusSubject.subscribe(value => {
           let currentTable = 'table'+this.tableService.tableNum;
           if(currentTable === params.tableId) {
+
             if (value) {
               this.statusBoxVisible = 'hidden';
             } else {
               if (+this.controlNum == this.seatService.currentSeat) {
-                this.active = true;
                 this.statusBoxVisible = 'visible';
                 ///////////////////////////////////
                 if (this.seatService.currentSeats < 2) {
-                  this.startBox();
+
+                  //timer
+                  this.status = 'Waiting for players to join:';
+                  this.timer = Observable.timer(1000,1000);
+                  this.subTimer = this.timer.subscribe(t =>this.timerTest(t));
+
                 }
                 ///////////////////////////////////
               }
@@ -74,57 +83,40 @@ export class ControlComponent implements OnInit, OnDestroy {
     }
   }
 
-  startBox() {
+  timerTest(t){
+    //t
 
-    let that = this;
-    let table = this.tableService.tableNum;
-    that.status = 'Waiting for players to join:';
+    this.startcount--;
+    this.status = 'game starting in: ' + this.startcount + ' seconds';
 
-    clearInterval(this.intv);
+    if(this.startcount == -1){
 
-    this.intv = setInterval(function () {
-      if (that.startcount < 1) {
+      this.setStartCount();
+      this.statusBoxVisible = 'hidden';
+      this.tableService.tablePlaying = true;
+      let table = this.tableService.tableNum;
+      const gameStarted = this.tableService.tablePlaying;
+      const initSeat = this.seatService.currentSeat;
 
-        clearInterval(this);
-        clearInterval(that.intv);
-        that.setStartCount();
-
-        /*
-        that.logStuff('************************');
-        that.logStuff('active: ' + that.active);
-        that.logStuff('currentTable: ' + that.tableService.tableNum);
-        that.logStuff('currentSeat: ' + that.seatService.currentSeat);
-        that.logStuff('controlNum: ' + that.controlNum);
-        that.logStuff('count: ' + that.startcount);
-        that.logStuff('************************');
-        */
-
-        that.statusBoxVisible = 'hidden';
-        that.tableService.tablePlaying = true;
-        const gameStarted = that.tableService.tablePlaying;
-        const initSeat = that.seatService.currentSeat;
-
-        that.wss.emit('tableBetting',
-          {
-            table: table,
-            tablePlaying: gameStarted,
-            seat: initSeat,
-            socketId: that.wss.socketId
-          });
-      }
-      that.status = 'game starting in: ' + that.startcount + ' seconds';
-      that.startcount--;
-    }, 1000);
+      this.wss.emit('tableBetting',
+        {
+          table: table,
+          tablePlaying: gameStarted,
+          seat: initSeat,
+          socketId: this.wss.socketId
+        });
+      this.subTimer.unsubscribe();
+    }
   }
 
   ngOnInit() {
-    clearInterval(this.intv);
   }
 
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
-    clearInterval(this.intv);
-    this.active = false;
+    if(this.subTimer !== undefined) {
+      this.subTimer.unsubscribe();
+    }
   }
 
   logStuff(stuff: any) {

@@ -18,17 +18,8 @@ export class TableSelectComponent implements OnInit {
 
   constructor(private http: HttpClient,
               private wss: WebsocketService,
-              private ts: TableService,
-              private router: Router,
-              private location: PlatformLocation) {
+              private ts: TableService) {
 
-    /*
-    location.onPopState(() => {
-      this.router.navigate(['/']).then((r) => {
-        //
-      });
-    });
-    */
   }
 
   joinRoom(roomNum) {

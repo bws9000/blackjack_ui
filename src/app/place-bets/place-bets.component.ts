@@ -7,7 +7,7 @@ import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {ActivatedRoute, Params} from "@angular/router";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 
 @Component({
@@ -27,9 +27,12 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
   chips: number;
   currentBet: number;
   selectedValue: number;
-  timerCount: number;
   countStatus: number;
   tableName: string;
+
+  private timer;
+  private subTimer: Subscription;
+  private startcount:number;
 
   userSubscription: Subscription;
 
@@ -40,7 +43,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
               private playerboxService: PlayerboxService,
               private route: ActivatedRoute) {
 
-    this.timerCount = 11;
+
     this.placeBetsVisible = 'hidden';
 
     this.chips = this.placeBetsService.currentBank;
@@ -51,11 +54,11 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       chips: new FormControl()
     });
 
-
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
 
         this.tableName = params.tableId;
+        this.startcount = 10;
 
         this.placeBetsService.visible.subscribe(value => {
 
@@ -68,22 +71,17 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
             let v = o.value;
             let s = o.seat;
 
-            /*
-            this.logStuff('-v: ' + v +
-              ' -seat: ' + s +
-              ' -current seat: ' + this.seatService.currentSeat +
-              ' -current-table: ' + this.tableService.tableNum +
-              ' -tableName: ' + t);
-             */
-
-
             if (v) {
               if (s == this.seatService.currentSeat) {
                 if (this.placeBetsVisible === 'hidden') {
-                  clearInterval(this.placeBetsService.intv);
                   this.logStuff('* placebet timer started *');
                   this.placeBetsVisible = 'visible';
-                  this.timer(this.timerCount);
+
+                  //timer
+                  this.startcount = 10;
+                  this.timer = Observable.timer(1000,1000);
+                  this.subTimer = this.timer.subscribe(t =>this.timerTest(t));
+
                 }
               }
             } else {
@@ -129,6 +127,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.subTimer.unsubscribe();
     this.placeBetsVisible = 'hidden';
     this.currentBet = this.placeBetForm.get('chips').value;
     this.placeBetsService.currentBet = this.currentBet;
@@ -140,22 +139,16 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       socketId: this.wss.socketId,
       betfinished: this.seatService.currentSeat
     });
-    clearInterval(this.placeBetsService.intv);
+
   }
 
-  timer(count) {
-
-    let that = this;
-    that.countStatus = count;
-    this.placeBetsService.intv = setInterval(function () {
-      if (count < 1) {
-        clearInterval(that.placeBetsService.intv);
-        that.clearSeat();
-        count = that.timerCount;
-      }
-      count--;
-      that.countStatus = count;
-    }, 1000);
+  timerTest(t){
+    this.startcount--;
+    this.countStatus = this.startcount;
+    if(this.startcount == -1) {
+      this.clearSeat();
+      this.subTimer.unsubscribe();
+    }
   }
 
   clearSeat() {
@@ -191,7 +184,9 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
-    clearInterval(this.placeBetsService.intv);
+    if(this.subTimer !== undefined){
+      this.subTimer.unsubscribe();
+    }
   }
 
 }

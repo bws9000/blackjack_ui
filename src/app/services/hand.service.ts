@@ -26,12 +26,12 @@ export class HandService {
   }
 
   getPlayerHands(playerHands){
-    this.logStuff(JSON.stringify(playerHands));
+    //this.logStuff(JSON.stringify(playerHands));
     this.playerHands.next(playerHands);
   }
 
   getDealerHand(dealerHand){
-    this.logStuff(JSON.stringify(dealerHand));
+    //this.logStuff(JSON.stringify(dealerHand));
     this.dealerHand.next(dealerHand);
   }
 
