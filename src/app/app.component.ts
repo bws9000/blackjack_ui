@@ -120,6 +120,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   ////////////////// table emit //////////////////////////
   ////////////////////////////////////////////////////////
 
+  playerAction(data){
+    this.wss.startChange.next(true);
+    this.sms.statusMessage(data.status);
+
+    this.handService.getPlayerHands(data.playerHands);
+    this.handService.getDealerHand(data.dealerHand);
+
+    this.logStuff('playerAction: ' + JSON.stringify(data));
+  }
+
   getHands(data) {
 
     this.logStuff(JSON.stringify(data));
@@ -166,7 +176,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     if(data.nextPlayer === this.seatService.currentSeat) {
       this.wss.emit('tablePlaying', {
         table: this.tableService.tableNum,
-        seat: data.nextPlayer
+        seat: data.nextPlayer,
+        socketid:this.wss.socketId
       });
     }
     this.logStuff(JSON.stringify(data));
@@ -236,22 +247,22 @@ export class AppComponent implements OnInit, AfterViewInit {
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
 
-      //initEmit
+      this.wss
+        .onEvent('playerActionEmit')
+        .subscribe(data => this.playerAction(data));
+
       this.wss
         .onEvent('initEmit')
         .subscribe(data => this.init(data));
 
-      //joinTableEmit
       this.wss
         .onEvent('joinTableEmit')
         .subscribe(data => this.joinTable(data));
 
-      //leftTableOneEmit
       this.wss
         .onEvent('leftTableEmit')
         .subscribe(data => this.leftTable(data));
 
-      //socketReconnect
       this.wss
         .onEvent('socketReconnect')
         .subscribe(data => this.socketReconnect(data));

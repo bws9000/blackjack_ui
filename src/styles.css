@@ -70,6 +70,7 @@ html, body {
   bottom: 0;
   left: 0;
   background-color: rgba(0,0,0,.5);
+  z-index: 999999;
 }
 .temp_loading-wheel {
   width: 20px;
@@ -84,10 +85,12 @@ html, body {
   border-width: 30px;
   border-radius: 50%;
   -webkit-animation: spin 1s linear infinite;
+  z-index: 999999;
 }
 .temp_style-2 .temp_loading-wheel {
   border-style: double;
   border-color: #ccc transparent;
+  z-index: 999999;
 }
 @-webkit-keyframes spin {
   0% {

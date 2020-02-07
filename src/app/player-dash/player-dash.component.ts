@@ -68,7 +68,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           if (currentTable === params.tableId) {
             if (v) {
               if (+this.dash == this.seatService.currentSeat &&
-              s === this.seatService.currentSeat) {
+                s === this.seatService.currentSeat) {
                 this.show();
               }
             } else {
@@ -76,7 +76,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             }
           }
         });
-
 
 
       });
@@ -87,17 +86,28 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     return this.dash;
   }
 
-  hit(){
-    alert('hit');
+  hit() {
+    this.wss.emit('playerAction',{
+      action: 'hit',
+      currentSeat: this.seatService.currentSeat,
+      table: this.tableService.tableNum,
+      socketId: this.wss.socketId
+    });
   }
 
-  other(){
-    alert('dd / split');
+  other() {
+    this.wss.emit('playerAction',{
+      action: 'dd/split',
+      currentSeat: this.seatService.currentSeat,
+      table: this.tableService.tableNum,
+      socketId: this.wss.socketId
+    });
   }
 
-  stand(){
+  stand() {
     this.wss.emit('nextPlayerDash', {
-      currentSeat:this.seatService.currentSeat,
+      action: 'stand',
+      currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
     });
@@ -115,7 +125,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  ngOnDestroy():void{
+  ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
   }
 
