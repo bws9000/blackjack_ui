@@ -3,10 +3,11 @@ import {PlayerDashService} from "../services/player-dash.service";
 import {SeatService} from "../services/seat.service";
 import {environment} from "../../environments/environment";
 import {HandService} from "../services/hand.service";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Params} from "@angular/router";
 import {TableService} from "../services/table.service";
 import {WebsocketService} from "../services/websocket.service";
+import {DashStatusServiceService} from "../services/dash-status-service.service";
 
 @Component({
   selector: 'app-player-dash',
@@ -23,6 +24,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   playerDashVisible: string;
   seat: string;
   tableName: string;
+  statusBoxVisible: string;
+  playerStatus: string;
+  actionTimerCount:number;
+
+  private timer;
+  private subTimer: Subscription;
 
   userSubscription: Subscription;
 
@@ -31,16 +38,41 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               private handService: HandService,
               private route: ActivatedRoute,
               private tableService: TableService,
+              private dss: DashStatusServiceService,
               private wss: WebsocketService) {
 
 
+    this.playerStatus = 'playing';
+    this.statusBoxVisible = 'hidden';
     this.playerDashVisible = 'hidden';
 
 
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
 
+        this.actionTimerCount  = 2;
         this.tableName = params.tableId;
+
+        this.dss.statusMessage.subscribe(value => {
+
+          let j = JSON.stringify(value);
+          let o = JSON.parse(j);
+          let result = o.result;
+          let seat = o.seat;
+          let tname = o.tableName;
+
+          if (tname === this.tableName &&
+            seat === this.dash) {
+            this.playerStatus = result;
+            if(result === 'blackjack' ||
+            result === 'busted'){
+              this.timer = Observable.timer(1000,1000);
+              this.subTimer = this.timer.subscribe(t =>this.statusOver(t));
+            }
+            this.statusBox();
+          }
+
+        });
 
         this.handService.dealerHand.subscribe(value => {
           if (value !== null) {
@@ -82,12 +114,45 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   }
 
+  statusOver(t){
+    this.actionTimerCount--;
+    if(this.actionTimerCount == -1){
+      this.playerStatus = 'playing';
+      this.setPlayerStatus();
+      this.stand();
+      this.actionTimerCount = 2;
+      this.subTimer.unsubscribe();
+    }
+  }
+
+  setPlayerStatus() {
+    let result = '';
+    if (this.playerStatus === 'busted') {
+      result = 'Bust!';
+    }
+    if (this.playerStatus === 'blackjack') {
+      result = 'Blackjack!';
+    }
+    return result;
+  }
+
+  statusBox() {
+    let result = '';
+    if (this.playerDashVisible === 'visible' &&
+      this.playerStatus !== 'playing') {
+      result = 'visible';
+    } else {
+      result = 'hidden';
+    }
+    return result;
+  }
+
   getSeat() {
     return this.dash;
   }
 
   hit() {
-    this.wss.emit('playerAction',{
+    this.wss.emit('playerAction', {
       action: 'hit',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
@@ -96,7 +161,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   other() {
-    this.wss.emit('playerAction',{
+    this.wss.emit('playerAction', {
       action: 'dd/split',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,

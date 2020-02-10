@@ -21,6 +21,7 @@ import {StatusMessageService} from "./services/status-message.service";
 import {HandService} from "./services/hand.service";
 import {PlayerDashService} from "./services/player-dash.service";
 import {SocketObservable} from "./SocketObservable";
+import {DashStatusServiceService} from "./services/dash-status-service.service";
 
 @Component({
   selector: 'app-root',
@@ -44,7 +45,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               private placeBetsService: PlaceBetsService,
               private sms: StatusMessageService,
               private handService: HandService,
-              private playerDashService: PlayerDashService) {
+              private playerDashService: PlayerDashService,
+              private dss: DashStatusServiceService) {
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -128,15 +130,25 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.handService.getDealerHand(data.dealerHand);
 
     this.logStuff('playerAction: ' + JSON.stringify(data));
+
+    let result = data.result;
+    let seat = data.seat;
+    let tableName = data.table;
+    this.dss.activate(result,seat,tableName);
   }
 
   getHands(data) {
 
-    this.logStuff(JSON.stringify(data));
+    this.logStuff('getHands: ' + JSON.stringify(data));
     this.wss.startChange.next(true);
 
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
+
+    let result = data.result;
+    let seat = data.justBet;
+    let tableName = data.table;
+    this.dss.activate(result,seat,tableName);
 
     let that = this;
 
@@ -148,6 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   //1st PLAYER SITS DOWN
   playersBetting(data) {
+    this.placeBetsService.currentBank = data.chips;
     this.wss.startChange.next(true);
     this.tableService.tablePlaying = true;
     this.placeBetsService.setVisible(true, data.nextPlayer, data.table);
