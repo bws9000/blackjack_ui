@@ -127,7 +127,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.subTimer.unsubscribe();
+
     this.placeBetsVisible = 'hidden';
     this.currentBet = this.placeBetForm.get('chips').value;
     this.placeBetsService.currentBet = this.currentBet;
@@ -139,7 +139,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       socketId: this.wss.socketId,
       betfinished: this.seatService.currentSeat
     });
-
+    this.subTimer.unsubscribe();
   }
 
   timerTest(t){

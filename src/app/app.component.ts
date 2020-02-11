@@ -122,7 +122,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ////////////////// table emit //////////////////////////
   ////////////////////////////////////////////////////////
 
-  playerAction(data){
+  playerAction(data) {
     this.wss.startChange.next(true);
     this.sms.statusMessage(data.status);
 
@@ -134,7 +134,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     let result = data.result;
     let seat = data.seat;
     let tableName = data.table;
-    this.dss.activate(result,seat,tableName);
+    let broadcast = data.broadcast;
+    this.dss.activate(result, seat, tableName, seat, broadcast);//seat,seat
   }
 
   getHands(data) {
@@ -148,12 +149,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     let result = data.result;
     let seat = data.justBet;
     let tableName = data.table;
-    this.dss.activate(result,seat,tableName);
+    let nextPlayer = data.nextPlayer;
+    let broadcast = data.broadcast;
+    this.dss.activate(result, seat, tableName, nextPlayer, broadcast);//seat/nextPlayer
 
     let that = this;
 
     setTimeout(() => {
-      that.playerDashService.updateVisible(true, data.nextPlayer);
+      that.playerDashService.updateVisible(true, nextPlayer);
     }, 900);
 
   }
@@ -186,11 +189,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   nextPlayerDashEmit(data) {
     this.sms.statusMessage(data.status);
     this.wss.startChange.next(true);
-    if(data.nextPlayer === this.seatService.currentSeat) {
+    if (data.nextPlayer === this.seatService.currentSeat) {
       this.wss.emit('tablePlaying', {
         table: this.tableService.tableNum,
         seat: data.nextPlayer,
-        socketid:this.wss.socketId
+        socketid: this.wss.socketId
       });
     }
     this.logStuff(JSON.stringify(data));

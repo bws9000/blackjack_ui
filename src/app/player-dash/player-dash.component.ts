@@ -26,7 +26,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   tableName: string;
   statusBoxVisible: string;
   playerStatus: string;
-  actionTimerCount:number;
+  actionTimerCount: number;
 
   private timer;
   private subTimer: Subscription;
@@ -50,7 +50,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
 
-        this.actionTimerCount  = 2;
+        this.actionTimerCount = 2;
         this.tableName = params.tableId;
 
         this.dss.statusMessage.subscribe(value => {
@@ -60,17 +60,25 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let result = o.result;
           let seat = o.seat;
           let tname = o.tableName;
+          let nextPlayer = o.nextPlayer;
+          let broadcast = o.broadcast;
 
-          if (tname === this.tableName &&
-            seat === this.dash) {
-            this.playerStatus = result;
-            if(result === 'blackjack' ||
-            result === 'busted'){
-              this.timer = Observable.timer(1000,1000);
-              this.subTimer = this.timer.subscribe(t =>this.statusOver(t));
+          /*
+          console.log('seat: ' + seat);
+          console.log('this.dash: ' + this.dash);
+          console.log('tname: ' + tname);
+          console.log('this.tableName: ' + this.tableName);
+          */
+
+            if (tname === this.tableName &&
+              nextPlayer === this.dash) {
+              this.playerStatus = result;
+              if (result !== 'playing' && !broadcast) {
+                this.timer = Observable.timer(1000, 1000);
+                this.subTimer = this.timer.subscribe(t => this.statusOver(t));
+              }
+              this.statusBox();
             }
-            this.statusBox();
-          }
 
         });
 
@@ -114,25 +122,43 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   }
 
-  statusOver(t){
+  stand() {
+    this.wss.emit('nextPlayerDash', {
+      action: 'stand',
+      currentSeat: this.seatService.currentSeat,
+      table: this.tableService.tableNum,
+      socketId: this.wss.socketId
+    });
+    this.playerDashVisible = 'hidden';
+  }
+
+  statusOver(t) {
     this.actionTimerCount--;
-    if(this.actionTimerCount == -1){
+    if (this.actionTimerCount == -1) {
+      console.log('statusOver');
       this.playerStatus = 'playing';
       this.setPlayerStatus();
-      this.stand();
       this.actionTimerCount = 2;
       this.subTimer.unsubscribe();
+      this.stand();
     }
   }
 
   setPlayerStatus() {
     let result = '';
-    if (this.playerStatus === 'busted') {
-      result = 'Bust!';
-    }
+
     if (this.playerStatus === 'blackjack') {
       result = 'Blackjack!';
     }
+
+    if (this.playerStatus === '21') {
+      result = '21';
+    }
+
+    if (this.playerStatus === 'busted') {
+      result = 'Bust!';
+    }
+
     return result;
   }
 
@@ -167,16 +193,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
     });
-  }
-
-  stand() {
-    this.wss.emit('nextPlayerDash', {
-      action: 'stand',
-      currentSeat: this.seatService.currentSeat,
-      table: this.tableService.tableNum,
-      socketId: this.wss.socketId
-    });
-    this.playerDashVisible = 'hidden';
   }
 
   hide() {
