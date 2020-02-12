@@ -74,6 +74,12 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
             if (v) {
               if (s == this.seatService.currentSeat) {
                 if (this.placeBetsVisible === 'hidden') {
+
+                  //this.playerboxService.setAction(this.seatService.currentSeat,false);
+                  this.wss.emit('actionOrder', {
+                    seat:this.seatService.currentSeat,
+                    table: this.tableService.tableNum
+                  });
                   this.logStuff('* placebet timer started *');
                   this.placeBetsVisible = 'visible';
 

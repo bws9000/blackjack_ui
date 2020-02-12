@@ -110,7 +110,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   ngOnDestroy() {
     //leave room/table
     let table = this.tableService.tableNum;
-    this.logStuff('NG ON DESTROY CALLED');
+    //this.logStuff('NG ON DESTROY CALLED');
     this.wss.emit('leaveTable', {table: table});
     this.statusUpdateService.hideNavBar(true);
     this.userSubscription.unsubscribe();

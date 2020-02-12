@@ -245,6 +245,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       data.tableName);
   }
 
+  actionSeat(data){
+    this.wss.startChange.next(true);
+    this.logStuff('actionSeat: ' + JSON.stringify(data));
+  }
   ////////////////////////////////////////////////////
   ////////////////////////////////////////////////////
   ////////////////////////////////////////////////////
@@ -262,6 +266,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+
+      this.wss
+        .onEvent('actionSeatEmit')
+        .subscribe(data => this.actionSeat(data));
 
       this.wss
         .onEvent('playerActionEmit')

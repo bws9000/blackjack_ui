@@ -473,7 +473,7 @@
 .playerstatus_update_box {
   margin: auto;
   width: calc(100% / 1.5);
-  height: calc(100% / 1.5);
+  height: calc(100% / 2.7);
   padding: 25px 25px 25px 25px;
   position: fixed;
   top: 0;
