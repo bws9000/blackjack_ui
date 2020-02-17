@@ -31,6 +31,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   private timer;
   private subTimer: Subscription;
 
+  private timer2;
+  private subTimer2: Subscription;
+  timer2time: number;
+
   userSubscription: Subscription;
 
   constructor(private playerDashService: PlayerDashService,
@@ -41,6 +45,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               private dss: DashStatusServiceService,
               private wss: WebsocketService) {
 
+
+    this.setTimer2Timer();
 
     this.playerStatus = 'playing';
     this.statusBoxVisible = 'hidden';
@@ -72,8 +78,14 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
             if (tname === this.tableName &&
               nextPlayer === this.dash) {
+
+              /////////////timer count
+              this.timer2 = Observable.timer(1000, 1000);
+              this.subTimer2 = this.timer2.subscribe(t => this.statusCount(t));
+              ////////////////////////
               this.playerStatus = result;
               if (result !== 'playing' && !broadcast) {
+                //display message from action then hide dashboard
                 this.timer = Observable.timer(1000, 1000);
                 this.subTimer = this.timer.subscribe(t => this.statusOver(t));
               }
@@ -117,7 +129,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           }
         });
 
-
       });
 
   }
@@ -131,6 +142,20 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     });
     this.playerDashVisible = 'hidden';
   }
+
+
+  statusCount(t) {
+    this.timer2time--;
+    if (this.timer2time < 0) {
+      this.playerStatus = 'playing';
+      if(this.playerStatus === 'playing') {
+        this.setTimer2Timer();
+        this.subTimer2.unsubscribe();
+        this.stand();
+      }
+    }
+  }
+
 
   statusOver(t) {
     this.actionTimerCount--;
@@ -173,8 +198,11 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  getSeat() {
-    return this.dash;
+  setTimer2Timer() {
+    this.timer2time = 10;
+    if (!environment.production) {
+      this.timer2time = 5;
+    }
   }
 
   hit() {

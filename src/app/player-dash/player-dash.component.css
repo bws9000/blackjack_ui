@@ -50,13 +50,19 @@
 
 .inner_top_header_dealer {
   text-align: center;
-  width: 29%;
+  width: 31%;
   float: left;
+}
+
+.inner_top_header_player_timer{
+  width:14%;
+  text-align: left;
+  float:left;
 }
 
 .inner_top_header_player {
   text-align: center;
-  width: 69%;
+  width: 54%;
   float: left;
 }
 
