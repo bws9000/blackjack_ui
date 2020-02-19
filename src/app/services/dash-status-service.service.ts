@@ -7,6 +7,7 @@ import {Subject} from "rxjs";
 export class DashStatusServiceService {
 
   statusMessage: Subject<Object> = new Subject<Object>();
+  startTimerCount: Subject<string> = new Subject<string>();
 
 
   constructor() {
@@ -22,6 +23,10 @@ export class DashStatusServiceService {
       broadcast:broadcast
     };
     this.statusMessage.next(data);
+  }
+
+  startTimer(seat){
+    this.startTimerCount.next(seat);
   }
 
 }

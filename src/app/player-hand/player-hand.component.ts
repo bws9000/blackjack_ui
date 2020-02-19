@@ -45,7 +45,7 @@ export class PlayerHandComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    //this.logStuff('HAND: ' + this.hand);
   }
 
   logStuff(stuff: any) {

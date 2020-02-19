@@ -17,8 +17,10 @@ import {DashStatusServiceService} from "../services/dash-status-service.service"
 
 export class PlayerDashComponent implements OnInit, OnDestroy {
 
-  @Input() player: string;
   @Input() dash: string;
+
+  private dashId;
+
   cards: [number];
   dcards: [number, number];
   playerDashVisible: string;
@@ -27,6 +29,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   statusBoxVisible: string;
   playerStatus: string;
   actionTimerCount: number;
+
+  private broadcast;
 
   private timer;
   private subTimer: Subscription;
@@ -59,6 +63,16 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         this.actionTimerCount = 2;
         this.tableName = params.tableId;
 
+        this.dss.startTimerCount.subscribe(value => {
+          if(this.dashId === value) {
+            //this.logStuff('OBSERVABLE');
+            //this.logStuff('this.dash: ' + this.dash);
+            //this.logStuff('value: ' + value);
+            this.timer2 = Observable.timer(1000, 1000);
+            this.subTimer2 = this.timer2.subscribe(t => this.statusCount(t));
+          }
+        });
+
         this.dss.statusMessage.subscribe(value => {
 
           let j = JSON.stringify(value);
@@ -68,6 +82,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let tname = o.tableName;
           let nextPlayer = o.nextPlayer;
           let broadcast = o.broadcast;
+          this.broadcast = broadcast;
 
           /*
           console.log('seat: ' + seat);
@@ -86,9 +101,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               this.timer = Observable.timer(1000, 1000);
               this.subTimer = this.timer.subscribe(t => this.statusOver(t));
             }
-
-            //this.timer2 = Observable.timer(1000, 1000);
-            //this.subTimer2 = this.timer2.subscribe(t => this.statusCount(t));
 
             this.statusBox();
           }
@@ -149,11 +161,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.timer2time--;
     if (this.timer2time < 0) {
       this.playerStatus = 'playing';
-      if (this.playerStatus === 'playing') {
-        this.setTimer2Timer();
-        this.subTimer2.unsubscribe();
-        this.stand();
+      this.setTimer2Timer();
+      if (this.subTimer !== undefined) {
+        this.subTimer.unsubscribe();
       }
+      this.subTimer2.unsubscribe();
+      this.stand();
     }
   }
 
@@ -200,9 +213,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   setTimer2Timer() {
-    this.timer2time = 10;
+    this.timer2time = 30;
     if (!environment.production) {
-      this.timer2time = 5;
+      this.timer2time = 10;
     }
   }
 
@@ -230,9 +243,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   show() {
     this.playerDashVisible = 'visible';
+      this.dss.startTimer(this.dash);
   }
 
   ngOnInit() {
+    //this.logStuff('dash: ' + this.dash);
+    this.dashId = this.dash;
   }
 
   ngOnDestroy(): void {
