@@ -22,6 +22,7 @@ import {HandService} from "./services/hand.service";
 import {PlayerDashService} from "./services/player-dash.service";
 import {SocketObservable} from "./SocketObservable";
 import {DashStatusServiceService} from "./services/dash-status-service.service";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   loadingWheelVisible: string;
   isHidden: boolean;
   count: number;
+
+  private timer;
+  private subTimer: Subscription;
 
   constructor(private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
@@ -140,7 +144,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   getHands(data) {
 
+    //this.logStuff('handResult: ' + this.handService.handResult);
+    //this.logStuff('sitting: ' + this.seatService.sitting);
     this.logStuff('getHands: ' + JSON.stringify(data));
+
     this.wss.startChange.next(true);
 
     this.handService.getPlayerHands(data.playerHands);
@@ -153,12 +160,22 @@ export class AppComponent implements OnInit, AfterViewInit {
     let broadcast = data.broadcast;
     this.dss.activate(result, seat, tableName, nextPlayer, broadcast);//seat/nextPlayer
 
-    let that = this;
+    this.timer = Observable.timer(1000, 1000);
+    this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer,result));
 
+    /*
     setTimeout(() => {
       that.playerDashService.updateVisible(true, nextPlayer);
     }, 900);
+    */
 
+  }
+
+  updateVisibleDash(t, nextPlayer,result) {
+    //t
+    this.playerDashService.updateVisible(true, nextPlayer);
+    this.handService.handResult = result;
+    this.subTimer.unsubscribe();
   }
 
   //1st PLAYER SITS DOWN
@@ -245,10 +262,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       data.tableName);
   }
 
-  actionSeat(data){
+  actionSeat(data) {
     this.wss.startChange.next(true);
     this.logStuff('actionSeat: ' + JSON.stringify(data));
   }
+
   ////////////////////////////////////////////////////
   ////////////////////////////////////////////////////
   ////////////////////////////////////////////////////

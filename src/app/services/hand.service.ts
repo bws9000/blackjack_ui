@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Subject} from "rxjs";
 import {environment} from "../../environments/environment";
-import {StatusUpdateService} from "./status-update.service";
-import {isBoolean} from "util";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +13,13 @@ export class HandService {
   hideDealerHand: Subject<boolean> = new Subject<boolean>();
   standUp: Subject<number> = new Subject<number>();
 
-  constructor() { }
+  public handResult: string;
+  public handPlayed: boolean;
+
+  constructor() {
+    this.handResult = 'playing';
+    this.handPlayed = false;
+  }
 
   seatStand(seat){
     this.standUp.next(seat);

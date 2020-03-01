@@ -12,9 +12,10 @@ export class SeatService {
   playerSeats: Subject<Array<any>> = new Subject<Array<any>>();
   sitState: Subject<Object> = new Subject<Object>();
   standState: Subject<Object> = new Subject<Object>();
-  //initState: Subject<Array<any>> = new Subject<Array<any>>();
+
   is: Array<any>;
-  sitting:boolean;
+
+  public sitting:boolean;
   public currentSeat:number;
   public currentSeats:number;
 
@@ -38,6 +39,8 @@ export class SeatService {
   }
 
   sitDown(seat, bc, tableName: string) {
+    this.sitting = true;
+
     let data = {
       sitting: seat,
       broadcast: bc,
@@ -48,6 +51,8 @@ export class SeatService {
   }
 
   standUp(seat, bc, tableName: string) {
+    this.sitting = false;
+
     let data = {
       sitting: seat,
       broadcast: bc,

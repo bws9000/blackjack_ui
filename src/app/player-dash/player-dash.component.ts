@@ -56,7 +56,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.statusBoxVisible = 'hidden';
     this.playerDashVisible = 'hidden';
 
-
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
 
@@ -64,7 +63,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         this.tableName = params.tableId;
 
         this.dss.startTimerCount.subscribe(value => {
-          if(this.dashId === value) {
+          if (this.dashId === value) {
             //this.logStuff('OBSERVABLE');
             //this.logStuff('this.dash: ' + this.dash);
             //this.logStuff('value: ' + value);
@@ -84,12 +83,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let broadcast = o.broadcast;
           this.broadcast = broadcast;
 
-          /*
-          console.log('seat: ' + seat);
-          console.log('this.dash: ' + this.dash);
-          console.log('tname: ' + tname);
-          console.log('this.tableName: ' + this.tableName);
-          */
 
           if (tname === this.tableName &&
             nextPlayer === this.dash) {
@@ -102,7 +95,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               this.subTimer = this.timer.subscribe(t => this.statusOver(t));
             }
 
-            this.statusBox();
+            //this.statusBox();
           }
 
         });
@@ -147,20 +140,29 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   stand() {
-    this.wss.emit('nextPlayerDash', {
-      action: 'stand',
-      currentSeat: this.seatService.currentSeat,
-      table: this.tableService.tableNum,
-      socketId: this.wss.socketId
-    });
-    this.playerDashVisible = 'hidden';
-  }
 
+    //this.logStuff('playerStatus: ' + this.playerStatus);
+    //this.logStuff('handResult2: ' + this.handService.handResult);
+    this.logStuff('handPlayed: ' + this.handService.handPlayed);
+
+    if(this.handService.handPlayed) {
+      this.handService.handPlayed = false;
+
+      this.wss.emit('nextPlayerDash', {
+        action: 'stand',
+        currentSeat: this.seatService.currentSeat,
+        table: this.tableService.tableNum,
+        socketId: this.wss.socketId
+      });
+      this.playerDashVisible = 'hidden';
+
+    }
+  }
 
   statusCount(t) {
     this.timer2time--;
     if (this.timer2time < 0) {
-      this.playerStatus = 'playing';
+      //this.playerStatus = 'playing';
       this.setTimer2Timer();
       if (this.subTimer !== undefined) {
         this.subTimer.unsubscribe();
@@ -175,7 +177,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.actionTimerCount--;
     if (this.actionTimerCount == -1) {
       console.log('statusOver');
-      this.playerStatus = 'playing';
+      //this.playerStatus = 'playing';
       this.setPlayerStatus();
       this.actionTimerCount = 2;
       this.subTimer.unsubscribe();
@@ -198,13 +200,15 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       result = 'Bust!';
     }
 
+
     return result;
   }
 
   statusBox() {
     let result = '';
     if (this.playerDashVisible === 'visible' &&
-      this.playerStatus !== 'playing') {
+      this.playerStatus !== 'playing' && this.playerStatus !== 'next') {
+      this.handService.handPlayed = true;
       result = 'visible';
     } else {
       result = 'hidden';
@@ -243,7 +247,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   show() {
     this.playerDashVisible = 'visible';
-      this.dss.startTimer(this.dash);
+    this.dss.startTimer(this.dash);
   }
 
   ngOnInit() {
