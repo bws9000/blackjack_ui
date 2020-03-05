@@ -140,10 +140,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   stand() {
-
     //this.logStuff('playerStatus: ' + this.playerStatus);
     //this.logStuff('handResult2: ' + this.handService.handResult);
-    this.logStuff('handPlayed: ' + this.handService.handPlayed);
+    //this.logStuff('handPlayed: ' + this.handService.handPlayed);
 
     if(this.handService.handPlayed) {
       this.handService.handPlayed = false;
@@ -159,16 +158,53 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     }
   }
 
+  standClick() {
+
+    this.handService.handPlayed = false;
+
+    if (this.subTimer !== undefined) {
+      this.subTimer.unsubscribe();
+    }
+
+    if (this.subTimer2 !== undefined) {
+      this.subTimer2.unsubscribe();
+    }
+
+    this.wss.emit('nextPlayerDash', {
+      action: 'stand',
+      currentSeat: this.seatService.currentSeat,
+      table: this.tableService.tableNum,
+      socketId: this.wss.socketId
+    });
+    this.playerDashVisible = 'hidden';
+
+  }
+
+  standTimeRanOut() {
+
+      this.handService.handPlayed = false;
+
+      this.wss.emit('nextPlayerDash', {
+        action: 'stand',
+        currentSeat: this.seatService.currentSeat,
+        table: this.tableService.tableNum,
+        socketId: this.wss.socketId
+      });
+      this.playerDashVisible = 'hidden';
+
+  }
+
   statusCount(t) {
     this.timer2time--;
     if (this.timer2time < 0) {
+      console.log('statusCount');
       //this.playerStatus = 'playing';
       this.setTimer2Timer();
       if (this.subTimer !== undefined) {
         this.subTimer.unsubscribe();
       }
       this.subTimer2.unsubscribe();
-      this.stand();
+      this.standTimeRanOut();
     }
   }
 
@@ -180,6 +216,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       //this.playerStatus = 'playing';
       this.setPlayerStatus();
       this.actionTimerCount = 2;
+      if (this.subTimer2 !== undefined) {
+        this.subTimer2.unsubscribe();
+      }
       this.subTimer.unsubscribe();
       this.stand();
     }
