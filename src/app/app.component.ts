@@ -163,12 +163,26 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.timer = Observable.timer(1000, 1000);
     this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer,result));
 
+    if(data.nextPlayer === undefined){
+      //DEALER TURN
+      this.sms.statusMessage("dealer playing");
+      this.handService.showDealerHiddenCard(data.dealerHand);
+      this.wss.emit('dealerHand', {
+        table: this.tableService.tableNum
+      });
+    }
+
     /*
     setTimeout(() => {
       that.playerDashService.updateVisible(true, nextPlayer);
     }, 900);
     */
 
+  }
+
+  dealerHandEmit(data){
+    this.wss.startChange.next(true);
+    this.logStuff('dealerHand => ' + JSON.stringify(data));
   }
 
   updateVisibleDash(t, nextPlayer,result) {
@@ -213,7 +227,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         socketid: this.wss.socketId
       });
     }
-    this.logStuff(JSON.stringify(data));
+    //this.logStuff('NEXT PLAYER: ' + data.nextPlayer);
+    //this.logStuff(JSON.stringify(data));
   }
 
   standUpTableEmit(data) {
@@ -339,6 +354,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.wss
         .onEvent('standUpTableEmit')
         .subscribe(data => this.standUpTableEmit(data));
+
+      this.wss
+        .onEvent('dealerHandEmit')
+        .subscribe(data => this.dealerHandEmit(data));
 
       ////////////////// Environment Updates //////////////////////
       /////////////////////////////////////////////////////////////

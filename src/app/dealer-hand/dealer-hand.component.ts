@@ -19,6 +19,12 @@ export class DealerHandComponent implements OnInit {
       }
     });
 
+    this.handService.showDealerHand.subscribe(value =>{
+      if (value !== null) {
+        this.cards = [value[0].hand[0], value[0].hand[1]];
+      }
+    });
+
     this.handService.hideDealerHand.subscribe(value=>{
       //set in sit component
       if(!value){
