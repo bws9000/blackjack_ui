@@ -175,12 +175,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       });
     }
 
-    /*
-    setTimeout(() => {
-      that.playerDashService.updateVisible(true, nextPlayer);
-    }, 900);
-    */
-
   }
 
   dealerHandEmit(data) {
