@@ -23,6 +23,7 @@ import {PlayerDashService} from "./services/player-dash.service";
 import {SocketObservable} from "./SocketObservable";
 import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Observable, Subscription} from "rxjs";
+import {MultiDashService} from "./services/multi-dash.service";
 
 @Component({
   selector: 'app-root',
@@ -50,7 +51,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               private sms: StatusMessageService,
               private handService: HandService,
               private playerDashService: PlayerDashService,
-              private dss: DashStatusServiceService) {
+              private dss: DashStatusServiceService,
+              private mdService: MultiDashService) {
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -161,14 +163,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.dss.activate(result, seat, tableName, nextPlayer, broadcast);//seat/nextPlayer
 
     this.timer = Observable.timer(1000, 1000);
-    this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer,result));
+    this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer, result));
 
-    if(data.nextPlayer === undefined){
+    if (data.nextPlayer === undefined) {
       //DEALER TURN
       this.sms.statusMessage("dealer playing");
       this.handService.showDealerHiddenCard(data.dealerHand);
       this.wss.emit('dealerHand', {
-        table: this.tableService.tableNum
+        table: this.tableService.tableNum,
+        socketid: this.wss.socketId
       });
     }
 
@@ -180,12 +183,23 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   }
 
-  dealerHandEmit(data){
+  dealerHandEmit(data) {
     this.wss.startChange.next(true);
-    this.logStuff('dealerHand => ' + JSON.stringify(data));
+    this.handService.showAllDealerHand(data.dealerHand);
+
+    let visible = true;
+    let dealerResult = data.result;
+    let playerResult = data.phResult;
+    let dealerHandArray = data.dealerHand[0].hand;
+    let playerHandArray = data.playerHand.hand;
+
+    this.mdService.updateVisible(visible, dealerResult, playerResult,
+      dealerHandArray, playerHandArray);
+
+    this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
   }
 
-  updateVisibleDash(t, nextPlayer,result) {
+  updateVisibleDash(t, nextPlayer, result) {
     //t
     this.playerDashService.updateVisible(true, nextPlayer);
     this.handService.handResult = result;

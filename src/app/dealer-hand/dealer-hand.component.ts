@@ -13,6 +13,12 @@ export class DealerHandComponent implements OnInit {
 
   constructor(private handService: HandService) {
 
+    this.handService.allDealerHand.subscribe(value =>{
+      if(value !== null) {
+        this.cards = value[0].hand;
+      }
+    });
+
     this.handService.dealerHand.subscribe(value => {
       if (value !== null) {
         this.cards = [98, value[0].hand[1]];

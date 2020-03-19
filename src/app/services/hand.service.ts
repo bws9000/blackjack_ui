@@ -10,6 +10,7 @@ export class HandService {
 
   playerHands: Subject<Array<any>> = new Subject<Array<any>>();
   dealerHand: Subject<Array<any>> = new Subject<Array<any>>();
+  allDealerHand: Subject<Array<any>> = new Subject<Array<any>>();
   hideDealerHand: Subject<boolean> = new Subject<boolean>();
   showDealerHand: Subject<Array<any>> = new Subject<Array<any>>();
   standUp: Subject<number> = new Subject<number>();
@@ -38,6 +39,10 @@ export class HandService {
   getDealerHand(dealerHand){
     //this.logStuff(JSON.stringify(dealerHand));
     this.dealerHand.next(dealerHand);
+  }
+
+  showAllDealerHand(dealerHand){
+    this.allDealerHand.next(dealerHand);
   }
 
   showDealerHiddenCard(dealerHand){
