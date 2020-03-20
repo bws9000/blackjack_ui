@@ -11,18 +11,20 @@ import {TableService} from "../services/table.service";
   templateUrl: './multi-dash.component.html',
   styleUrls: ['./multi-dash.component.css']
 })
+
 export class MultiDashComponent implements OnInit {
 
   multiDashVisible: string;
+
   private openTime;
   private timer;
   private subTimer: Subscription;
 
   public playerStatus;
   public dealerStatus;
-  
-  private dCardsArray;
-  private pCardsArray;
+
+  public dCardsArray;
+  public pCardsArray;
 
   private readonly socketid;
   private readonly table;
@@ -68,6 +70,7 @@ export class MultiDashComponent implements OnInit {
         this.timer = Observable.timer(1000, 1000);
         this.subTimer = this.timer.subscribe(t => this.closeCount(t));
       }
+
     });
   }
 
