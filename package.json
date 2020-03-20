@@ -1,6 +1,9 @@
 {
   "name": "angulartemp",
   "version": "0.0.0",
+  "engines": {
+    "node": "^10.15.1"
+  },
   "scripts": {
     "heroku-postbuild": "ng build --prod",
     "ng": "ng",
