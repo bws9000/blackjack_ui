@@ -18,8 +18,9 @@ export class MultiDashComponent implements OnInit {
   private timer;
   private subTimer: Subscription;
 
-  private playerStatus;
-  private dealerStatus;
+  public playerStatus;
+  public dealerStatus;
+  
   private dCardsArray;
   private pCardsArray;
 
