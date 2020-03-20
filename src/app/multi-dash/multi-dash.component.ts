@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MultiDashService} from "../services/multi-dash.service";
 import {Observable, Subscription} from "rxjs";
 import {environment} from "../../environments/environment";
+import {Card2} from "../Card2";
+import {WebsocketService} from "../services/websocket.service";
+import {TableService} from "../services/table.service";
 
 @Component({
   selector: 'app-multi-dash',
@@ -15,11 +18,25 @@ export class MultiDashComponent implements OnInit {
   private timer;
   private subTimer: Subscription;
 
-  constructor(private mdService: MultiDashService) {
+  private playerStatus;
+  private dealerStatus;
+  private dCardsArray;
+  private pCardsArray;
+
+  private readonly socketid;
+  private readonly table;
+
+  constructor(private mdService: MultiDashService,
+              private wss: WebsocketService,
+              private tableService: TableService) {
+
+    this.socketid = this.wss.socketId;
+    this.table = 'table' + this.tableService.tableNum;
+
     this.openTime = 10;
     //this.logStuff('>>>: ' + this.openTime);
     this.multiDashVisible = 'hidden';
-    this.mdService.visible.subscribe(value =>{
+    this.mdService.visible.subscribe(value => {
 
       let j = JSON.stringify(value);
       let o = JSON.parse(j);
@@ -29,12 +46,23 @@ export class MultiDashComponent implements OnInit {
       let dHandArray = o.dHandArray;
       let pHandArray = o.pHandArray;
 
-      this.logStuff('dResult: ' + dealerResult);
-      this.logStuff('pResult: ' + playerResult);
-      this.logStuff('dHandArray: ' + dHandArray);
-      this.logStuff('pHandArray: ' + pHandArray);
+      //this.logStuff('dResult: ' + dealerResult);
+      //this.logStuff('pResult: ' + playerResult);
+      //this.logStuff('dHandArray: ' + dHandArray);
+      //this.logStuff('pHandArray: ' + pHandArray);
 
-      if(visible){
+      this.playerStatus = playerResult;
+      this.dealerStatus = dealerResult;
+      this.dCardsArray = dHandArray;
+      this.pCardsArray = pHandArray;
+
+      this.dealerStatus = (this.dealerStatus === 'playing') ?
+        this.setHandStatus(this.dCardsArray):this.dealerStatus;
+
+      this.playerStatus = (this.playerStatus === 'playing') ?
+        this.setHandStatus(this.pCardsArray):this.playerStatus;
+
+      if (visible) {
         this.multiDashVisible = 'visible';
         this.timer = Observable.timer(1000, 1000);
         this.subTimer = this.timer.subscribe(t => this.closeCount(t));
@@ -42,7 +70,37 @@ export class MultiDashComponent implements OnInit {
     });
   }
 
-  closeCount(t){
+  setHandStatus(cardIndexArray) {
+
+    let result = 0;
+    let cardArray = [];
+    let aceCount = 0;
+
+    //if you're here it's always less than 21
+
+      for (let i = 0; i < cardIndexArray.length; i++) {
+        cardArray[i] = new Card2(cardIndexArray[i], this.socketid, this.table);
+      }
+      for (let i = 0; i < cardArray.length; i++) {
+        let c = cardArray[i];
+        result += c.value;
+        if (c.name === 'ace') {
+          aceCount++;
+        }
+      }
+      //aces
+      if (aceCount >= 1) {
+        for (let i = 0; i < aceCount; i++) {
+          if (result <= 11) {
+            result = result + 10;
+          }
+        }
+      }
+      return result;
+
+  }
+
+  closeCount(t) {
     this.openTime--;
     //this.logStuff('count: ' + this.openTime);
     if (this.openTime < 0) {
@@ -54,7 +112,7 @@ export class MultiDashComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    if(this.subTimer !== undefined) {
+    if (this.subTimer !== undefined) {
       this.subTimer.unsubscribe();
     }
   }
@@ -66,6 +124,7 @@ export class MultiDashComponent implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
 }

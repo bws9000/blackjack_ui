@@ -1,7 +1,15 @@
 <div [style.visibility]="this.multiDashVisible" class="multiDash">
   <div class="multiDash_box">
     <div class="multidash_container">
-      Hand Status:
+      <div class="dealerStatus">
+        <h3>YOU</h3>
+        <h1>{{this.playerStatus}}</h1>
+      </div>
+      <hr/>
+      <div class="playerStatus">
+        <h3>DEALER</h3>
+        <h1>{{this.dealerStatus}}</h1>
+      </div>
     </div>
   </div>
 </div>
