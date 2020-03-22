@@ -124,6 +124,7 @@ export class SitComponent implements OnInit {
       });
       if (!this.sitOrLeave) {
         this.sitOrLeaveText = 'STAND UP';
+        this.seatService.sitting = true;
         this.sitOrLeave = true;
       }
     } else {
@@ -132,6 +133,7 @@ export class SitComponent implements OnInit {
         tableNum: this.table
       });
         this.sitOrLeaveText = 'SIT DOWN';
+        this.seatService.sitting = false;
         this.sitOrLeave = false;
     }
   }

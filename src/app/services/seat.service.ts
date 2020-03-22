@@ -15,17 +15,18 @@ export class SeatService {
 
   is: Array<any>;
 
-  public sitting:boolean;
-  public currentSeat:number;
-  public currentSeats:number;
+  public sitting: boolean;
+  public currentSeat: number;
+  public currentSeats: number;
 
   constructor(private wss: WebsocketService,
               private tableService: TableService) {
 
+    this.sitting = false;
     this.currentSeat = undefined;
   }
 
-  resetSeat(seat){
+  resetSeat(seat) {
     this.reset.next(seat);
   }
 
@@ -39,7 +40,10 @@ export class SeatService {
   }
 
   sitDown(seat, bc, tableName: string) {
-    this.sitting = true;
+
+    //alert('hi');
+
+    //this.sitting = true;
 
     let data = {
       sitting: seat,
@@ -51,7 +55,7 @@ export class SeatService {
   }
 
   standUp(seat, bc, tableName: string) {
-    this.sitting = false;
+    //this.sitting = false;
 
     let data = {
       sitting: seat,

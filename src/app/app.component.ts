@@ -187,8 +187,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     let dealerHandArray = data.dealerHand[0].hand;
     let playerHandArray = data.playerHand.hand;
 
-    this.mdService.updateVisible(visible, dealerResult, playerResult,
-      dealerHandArray, playerHandArray);
+    if(this.seatService.sitting) {
+      this.mdService.updateVisible(visible, dealerResult, playerResult,
+        dealerHandArray, playerHandArray);
+    }
 
     this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
   }

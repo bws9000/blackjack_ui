@@ -5,6 +5,7 @@ import {environment} from "../../environments/environment";
 import {Card2} from "../Card2";
 import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
+import {SeatService} from "../services/seat.service";
 
 @Component({
   selector: 'app-multi-dash',
@@ -31,7 +32,8 @@ export class MultiDashComponent implements OnInit {
 
   constructor(private mdService: MultiDashService,
               private wss: WebsocketService,
-              private tableService: TableService) {
+              private tableService: TableService,
+              private seatService: SeatService) {
 
     this.socketid = this.wss.socketId;
     this.table = 'table' + this.tableService.tableNum;
@@ -66,6 +68,7 @@ export class MultiDashComponent implements OnInit {
         this.setHandStatus(this.pCardsArray) : this.playerStatus;
 
       if (visible) {
+        //this.logStuff('sitting: ' + this.seatService.sitting);
         this.multiDashVisible = 'visible';
         this.timer = Observable.timer(1000, 1000);
         this.subTimer = this.timer.subscribe(t => this.closeCount(t));
