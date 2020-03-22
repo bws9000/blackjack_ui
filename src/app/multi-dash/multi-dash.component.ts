@@ -36,7 +36,7 @@ export class MultiDashComponent implements OnInit {
     this.socketid = this.wss.socketId;
     this.table = 'table' + this.tableService.tableNum;
 
-    this.openTime = 10;
+    this.setOpenTime();
     //this.logStuff('>>>: ' + this.openTime);
     this.multiDashVisible = 'hidden';
     this.mdService.visible.subscribe(value => {
@@ -60,10 +60,10 @@ export class MultiDashComponent implements OnInit {
       this.pCardsArray = pHandArray;
 
       this.dealerStatus = (this.dealerStatus === 'playing') ?
-        this.setHandStatus(this.dCardsArray):this.dealerStatus;
+        this.setHandStatus(this.dCardsArray) : this.dealerStatus;
 
       this.playerStatus = (this.playerStatus === 'playing') ?
-        this.setHandStatus(this.pCardsArray):this.playerStatus;
+        this.setHandStatus(this.pCardsArray) : this.playerStatus;
 
       if (visible) {
         this.multiDashVisible = 'visible';
@@ -74,6 +74,13 @@ export class MultiDashComponent implements OnInit {
     });
   }
 
+  setOpenTime() {
+    this.openTime = 30;
+    if (!environment.production) {
+      this.openTime = 10;
+    }
+  }
+
   setHandStatus(cardIndexArray) {
 
     let result = 0;
@@ -82,25 +89,25 @@ export class MultiDashComponent implements OnInit {
 
     //if you're here it's always less than 21
 
-      for (let i = 0; i < cardIndexArray.length; i++) {
-        cardArray[i] = new Card2(cardIndexArray[i], this.socketid, this.table);
+    for (let i = 0; i < cardIndexArray.length; i++) {
+      cardArray[i] = new Card2(cardIndexArray[i], this.socketid, this.table);
+    }
+    for (let i = 0; i < cardArray.length; i++) {
+      let c = cardArray[i];
+      result += c.value;
+      if (c.name === 'ace') {
+        aceCount++;
       }
-      for (let i = 0; i < cardArray.length; i++) {
-        let c = cardArray[i];
-        result += c.value;
-        if (c.name === 'ace') {
-          aceCount++;
+    }
+    //aces
+    if (aceCount >= 1) {
+      for (let i = 0; i < aceCount; i++) {
+        if (result <= 11) {
+          result = result + (10 - 1);
         }
       }
-      //aces
-      if (aceCount >= 1) {
-        for (let i = 0; i < aceCount; i++) {
-          if (result <= 11) {
-            result = result + 10;
-          }
-        }
-      }
-      return result;
+    }
+    return result;
 
   }
 
@@ -108,11 +115,16 @@ export class MultiDashComponent implements OnInit {
     this.openTime--;
     //this.logStuff('count: ' + this.openTime);
     if (this.openTime < 0) {
-      this.openTime = 10;
+      this.setOpenTime();
       this.subTimer.unsubscribe();
       this.multiDashVisible = 'hidden';
       //start game over
     }
+  }
+
+  closeWindow(){
+    this.subTimer.unsubscribe();
+    this.multiDashVisible = 'hidden';
   }
 
   ngOnDestroy(): void {

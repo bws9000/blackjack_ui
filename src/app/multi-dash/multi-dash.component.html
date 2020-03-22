@@ -2,30 +2,30 @@
   <div class="multiDash_box">
     <div class="multidash_container">
 
+      <div class="temp_close" (click)="closeWindow()">X CLOSE</div>
+      <div class="sectionOne">
+        <div class="dealerStatus">
+          <h3>YOU</h3>
+          <h1>{{this.playerStatus}}</h1>
+        </div>
 
-      <div class="dealerStatus">
-        <h3>YOU</h3>
-        <h1>{{this.playerStatus}}</h1>
-      </div>
-
-
-      <div class="cardRowDefault">
-        <div class="cardBox" *ngFor="let card of pCardsArray">
-          <div class="testCard" [ngClass]="'_'+card"></div>
+        <div class="cardRowDefault">
+          <div class="cardBox" *ngFor="let card of pCardsArray">
+            <div class="testCard" [ngClass]="'_'+card"></div>
+          </div>
         </div>
       </div>
 
-      <hr/>
+      <div class="sectionTwo">
+        <div class="playerStatus">
+          <h3>DEALER</h3>
+          <h1>{{this.dealerStatus}}</h1>
+        </div>
 
-
-      <div class="playerStatus">
-        <h3>DEALER</h3>
-        <h1>{{this.dealerStatus}}</h1>
-      </div>
-
-      <div class="cardRowDefault">
-        <div class="cardBox" *ngFor="let card of dCardsArray">
-          <div class="testCard" [ngClass]="'_'+card"></div>
+        <div class="cardRowDefault">
+          <div class="cardBox" *ngFor="let card of dCardsArray">
+            <div class="testCard" [ngClass]="'_'+card"></div>
+          </div>
         </div>
       </div>
 

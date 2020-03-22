@@ -29,7 +29,8 @@
 
 .temp_close {
   cursor: pointer;
-  margin-bottom: 1vw;
+  text-align: right;
+  width: 100%;
 }
 
 /*dash*/
@@ -39,6 +40,18 @@
   background-color: cornsilk;
 }
 
+.sectionOne {
+  padding-top: 2%;
+  display: block;
+  width: 100%;
+}
+
+.sectionTwo {
+  padding-top: 10%;
+  display: block;
+  width: 100%;
+}
+
 /* CARDS */
 .testCard {
   width: 100%;
@@ -46,23 +59,20 @@
   font-size: 1em;
   background-size: contain;
   background-repeat: no-repeat;
+  margin: 0 auto;
 }
 
 .cardBox {
+  overflow: hidden;
   display: inline-block;
-  min-width: 30px;
-  width: 13%;
-  min-height: 20px;
-  height: 50%;
-  /* background-color: cornflowerblue; */
-  position: relative;
+  margin: 0 auto;
+  height: 120px;
+  width: 7%; /* ... */
 }
 
 .cardRowDefault {
-  padding-top: 0.5vw;
+  height: 80px;
   width: 100%;
-  height: 50%;
-  position: relative;
 }
 
 
@@ -396,16 +406,16 @@
   text-align: center;
 }
 
-.statusMessageContainer{
-  display:table;
-  width:100%;
-  height:100%;
+.statusMessageContainer {
+  display: table;
+  width: 100%;
+  height: 100%;
 }
 
 .statusMessage {
-  font-size:6vw;
+  font-size: 6vw;
   font-weight: bolder;
-  text-align:center;
+  text-align: center;
   display: table-cell;
   vertical-align: middle;
   margin: 0 auto;
