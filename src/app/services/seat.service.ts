@@ -41,10 +41,6 @@ export class SeatService {
 
   sitDown(seat, bc, tableName: string) {
 
-    //alert('hi');
-
-    //this.sitting = true;
-
     let data = {
       sitting: seat,
       broadcast: bc,
@@ -55,7 +51,6 @@ export class SeatService {
   }
 
   standUp(seat, bc, tableName: string) {
-    //this.sitting = false;
 
     let data = {
       sitting: seat,

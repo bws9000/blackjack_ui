@@ -78,7 +78,7 @@ export class MultiDashComponent implements OnInit {
   }
 
   setOpenTime() {
-    this.openTime = 30;
+    this.openTime = 10;
     if (!environment.production) {
       this.openTime = 10;
     }
