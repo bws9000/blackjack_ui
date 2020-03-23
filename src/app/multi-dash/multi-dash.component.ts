@@ -78,9 +78,9 @@ export class MultiDashComponent implements OnInit {
   }
 
   setOpenTime() {
-    this.openTime = 10;
+    this.openTime = 5;
     if (!environment.production) {
-      this.openTime = 10;
+      this.openTime = 2;
     }
   }
 
@@ -136,7 +136,8 @@ export class MultiDashComponent implements OnInit {
   restartHands() {
     this.wss.emit('restartHands',
       {
-        seat: true
+        table: this.tableService.tableNum,
+        seat: this.seatService.currentSeat
       });
   }
 

@@ -212,10 +212,23 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   restartHands(data){
+
     this.wss.startChange.next(true);
     this.handService.clearPlayerHands();
     this.handService.clearDealerHand();
+
     this.logStuff('RESTARTHANDS: ' + JSON.stringify(data));
+
+    if(this.seatService.currentSeat === data.initSeat) {
+      this.wss.emit('tableBetting',
+        {
+          table: this.tableService.tableNum,
+          tablePlaying: true,
+          seat: data.initSeat,
+          socketId: this.wss.socketId
+        });
+    }
+
   }
 
   nextPlayerBetEmit(data) {

@@ -133,7 +133,6 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
     this.placeBetsVisible = 'hidden';
     this.currentBet = this.placeBetForm.get('chips').value;
     this.placeBetsService.currentBet = this.currentBet;
@@ -152,11 +151,13 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.startcount--;
     this.countStatus = this.startcount;
     if(this.startcount == -1) {
-      this.clearSeat();
+      //this.clearSeat();
+      this.onSubmit();
       this.subTimer.unsubscribe();
     }
   }
 
+  /*
   clearSeat() {
     //////clear seat//////////////////////////////////////////
     this.wss.emit('standUpTable', {
@@ -169,6 +170,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.seatService.resetSeat(this.seatService.currentSeat);
     //////////////////////////////////////////////////////////
   }
+  */
 
   getTime() {
     return this.countStatus;
