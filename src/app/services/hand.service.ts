@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
 import {environment} from "../../environments/environment";
 
@@ -15,6 +15,9 @@ export class HandService {
   showDealerHand: Subject<Array<any>> = new Subject<Array<any>>();
   standUp: Subject<number> = new Subject<number>();
 
+  clearPlayerHandsSubject: Subject<boolean> = new Subject<boolean>();
+  clearDealerHandSubject: Subject<boolean> = new Subject<boolean>();
+
   public handResult: string;
   public handPlayed: boolean;
 
@@ -23,29 +26,37 @@ export class HandService {
     this.handPlayed = false;
   }
 
-  seatStand(seat){
+  clearDealerHand() {
+    this.clearDealerHandSubject.next(true);
+  }
+
+  clearPlayerHands() {
+    this.clearPlayerHandsSubject.next(true);
+  }
+
+  seatStand(seat) {
     this.standUp.next(seat);
   }
 
-  dealerHandVisible(status){
+  dealerHandVisible(status) {
     this.hideDealerHand.next(status);
   }
 
-  getPlayerHands(playerHands){
+  getPlayerHands(playerHands) {
     //this.logStuff(JSON.stringify(playerHands));
     this.playerHands.next(playerHands);
   }
 
-  getDealerHand(dealerHand){
+  getDealerHand(dealerHand) {
     //this.logStuff(JSON.stringify(dealerHand));
     this.dealerHand.next(dealerHand);
   }
 
-  showAllDealerHand(dealerHand){
+  showAllDealerHand(dealerHand) {
     this.allDealerHand.next(dealerHand);
   }
 
-  showDealerHiddenCard(dealerHand){
+  showDealerHiddenCard(dealerHand) {
     this.showDealerHand.next(dealerHand);
   }
 

@@ -121,13 +121,23 @@ export class MultiDashComponent implements OnInit {
       this.setOpenTime();
       this.subTimer.unsubscribe();
       this.multiDashVisible = 'hidden';
+      this.restartHands();
       //start game over
     }
   }
 
-  closeWindow(){
+  closeWindow() {
+    this.setOpenTime();
     this.subTimer.unsubscribe();
     this.multiDashVisible = 'hidden';
+    this.restartHands();
+  }
+
+  restartHands() {
+    this.wss.emit('restartHands',
+      {
+        seat: true
+      });
   }
 
   ngOnDestroy(): void {

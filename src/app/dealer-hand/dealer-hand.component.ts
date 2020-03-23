@@ -9,12 +9,12 @@ import {HandService} from "../services/hand.service";
 })
 export class DealerHandComponent implements OnInit {
 
-  cards: [number, number];
+  public cards: [number, number];
 
   constructor(private handService: HandService) {
 
-    this.handService.allDealerHand.subscribe(value =>{
-      if(value !== null) {
+    this.handService.allDealerHand.subscribe(value => {
+      if (value !== null) {
         this.cards = value[0].hand;
       }
     });
@@ -25,16 +25,22 @@ export class DealerHandComponent implements OnInit {
       }
     });
 
-    this.handService.showDealerHand.subscribe(value =>{
+    this.handService.showDealerHand.subscribe(value => {
       if (value !== null) {
         this.cards = [value[0].hand[0], value[0].hand[1]];
       }
     });
 
-    this.handService.hideDealerHand.subscribe(value=>{
+    this.handService.hideDealerHand.subscribe(value => {
       //set in sit component
-      if(!value){
-        this.cards = [99,99];
+      if (!value) {
+        this.cards = [99, 99];
+      }
+    });
+
+    this.handService.clearDealerHandSubject.subscribe(value => {
+      if (value) {
+        this.cards = null;
       }
     });
   }

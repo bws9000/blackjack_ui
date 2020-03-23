@@ -90,6 +90,7 @@ export class WebsocketService {
     this.eventMap.set('playerActionEmit', new SocketObservable('playerActionEmit', this.socket));
     this.eventMap.set('actionSeatEmit', new SocketObservable('actionSeatEmit', this.socket));
     this.eventMap.set('dealerHandEmit', new SocketObservable('dealerHandEmit', this.socket));
+    this.eventMap.set('restartHandsEmit', new SocketObservable('restartHandsEmit', this.socket));
     //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat', this.socket));
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));

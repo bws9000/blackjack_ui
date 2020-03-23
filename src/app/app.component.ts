@@ -211,6 +211,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.sms.statusMessage(data.status);//player x is betting
   }
 
+  restartHands(data){
+    this.wss.startChange.next(true);
+    this.handService.clearPlayerHands();
+    this.handService.clearDealerHand();
+    this.logStuff('RESTARTHANDS: ' + JSON.stringify(data));
+  }
+
   nextPlayerBetEmit(data) {
 
     this.sms.statusMessage(data.status);
@@ -309,6 +316,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+      this.wss
+        .onEvent('restartHandsEmit')
+        .subscribe(data => this.restartHands(data));
 
       this.wss
         .onEvent('actionSeatEmit')

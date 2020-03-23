@@ -33,6 +33,16 @@ export class PlayerHandComponent implements OnInit {
       }
     });
 
+    this.handService.clearPlayerHandsSubject.subscribe(value => {
+      if (value) {
+        if (this.cards !== undefined) {
+          for (let i = 0; i < this.cards.length; i++) {
+            this.cards[i] = 99;
+          }
+        }
+      }
+    });
+
     this.handService.playerHands.subscribe(value => {
       let that = this;
       for (let i = 0; i < value.length; i++) {
