@@ -20,8 +20,8 @@ export class PlayerboxService {
     this.playerSeats.next(ps);
   }
 
-  setAction(seat, broadcast) {
-    let data = {seat: seat, broadcast: broadcast};
+  setAction(seat, broadcast, action) {
+    let data = {seat: seat, broadcast: broadcast, action};
     this.playerAction.next(data);
   }
 

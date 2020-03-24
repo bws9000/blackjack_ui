@@ -165,6 +165,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.timer = Observable.timer(1000, 1000);
     this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer, result));
 
+    this.sms.statusMessage("player " + data.nextPlayer + " is playing");
+
     if (data.nextPlayer === undefined) {
       //DEALER TURN
       this.sms.statusMessage("dealer playing");
@@ -234,7 +236,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   nextPlayerBetEmit(data) {
 
     this.sms.statusMessage(data.status);
-    this.playerboxService.setAction(data.nextPlayer, data.broadcast);//green graphic
+    //this.playerboxService.setAction(data.nextPlayer, data.broadcast, true);//green graphic
     this.playerboxService.reset(data.justBet);
     this.wss.startChange.next(true);
 
@@ -248,7 +250,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   nextPlayerDashEmit(data) {
-    this.sms.statusMessage(data.status);
     this.wss.startChange.next(true);
     if (data.nextPlayer === this.seatService.currentSeat) {
       this.wss.emit('tablePlaying', {
@@ -310,6 +311,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   actionSeat(data) {
     this.wss.startChange.next(true);
     this.logStuff('actionSeat: ' + JSON.stringify(data));
+    this.playerboxService.setAction(data.actionSeat, data.broadcast, true);//green playerbox
   }
 
   ////////////////////////////////////////////////////

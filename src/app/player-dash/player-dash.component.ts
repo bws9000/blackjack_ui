@@ -144,7 +144,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     //this.logStuff('handResult2: ' + this.handService.handResult);
     //this.logStuff('handPlayed: ' + this.handService.handPlayed);
 
-    if(this.handService.handPlayed) {
+    if (this.handService.handPlayed) {
       this.handService.handPlayed = false;
 
       this.wss.emit('nextPlayerDash', {
@@ -154,6 +154,16 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         socketId: this.wss.socketId
       });
       this.playerDashVisible = 'hidden';
+
+      if (this.subTimer !== undefined) {
+        this.subTimer.unsubscribe();
+      }
+
+      if (this.subTimer2 !== undefined) {
+        this.subTimer2.unsubscribe();
+      }
+
+      this.setTimer2Timer();
 
     }
   }
@@ -170,6 +180,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       this.subTimer2.unsubscribe();
     }
 
+    this.setTimer2Timer();
+
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
       currentSeat: this.seatService.currentSeat,
@@ -182,15 +194,17 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   standTimeRanOut() {
 
-      this.handService.handPlayed = false;
+    this.handService.handPlayed = false;
 
-      this.wss.emit('nextPlayerDash', {
-        action: 'stand',
-        currentSeat: this.seatService.currentSeat,
-        table: this.tableService.tableNum,
-        socketId: this.wss.socketId
-      });
-      this.playerDashVisible = 'hidden';
+    this.wss.emit('nextPlayerDash', {
+      action: 'stand',
+      currentSeat: this.seatService.currentSeat,
+      table: this.tableService.tableNum,
+      socketId: this.wss.socketId
+    });
+    this.playerDashVisible = 'hidden';
+
+    this.setTimer2Timer();
 
   }
 
@@ -220,6 +234,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         this.subTimer2.unsubscribe();
       }
       this.subTimer.unsubscribe();
+      this.setTimer2Timer();
       this.stand();
     }
   }
@@ -285,6 +300,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   show() {
+    this.wss.emit('actionOrder', {
+      seat:this.seatService.currentSeat,
+      table: this.tableService.tableNum
+    });
     this.playerDashVisible = 'visible';
     this.dss.startTimer(this.dash);
   }

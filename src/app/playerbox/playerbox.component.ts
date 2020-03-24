@@ -26,17 +26,21 @@ export class PlayerboxComponent implements OnInit {
   constructor(private wss: WebsocketService,
               private playerboxService: PlayerboxService) {
 
+    this.action = false;
+
     this.playerboxService.playerAction.subscribe(value => {
 
       let j = JSON.stringify(value);
       let o = JSON.parse(j);
       let seat = o.seat;
-      //let broadcast = o.broadcast;
+      let action = o.action;
 
       if (seat === this.player) {
         this.action = true;
-        this.playerInnerbox();
+      } else {
+        this.action = false;
       }
+      this.playerInnerbox();
 
     });
 
@@ -44,8 +48,7 @@ export class PlayerboxComponent implements OnInit {
       let j = JSON.stringify(value);
       let o = JSON.parse(j);
       let seat = o.seat;
-      if(this.player === seat) {
-        this.action = false;
+      if (this.player === seat) {
         this.playerInnerbox();
       }
     });
@@ -68,14 +71,14 @@ export class PlayerboxComponent implements OnInit {
   }
 
   playerInnerbox() {
-    if (!this.action) {
+    if (this.action) {
+      return '3';
+    } else {
       if (this.sitting) {
         return '1';
       } else {
         return '2';
       }
-    } else {
-      return '3';
     }
   }
 
