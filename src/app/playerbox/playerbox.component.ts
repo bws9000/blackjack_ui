@@ -49,6 +49,8 @@ export class PlayerboxComponent implements OnInit {
       let o = JSON.parse(j);
       let seat = o.seat;
       if (this.player === seat) {
+        this.action = false;
+        this.sitting = false;
         this.playerInnerbox();
       }
     });

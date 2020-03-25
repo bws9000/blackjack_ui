@@ -4,6 +4,7 @@ import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
 import {StatusUpdateService} from "../services/status-update.service";
 import {PlayerboxService} from "../services/playerbox.service";
+import {HandService} from "../services/hand.service";
 
 @Component({
   selector: 'app-sit',
@@ -26,7 +27,8 @@ export class SitComponent implements OnInit {
               private seatService: SeatService,
               private tableService: TableService,
               private playerboxService: PlayerboxService,
-              private statusUpdateService: StatusUpdateService) {
+              private statusUpdateService: StatusUpdateService,
+              private handService: HandService) {
 
     this.isHidden = true;
     this.opHidden = true;
@@ -35,9 +37,20 @@ export class SitComponent implements OnInit {
     this.localSocket = this.wss.socketId;
     this.table = tableService.tableNum;
 
+    this.seatService.playerStand.subscribe(value => {
+      //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      //this.logStuff('this.id: ' + this.id);
+      //this.logStuff('value: ' + value);
+      //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      if (+this.id == value) {
+        this.sitOrLeave = true;
+        this.sitStand();
+      }
+    });
 
-    this.seatService.reset.subscribe(value =>{
-      if(this.id === value){
+
+    this.seatService.reset.subscribe(value => {
+      if (this.id === value) {
         this.sitOrLeaveText = 'SIT DOWN';
         this.sitOrLeave = false;
       }
@@ -132,9 +145,9 @@ export class SitComponent implements OnInit {
         player: this.id,
         tableNum: this.table
       });
-        this.sitOrLeaveText = 'SIT DOWN';
-        this.seatService.sitting = false;
-        this.sitOrLeave = false;
+      this.sitOrLeaveText = 'SIT DOWN';
+      this.seatService.sitting = false;
+      this.sitOrLeave = false;
     }
   }
 

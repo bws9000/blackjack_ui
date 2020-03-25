@@ -80,6 +80,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
                     seat:this.seatService.currentSeat,
                     table: this.tableService.tableNum
                   });
+
                   this.logStuff('* placebet timer started *');
                   this.placeBetsVisible = 'visible';
 
@@ -137,6 +138,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     let table = this.tableService.tableNum;
     this.playerboxService.reset(this.seatService.currentSeat);
     this.wss.emit('nextPlayerBet', {
+      timeOut:false,
       currentSeat:this.seatService.currentSeat,
       table: table,
       socketId: this.wss.socketId,
@@ -150,7 +152,18 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.countStatus = this.startcount;
     if(this.startcount == -1) {
       //this.clearSeat();
-      this.onSubmit();
+      //this.onSubmit();
+      this.placeBetsVisible = 'hidden';
+      this.playerboxService.reset(this.seatService.currentSeat);
+      let table = this.tableService.tableNum;
+      this.wss.emit('nextPlayerBet', {
+        timeOut:true,
+        currentSeat:this.seatService.currentSeat,
+        table: table,
+        socketId: this.wss.socketId,
+        betfinished: this.seatService.currentSeat
+      });
+      this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
       this.subTimer.unsubscribe();
     }
   }

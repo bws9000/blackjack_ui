@@ -125,6 +125,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let currentTable = 'table' + this.tableService.tableNum;
           if (currentTable === params.tableId) {
             if (v) {
+
+              //this.logStuff('============================');
+              //this.logStuff('this.seatService.currentSeat:' + this.seatService.currentSeat);
+              //this.logStuff('this.dash: ' + this.dash);
+              //this.logStuff('s: ' + s);
+              //this.logStuff('============================');
+
               if (+this.dash == this.seatService.currentSeat &&
                 s === this.seatService.currentSeat) {
                 this.show();
@@ -133,6 +140,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               this.hide();
             }
           }
+
+          //this.logStuff('j:' + j);
+
         });
 
       });
@@ -301,7 +311,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   show() {
     this.wss.emit('actionOrder', {
-      seat:this.seatService.currentSeat,
+      seat: this.seatService.currentSeat,
       table: this.tableService.tableNum
     });
     this.playerDashVisible = 'visible';

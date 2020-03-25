@@ -146,8 +146,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   getHands(data) {
 
-    //this.logStuff('handResult: ' + this.handService.handResult);
-    //this.logStuff('sitting: ' + this.seatService.sitting);
     this.logStuff('getHands: ' + JSON.stringify(data));
 
     this.wss.startChange.next(true);
@@ -163,7 +161,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.dss.activate(result, seat, tableName, nextPlayer, broadcast);//seat/nextPlayer
 
     this.timer = Observable.timer(1000, 1000);
-    this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer, result));
+
+    ///////////UPDATE MULTI-DASH /////////////
+    //this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer, result));
+    this.updateVisibleDash(nextPlayer, result);
 
     this.sms.statusMessage("player " + data.nextPlayer + " is playing");
 
@@ -179,7 +180,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   }
 
+  //updateVisibleDash(t, nextPlayer, result) {
+  updateVisibleDash(nextPlayer, result) {
+    //t
+
+    this.logStuff('O o O o ================');
+    this.logStuff('nextPlayer: ' + nextPlayer);
+    this.logStuff('O o O o ================');
+
+    this.playerDashService.updateVisible(true, nextPlayer);
+    this.handService.handResult = result;
+    //this.subTimer.unsubscribe();
+  }
+
   dealerHandEmit(data) {
+
     this.wss.startChange.next(true);
     this.handService.showAllDealerHand(data.dealerHand);
 
@@ -195,13 +210,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
-  }
-
-  updateVisibleDash(t, nextPlayer, result) {
-    //t
-    this.playerDashService.updateVisible(true, nextPlayer);
-    this.handService.handResult = result;
-    this.subTimer.unsubscribe();
   }
 
   //1st PLAYER SITS DOWN
@@ -236,7 +244,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   nextPlayerBetEmit(data) {
 
     this.sms.statusMessage(data.status);
-    //this.playerboxService.setAction(data.nextPlayer, data.broadcast, true);//green graphic
     this.playerboxService.reset(data.justBet);
     this.wss.startChange.next(true);
 
@@ -251,6 +258,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   nextPlayerDashEmit(data) {
     this.wss.startChange.next(true);
+
     if (data.nextPlayer === this.seatService.currentSeat) {
       this.wss.emit('tablePlaying', {
         table: this.tableService.tableNum,
@@ -276,11 +284,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.tableService.tablePlaying = false;
     }
     this.handService.seatStand(data.standing);
-    this.seatService.currentSeat = undefined;
+    //this.seatService.currentSeat = undefined;
 
     //green graphic
-    this.playerboxService.reset(this.seatService.currentSeat);
-    this.playerboxService.reset(data.standing);
+    //this.playerboxService.reset(this.seatService.currentSeat);
+    //this.playerboxService.reset(data.standing);
   }
 
 

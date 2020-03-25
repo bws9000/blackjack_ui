@@ -13,6 +13,8 @@ export class SeatService {
   sitState: Subject<Object> = new Subject<Object>();
   standState: Subject<Object> = new Subject<Object>();
 
+  playerStand: Subject<number> = new Subject<number>();
+
   is: Array<any>;
 
   public sitting: boolean;
@@ -21,9 +23,12 @@ export class SeatService {
 
   constructor(private wss: WebsocketService,
               private tableService: TableService) {
+    //this.sitting = false;
+    //this.currentSeat = undefined;
+  }
 
-    this.sitting = false;
-    this.currentSeat = undefined;
+  playerStandUp(seat){
+    this.playerStand.next(seat);
   }
 
   resetSeat(seat) {
