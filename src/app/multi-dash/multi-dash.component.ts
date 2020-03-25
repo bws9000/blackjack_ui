@@ -123,6 +123,14 @@ export class MultiDashComponent implements OnInit {
       this.multiDashVisible = 'hidden';
       this.restartHands();
       //start game over
+
+      let tableNum = this.tableService.tableNum;
+      let seatNum = this.seatService.currentSeat;
+      this.wss.emit('checkDone',
+        {
+          table: tableNum,
+          seat: seatNum
+        });
     }
   }
 
