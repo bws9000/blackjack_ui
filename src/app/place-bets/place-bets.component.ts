@@ -165,23 +165,9 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       });
       this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
       this.subTimer.unsubscribe();
+
     }
   }
-
-  /*
-  clearSeat() {
-    //////clear seat//////////////////////////////////////////
-    this.wss.emit('standUpTable', {
-      player: this.seatService.currentSeat,
-      tableNum: this.tableService.tableNum
-    });
-    this.placeBetsVisible = 'hidden';
-    //this.placeBetsService.setVisible(false, this.seatService.currentSeat);
-    this.playerboxService.reset(this.seatService.currentSeat);
-    this.seatService.resetSeat(this.seatService.currentSeat);
-    //////////////////////////////////////////////////////////
-  }
-  */
 
   getTime() {
     return this.countStatus;
