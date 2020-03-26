@@ -121,7 +121,7 @@ export class MultiDashComponent implements OnInit {
       this.setOpenTime();
       this.subTimer.unsubscribe();
       this.multiDashVisible = 'hidden';
-      this.restartHands();
+      //this.restartHands();
       //start game over
 
       let tableNum = this.tableService.tableNum;
@@ -131,6 +131,7 @@ export class MultiDashComponent implements OnInit {
           table: tableNum,
           seat: seatNum
         });
+
     }
   }
 

@@ -24,6 +24,7 @@ import {SocketObservable} from "./SocketObservable";
 import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Observable, Subscription} from "rxjs";
 import {MultiDashService} from "./services/multi-dash.service";
+import {stringify} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-root',
@@ -214,6 +215,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   //1st PLAYER SITS DOWN
   playersBetting(data) {
+    //this.logStuff('*: ' + JSON.stringify(data));
     this.placeBetsService.currentBank = data.chips;
     this.wss.startChange.next(true);
     this.tableService.tablePlaying = true;
@@ -221,6 +223,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.sms.statusMessage(data.status);//player x is betting
   }
 
+
+  /*
   restartHands(data){
 
     this.wss.startChange.next(true);
@@ -238,8 +242,8 @@ export class AppComponent implements OnInit, AfterViewInit {
           socketId: this.wss.socketId
         });
     }
-
   }
+ */
 
   nextPlayerBetEmit(data) {
 
@@ -318,7 +322,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   actionSeat(data) {
     this.wss.startChange.next(true);
-    this.logStuff('actionSeat: ' + JSON.stringify(data));
+    //this.logStuff('actionSeat: ' + JSON.stringify(data));
     this.playerboxService.setAction(data.actionSeat, data.broadcast, true);//green playerbox
   }
 
@@ -339,9 +343,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+
+      /*
       this.wss
         .onEvent('restartHandsEmit')
         .subscribe(data => this.restartHands(data));
+      */
 
       this.wss
         .onEvent('actionSeatEmit')
