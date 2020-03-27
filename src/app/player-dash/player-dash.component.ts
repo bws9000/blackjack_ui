@@ -326,8 +326,14 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
-    this.dashSubTimer2.unsubscribe();
-    this.dashSubTimer.unsubscribe();
+
+    if(this.dashSubTimer !== undefined){
+      this.dashSubTimer.unsubscribe();
+    }
+    if(this.dashSubTimer2 !== undefined) {
+      this.dashSubTimer2.unsubscribe();
+    }
+
   }
 
   logStuff(stuff: any) {
