@@ -33,6 +33,10 @@ import {stringify} from "@angular/compiler/src/util";
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
+  private noActivityTimer;
+  private noActivitySubTimer: Subscription;
+  private noActivityCount;
+
   loadingWheelVisible: string;
   isHidden: boolean;
   count: number;
@@ -67,10 +71,18 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     });
 
+
     this.statusUpdateService.navBarVisible.subscribe(value => {
       this.isHidden = !value;
     });
     this.statusUpdateService.hideNavBar(true);
+
+
+    //////// reload due to non activity ??? /////////
+    this.noActivityCount = 30;
+    this.noActivityTimer = Observable.timer(1000, 1000);
+    //this.noActivitySubTimer = this.noActivityTimer.subscribe(t => this.noActivityReload(t));
+    /////////////////////////////////////////////////
 
   }
 
@@ -328,7 +340,19 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ////////////////////////////////////////////////////
   ////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////
+
+  /*
+ // it shouldn't take longer
+ // than 30 seconds to pick a room
+ */
+  noActivityReload(t){
+    this.noActivityCount--;
+    if(this.noActivityCount === 0){
+      this.noActivityCount = 30;
+      window.location.reload();
+      this.noActivitySubTimer.unsubscribe();
+    }
+  }
 
   async connect(): Promise<void> {
 

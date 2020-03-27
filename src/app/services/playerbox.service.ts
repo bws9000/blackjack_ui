@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
-import {SeatService} from "./seat.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ export class PlayerboxService {
   playerAction: Subject<Object> = new Subject<Object>();
   resetSubject: Subject<Object> = new Subject<Object>();
 
-  constructor(private seatService:SeatService) {
+  constructor() {
 
   }
 

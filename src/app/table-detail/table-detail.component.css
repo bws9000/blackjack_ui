@@ -38,8 +38,12 @@
 .leaveTable:hover {
   background-color: darkcyan;
 }
+.bank{
+  float:right;
+}
 
 .tableHeader > div {
+  padding:0.2em;
   display: inline-block;
   color: white;
 }

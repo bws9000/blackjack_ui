@@ -130,6 +130,8 @@ export class SitComponent implements OnInit {
   }
 
   sitStand() {
+    //window.location.reload();
+
     if (!this.sitOrLeave) {
       this.wss.emit('sitTable', {
         player: this.id,
@@ -149,6 +151,7 @@ export class SitComponent implements OnInit {
       this.seatService.sitting = false;
       this.sitOrLeave = false;
     }
+
   }
 
   ngOnInit() {

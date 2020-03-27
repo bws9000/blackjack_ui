@@ -32,11 +32,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   private broadcast;
 
-  private timer;
-  private subTimer: Subscription;
+  private dashTimer;
+  private dashSubTimer: Subscription;
 
-  private timer2;
-  private subTimer2: Subscription;
+  private dashTimer2;
+  private dashSubTimer2: Subscription;
+
   timer2time: number;
 
   userSubscription: Subscription;
@@ -67,8 +68,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             //this.logStuff('OBSERVABLE');
             //this.logStuff('this.dash: ' + this.dash);
             //this.logStuff('value: ' + value);
-            this.timer2 = Observable.timer(1000, 1000);
-            this.subTimer2 = this.timer2.subscribe(t => this.statusCount(t));
+            this.dashTimer2 = Observable.timer(1000, 1000);
+            this.dashSubTimer2 = this.dashTimer2.subscribe(t => this.statusCount(t));
           }
         });
 
@@ -91,8 +92,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
             if (result !== 'playing' && !broadcast) {
               //display message from action then hide dashboard
-              this.timer = Observable.timer(1000, 1000);
-              this.subTimer = this.timer.subscribe(t => this.statusOver(t));
+              this.dashTimer = Observable.timer(1000, 1000);
+              this.dashSubTimer = this.dashTimer.subscribe(t => this.statusOver(t));
             }
 
             //this.statusBox();
@@ -165,12 +166,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       });
       this.playerDashVisible = 'hidden';
 
-      if (this.subTimer !== undefined) {
-        this.subTimer.unsubscribe();
+      if (this.dashSubTimer !== undefined) {
+        this.dashSubTimer.unsubscribe();
       }
 
-      if (this.subTimer2 !== undefined) {
-        this.subTimer2.unsubscribe();
+      if (this.dashSubTimer2 !== undefined) {
+        this.dashSubTimer2.unsubscribe();
       }
 
       this.setTimer2Timer();
@@ -182,12 +183,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.handService.handPlayed = false;
 
-    if (this.subTimer !== undefined) {
-      this.subTimer.unsubscribe();
+    if (this.dashSubTimer !== undefined) {
+      this.dashSubTimer.unsubscribe();
     }
 
-    if (this.subTimer2 !== undefined) {
-      this.subTimer2.unsubscribe();
+    if (this.dashSubTimer2 !== undefined) {
+      this.dashSubTimer2.unsubscribe();
     }
 
     this.setTimer2Timer();
@@ -224,10 +225,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       console.log('statusCount');
       //this.playerStatus = 'playing';
       this.setTimer2Timer();
-      if (this.subTimer !== undefined) {
-        this.subTimer.unsubscribe();
+      if (this.dashSubTimer !== undefined) {
+        this.dashSubTimer.unsubscribe();
       }
-      this.subTimer2.unsubscribe();
+      this.dashSubTimer2.unsubscribe();
       this.standTimeRanOut();
     }
   }
@@ -240,10 +241,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       //this.playerStatus = 'playing';
       this.setPlayerStatus();
       this.actionTimerCount = 2;
-      if (this.subTimer2 !== undefined) {
-        this.subTimer2.unsubscribe();
+      if (this.dashSubTimer2 !== undefined) {
+        this.dashSubTimer2.unsubscribe();
       }
-      this.subTimer.unsubscribe();
+      this.dashSubTimer.unsubscribe();
       this.setTimer2Timer();
       this.stand();
     }
@@ -325,6 +326,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
+    this.dashSubTimer2.unsubscribe();
+    this.dashSubTimer.unsubscribe();
   }
 
   logStuff(stuff: any) {

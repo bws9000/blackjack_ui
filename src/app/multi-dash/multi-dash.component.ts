@@ -18,8 +18,9 @@ export class MultiDashComponent implements OnInit {
   multiDashVisible: string;
 
   private openTime;
-  private timer;
-  private subTimer: Subscription;
+
+  private multiTimer;
+  private multiSubTimer: Subscription;
 
   public playerStatus;
   public dealerStatus;
@@ -70,8 +71,8 @@ export class MultiDashComponent implements OnInit {
       if (visible) {
         //this.logStuff('sitting: ' + this.seatService.sitting);
         this.multiDashVisible = 'visible';
-        this.timer = Observable.timer(1000, 1000);
-        this.subTimer = this.timer.subscribe(t => this.closeCount(t));
+        this.multiTimer = Observable.timer(1000, 1000);
+        this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
       }
 
     });
@@ -119,7 +120,7 @@ export class MultiDashComponent implements OnInit {
     //this.logStuff('count: ' + this.openTime);
     if (this.openTime < 0) {
       this.setOpenTime();
-      this.subTimer.unsubscribe();
+      this.multiSubTimer.unsubscribe();
       this.multiDashVisible = 'hidden';
       //this.restartHands();
       //start game over
@@ -137,7 +138,7 @@ export class MultiDashComponent implements OnInit {
 
   closeWindow() {
     this.setOpenTime();
-    this.subTimer.unsubscribe();
+    this.multiSubTimer.unsubscribe();
     this.multiDashVisible = 'hidden';
     this.restartHands();
   }
@@ -151,8 +152,8 @@ export class MultiDashComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    if (this.subTimer !== undefined) {
-      this.subTimer.unsubscribe();
+    if (this.multiSubTimer !== undefined) {
+      this.multiSubTimer.unsubscribe();
     }
   }
 

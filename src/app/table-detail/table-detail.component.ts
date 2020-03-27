@@ -80,7 +80,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   leaveTable() {
-    this.router.navigate(['/']).then((r) => {
+    this.router.navigate(['']).then((r) => {
       let table = this.tableService.tableNum;
       this.wss.emit('leaveTable', {table: table});
       window.location.reload()
@@ -101,7 +101,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     if (this.wss.start) {
 
     } else {
-      this.router.navigate(['/']).then((r) => {
+      this.ngOnDestroy();
+      this.router.navigate(['']).then((r) => {
         //do something...
       })
     }
