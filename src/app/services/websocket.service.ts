@@ -83,9 +83,9 @@ export class WebsocketService {
     this.eventMap.set('leftTableEmit', new SocketObservable('leftTableEmit', this.socket));
     this.eventMap.set('standUpTableEmit', new SocketObservable('standUpTableEmit', this.socket));
     this.eventMap.set('satDownTableEmit', new SocketObservable('satDownTableEmit', this.socket));
-    this.eventMap.set('playersBettingEmit', new SocketObservable('playersBettingEmit', this.socket));
-    this.eventMap.set('nextPlayerBetEmit', new SocketObservable('nextPlayerBetEmit', this.socket));
-    this.eventMap.set('nextPlayerDashEmit', new SocketObservable('nextPlayerDashEmit', this.socket));
+    this.eventMap.set('openBetDashEmit', new SocketObservable('openBetDashEmit', this.socket));
+    //this.eventMap.set('nextPlayerBetEmit', new SocketObservable('nextPlayerBetEmit', this.socket));
+    this.eventMap.set('openPlayerDashEmit', new SocketObservable('openPlayerDashEmit', this.socket));
     this.eventMap.set('actionStatusEmit', new SocketObservable('actionStatusEmit', this.socket));
     this.eventMap.set('playerActionEmit', new SocketObservable('playerActionEmit', this.socket));
     this.eventMap.set('actionSeatEmit', new SocketObservable('actionSeatEmit', this.socket));

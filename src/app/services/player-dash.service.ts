@@ -13,11 +13,11 @@ export class PlayerDashService {
   constructor() {
   }
 
-  updateVisible(value,seat){
+  updateVisible(value, seat) {
 
     let data = {
-      value:value,
-      seat:seat
+      value: value,
+      seat: seat
     };
 
     //this.logStuff(JSON.stringify(data));

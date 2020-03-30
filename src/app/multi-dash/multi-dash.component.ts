@@ -130,7 +130,8 @@ export class MultiDashComponent implements OnInit {
       this.wss.emit('checkDone',
         {
           table: tableNum,
-          seat: seatNum
+          seat: seatNum,
+          deactivated: false
         });
 
     }

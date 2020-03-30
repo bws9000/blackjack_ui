@@ -130,7 +130,6 @@ export class SitComponent implements OnInit {
   }
 
   sitStand() {
-    //window.location.reload();
 
     if (!this.sitOrLeave) {
       this.wss.emit('sitTable', {

@@ -32,7 +32,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
 
   private timer;
   private subTimer: Subscription;
-  private startcount:number;
+  private startcount: number;
 
   userSubscription: Subscription;
 
@@ -67,17 +67,15 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
 
             let j = JSON.stringify(value);
             let o = JSON.parse(j);
-            let t = o.table;
             let v = o.value;
-            let s = o.seat;
+            let s = o.seats;
 
             if (v) {
-              if (s == this.seatService.currentSeat) {
+              if (s.indexOf(this.seatService.currentSeat) > -1) {
                 if (this.placeBetsVisible === 'hidden') {
 
-                  //this.playerboxService.setAction(this.seatService.currentSeat,false);
                   this.wss.emit('actionOrder', {
-                    seat:this.seatService.currentSeat,
+                    seat: this.seatService.currentSeat,
                     table: this.tableService.tableNum
                   });
 
@@ -86,8 +84,8 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
 
                   //timer
                   this.startcount = 10;
-                  this.timer = Observable.timer(1000,1000);
-                  this.subTimer = this.timer.subscribe(t =>this.timerTest(t));
+                  this.timer = Observable.timer(1000, 1000);
+                  this.subTimer = this.timer.subscribe(t => this.timerTest(t));
 
                 }
               }
@@ -137,31 +135,25 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.placeBetsService.currentBet = this.currentBet;
     let table = this.tableService.tableNum;
     this.playerboxService.reset(this.seatService.currentSeat);
-    this.wss.emit('nextPlayerBet', {
-      timeOut:false,
-      currentSeat:this.seatService.currentSeat,
-      table: table,
-      socketId: this.wss.socketId,
-      betfinished: this.seatService.currentSeat
+    this.wss.emit('openPlayerDash', {
+      currentSeat: this.seatService.currentSeat,
+      table: table
     });
     this.subTimer.unsubscribe();
   }
 
-  timerTest(t){
+  timerTest(t) {
     this.startcount--;
     this.countStatus = this.startcount;
-    if(this.startcount == -1) {
+    if (this.startcount == -1) {
       //this.clearSeat();
       //this.onSubmit();
       this.placeBetsVisible = 'hidden';
       this.playerboxService.reset(this.seatService.currentSeat);
       let table = this.tableService.tableNum;
-      this.wss.emit('nextPlayerBet', {
-        timeOut:true,
-        currentSeat:this.seatService.currentSeat,
-        table: table,
-        socketId: this.wss.socketId,
-        betfinished: this.seatService.currentSeat
+      this.wss.emit('openPlayerDash', {
+        currentSeat: this.seatService.currentSeat,
+        table: table
       });
       this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
       this.subTimer.unsubscribe();
@@ -189,7 +181,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
-    if(this.subTimer !== undefined){
+    if (this.subTimer !== undefined) {
       this.subTimer.unsubscribe();
     }
   }

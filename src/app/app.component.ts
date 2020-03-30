@@ -2,14 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Location} from '@angular/common';
 
-import {
-  NavigationCancel,
-  Event,
-  NavigationEnd,
-  NavigationError,
-  NavigationStart,
-  Router
-} from '@angular/router';
+import {Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
 import {WebsocketService} from "./services/websocket.service";
 import {environment} from "../environments/environment";
 import {StatusUpdateService} from "./services/status-update.service";
@@ -20,11 +13,9 @@ import {PlaceBetsService} from "./services/place-bets.service";
 import {StatusMessageService} from "./services/status-message.service";
 import {HandService} from "./services/hand.service";
 import {PlayerDashService} from "./services/player-dash.service";
-import {SocketObservable} from "./SocketObservable";
 import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Observable, Subscription} from "rxjs";
 import {MultiDashService} from "./services/multi-dash.service";
-import {stringify} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-root',
@@ -142,6 +133,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ////////////////////////////////////////////////////////
 
   playerAction(data) {
+
     this.wss.startChange.next(true);
     this.sms.statusMessage(data.status);
 
@@ -154,9 +146,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     let seat = data.seat;
     let tableName = data.table;
     let broadcast = data.broadcast;
-    this.dss.activate(result, seat, tableName, seat, broadcast);//seat,seat
+    //this.dss.activate(result, seat, tableName, seat, broadcast);
   }
 
+  /*
   getHands(data) {
 
     this.logStuff('getHands: ' + JSON.stringify(data));
@@ -171,13 +164,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     let tableName = data.table;
     let nextPlayer = data.nextPlayer;
     let broadcast = data.broadcast;
-    this.dss.activate(result, seat, tableName, nextPlayer, broadcast);//seat/nextPlayer
 
-    this.timer = Observable.timer(1000, 1000);
-
-    ///////////UPDATE MULTI-DASH /////////////
-    //this.subTimer = this.timer.subscribe(t => this.updateVisibleDash(t, nextPlayer, result));
     this.updateVisibleDash(nextPlayer, result);
+
+    this.dss.activate(result, seat, tableName, nextPlayer, broadcast);//seat/nextPlayer
 
     this.sms.statusMessage("player " + data.nextPlayer + " is playing");
 
@@ -190,21 +180,18 @@ export class AppComponent implements OnInit, AfterViewInit {
         socketid: this.wss.socketId
       });
     }
-
   }
+  */
 
-  //updateVisibleDash(t, nextPlayer, result) {
+  /*
   updateVisibleDash(nextPlayer, result) {
-    //t
-
-    this.logStuff('O o O o ================');
-    this.logStuff('nextPlayer: ' + nextPlayer);
-    this.logStuff('O o O o ================');
-
+    //this.logStuff('O o O o ================');
+    //his.logStuff('nextPlayer: ' + nextPlayer);
+    //this.logStuff('O o O o ================');
     this.playerDashService.updateVisible(true, nextPlayer);
     this.handService.handResult = result;
-    //this.subTimer.unsubscribe();
   }
+  */
 
   dealerHandEmit(data) {
 
@@ -216,65 +203,78 @@ export class AppComponent implements OnInit, AfterViewInit {
     let playerResult = data.phResult;
     let dealerHandArray = data.dealerHand[0].hand;
     let playerHandArray = data.playerHand.hand;
+    let playerQue = data.playerQue;
+    let inPlayerQue = (playerQue !== undefined) ? playerQue.indexOf(this.seatService.currentSeat) : false;
 
-    if(this.seatService.sitting) {
+    if (this.seatService.sitting && inPlayerQue) {
       this.mdService.updateVisible(visible, dealerResult, playerResult,
         dealerHandArray, playerHandArray);
+    }else{
+      this.wss.emit('checkDone',
+        {
+          table: this.tableService.tableNum,
+          seat: this.seatService.currentSeat,
+          deactivated:true
+        });
     }
 
     this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
   }
 
   //1st PLAYER SITS DOWN
+  /*
   playersBetting(data) {
-    //this.logStuff('*: ' + JSON.stringify(data));
-    this.placeBetsService.currentBank = data.chips;
+    this.logStuff('*: ' + JSON.stringify(data));
+    let seats = data.seats;
+    this.placeBetsService.currentBank = 0;
     this.wss.startChange.next(true);
     this.tableService.tablePlaying = true;
-    this.placeBetsService.setVisible(true, data.nextPlayer, data.table);
-    this.sms.statusMessage(data.status);//player x is betting
+    this.placeBetsService.setVisible(true, seats);
+    //this.sms.statusMessage(data.status);//player x is betting
+  }
+  */
+
+  openBetDash(data) {
+    this.wss.startChange.next(true);
+    this.logStuff(JSON.stringify(data));
+    let allActiveSeatsArray = data.allActiveSeatsArray;
+    this.placeBetsService.setVisible(true, allActiveSeatsArray);
+    //this.placeBetsService.currentBank = data.chips;
+    //this.placeBetsService.setStatus(false, seat);
   }
 
+  openPlayerDash(data) {
 
-  /*
-  restartHands(data){
+    this.logStuff('openPlayerDash: ' + JSON.stringify(data));
 
     this.wss.startChange.next(true);
-    this.handService.clearPlayerHands();
-    this.handService.clearDealerHand();
 
-    this.logStuff('RESTARTHANDS: ' + JSON.stringify(data));
+    this.handService.getPlayerHands(data.playerHands);
+    this.handService.getDealerHand(data.dealerHand);
+    let result = data.result;
+    let currentSeat = data.currentSeat;
 
-    if(this.seatService.currentSeat === data.initSeat) {
-      this.wss.emit('tableBetting',
-        {
-          table: this.tableService.tableNum,
-          tablePlaying: true,
-          seat: data.initSeat,
-          socketId: this.wss.socketId
-        });
+    //this.dss.activate(result, tableName, currentSeat, broadcast);//seat/nextPlayer
+
+    this.playerDashService.updateVisible(true, currentSeat);
+    this.handService.handResult = result;
+    this.sms.statusMessage("player " + currentSeat + " is playing");
+
+
+    /*
+    if (data.nextPlayer === undefined) {
+      //DEALER TURN
+      this.sms.statusMessage("dealer playing");
+      this.handService.showDealerHiddenCard(data.dealerHand);
+      this.wss.emit('dealerHand', {
+        table: this.tableService.tableNum,
+        socketid: this.wss.socketId
+      });
     }
-  }
- */
+    */
 
-  nextPlayerBetEmit(data) {
 
-    this.sms.statusMessage(data.status);
-    this.playerboxService.reset(data.justBet);
-    this.wss.startChange.next(true);
-
-    if (this.seatService.currentSeat === data.nextPlayer
-      && this.seatService.currentSeat !== undefined) {
-      this.placeBetsService.currentBank = data.chips;
-      this.placeBetsService.setVisible(true, data.nextPlayer, data.table);
-      this.placeBetsService.setStatus(false, data.nextPlayer);
-    }
-
-  }
-
-  nextPlayerDashEmit(data) {
-    this.wss.startChange.next(true);
-
+    /*
     if (data.nextPlayer === this.seatService.currentSeat) {
       this.wss.emit('tablePlaying', {
         table: this.tableService.tableNum,
@@ -282,8 +282,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         socketid: this.wss.socketId
       });
     }
-    //this.logStuff('NEXT PLAYER: ' + data.nextPlayer);
-    //this.logStuff(JSON.stringify(data));
+    */
+
   }
 
   standUpTableEmit(data) {
@@ -345,9 +345,9 @@ export class AppComponent implements OnInit, AfterViewInit {
  // it shouldn't take longer
  // than 30 seconds to pick a room
  */
-  noActivityReload(t){
+  noActivityReload(t) {
     this.noActivityCount--;
-    if(this.noActivityCount === 0){
+    if (this.noActivityCount === 0) {
       this.noActivityCount = 30;
       window.location.reload();
       this.noActivitySubTimer.unsubscribe();
@@ -409,21 +409,24 @@ export class AppComponent implements OnInit, AfterViewInit {
         .subscribe(data => this.satDownTableEmit(data));
 
       this.wss
-        .onEvent('nextPlayerBetEmit')
-        .subscribe(data => this.nextPlayerBetEmit(data));
-
+        .onEvent('openBetDashEmit')
+        .subscribe(data => this.openBetDash(data));
 
       this.wss
-        .onEvent('nextPlayerDashEmit')
-        .subscribe(data => this.nextPlayerDashEmit(data));
+        .onEvent('openPlayerDashEmit')
+        .subscribe(data => this.openPlayerDash(data));
 
+      /*
       this.wss
         .onEvent('playersBettingEmit')
         .subscribe(data => this.playersBetting(data));
+      */
 
+      /*
       this.wss
         .onEvent('getHandsEmit')
         .subscribe(data => this.getHands(data));
+       */
 
       this.wss
         .onEvent('standUpTableEmit')

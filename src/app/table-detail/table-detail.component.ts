@@ -63,11 +63,9 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
           });
 
-
       });
     ///////////////////////////////////////////////////////////////////
-    this.placeBetsService.setVisible(false,
-      this.seatService.currentSeat,this.tableService.tableNum);
+    //this.placeBetsService.setVisible(false, this.seatService.currentSeat);
 
 
     location.onPopState(() => {

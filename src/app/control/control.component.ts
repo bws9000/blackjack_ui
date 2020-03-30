@@ -94,16 +94,11 @@ export class ControlComponent implements OnInit, OnDestroy {
       this.setStartCount();
       this.statusBoxVisible = 'hidden';
       this.tableService.tablePlaying = true;
-      let table = this.tableService.tableNum;
-      const gameStarted = this.tableService.tablePlaying;
-      const initSeat = this.seatService.currentSeat;
 
-      this.wss.emit('tableBetting',
+      this.wss.emit('playerBetting',
         {
-          table: table,
-          tablePlaying: gameStarted,
-          seat: initSeat,
-          socketId: this.wss.socketId
+          table: this.tableService.tableNum,
+          seat: this.seatService.currentSeat
         });
       this.subTimer.unsubscribe();
     }

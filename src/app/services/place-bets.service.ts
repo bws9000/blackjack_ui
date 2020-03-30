@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
 import {environment} from "../../environments/environment";
 
@@ -7,32 +7,31 @@ import {environment} from "../../environments/environment";
 })
 export class PlaceBetsService {
 
-  placeBetsStatus: Subject<Object>= new Subject<Object>();
+  placeBetsStatus: Subject<Object> = new Subject<Object>();
   playerBanks: Subject<Array<any>> = new Subject<Array<any>>();
   visible: Subject<Object> = new Subject<Object>();
-  intv:number;
+  intv: number;
 
-  public currentBank:number;
-  public currentBet:number;
+  public currentBank: number;
+  public currentBet: number;
 
   constructor() {
     this.currentBet = undefined;
     this.currentBank = undefined;
   }
 
-  setVisible(value,seat,table){
+  setVisible(value, allActiveSeatsArray) {
     let data = {
-      value:value,
-      seat:seat,
-      table:table
+      value: value,
+      seats: allActiveSeatsArray
     };
     this.visible.next(data);
   }
 
-  setStatus(value,seat){
+  setStatus(value, seat) {
     let data = {
-      value:value,
-      seat:seat
+      value: value,
+      seat: seat
     };
     this.placeBetsStatus.next(data);
   }

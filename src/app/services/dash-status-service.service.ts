@@ -14,18 +14,19 @@ export class DashStatusServiceService {
 
   }
 
-  activate(result,seat,tableName,nextPlayer,broadcast){
+  /*
+  activate(result, tableName, currentSeat, broadcast) {
     let data = {
-      result:result,
-      seat:seat,
-      tableName:tableName,
-      nextPlayer:nextPlayer,
-      broadcast:broadcast
+      result: result,
+      tableName: tableName,
+      currentSeat: currentSeat,
+      broadcast: broadcast
     };
     this.statusMessage.next(data);
   }
+   */
 
-  startTimer(seat){
+  startTimer(seat) {
     this.startTimerCount.next(seat);
   }
 
