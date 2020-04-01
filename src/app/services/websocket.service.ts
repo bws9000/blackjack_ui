@@ -91,10 +91,13 @@ export class WebsocketService {
     this.eventMap.set('actionSeatEmit', new SocketObservable('actionSeatEmit', this.socket));
     this.eventMap.set('dealerHandEmit', new SocketObservable('dealerHandEmit', this.socket));
     this.eventMap.set('restartHandsEmit', new SocketObservable('restartHandsEmit', this.socket));
+    this.eventMap.set('checkDoneEmit', new SocketObservable('checkDoneEmit', this.socket));
     //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat', this.socket));
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));
-  }
+    this.eventMap.set('resetClientEmit', new SocketObservable('resetClientEmit', this.socket));
+    this.eventMap.set('blankEmit', new SocketObservable('blankEmit', this.socket));
+    }
 
   logStuff(stuff: any) {
     if (!environment.production) {

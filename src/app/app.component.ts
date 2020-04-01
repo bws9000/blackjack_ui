@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Location} from '@angular/common';
 
@@ -22,7 +22,7 @@ import {MultiDashService} from "./services/multi-dash.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private noActivityTimer;
   private noActivitySubTimer: Subscription;
@@ -34,6 +34,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private timer;
   private subTimer: Subscription;
+
+  //new counter
+  private resetCounter;
+  private resetTimer;
+  private resetSubTimer: Subscription;
 
   constructor(private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
@@ -49,6 +54,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               private playerDashService: PlayerDashService,
               private dss: DashStatusServiceService,
               private mdService: MultiDashService) {
+
+    this.resetCounter = 5;
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -70,8 +77,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
     //////// reload due to non activity ??? /////////
-    this.noActivityCount = 30;
-    this.noActivityTimer = Observable.timer(1000, 1000);
+    //this.noActivityCount = 30;
+    //this.noActivityTimer = Observable.timer(1000, 1000);
     //this.noActivitySubTimer = this.noActivityTimer.subscribe(t => this.noActivityReload(t));
     /////////////////////////////////////////////////
 
@@ -103,18 +110,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
     let result = JSON.stringify((data));
     this.logStuff('EMIT LEFT TABLE: ' + result);
-  }
-
-  socketReconnect(data) {
-    this.router.navigate(['']).then(r => {
-      this.wss.startChange.next(true);
-      this.connect().then(r => {
-        this.logStuff('CONNECTION TYPE: Reconnection Occured.');
-      })
-    });
-    this.logStuff('Reconnection occured: Booted from room'); //temp
-    let result = JSON.stringify((data));
-    this.logStuff(result);
   }
 
   tableDetailHeartBeat(data) {
@@ -149,49 +144,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     //this.dss.activate(result, seat, tableName, seat, broadcast);
   }
 
-  /*
-  getHands(data) {
-
-    this.logStuff('getHands: ' + JSON.stringify(data));
-
+  checkDone(data) {
+    this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
-
-    this.handService.getPlayerHands(data.playerHands);
-    this.handService.getDealerHand(data.dealerHand);
-
-    let result = data.result;
-    let seat = data.justBet;
-    let tableName = data.table;
-    let nextPlayer = data.nextPlayer;
-    let broadcast = data.broadcast;
-
-    this.updateVisibleDash(nextPlayer, result);
-
-    this.dss.activate(result, seat, tableName, nextPlayer, broadcast);//seat/nextPlayer
-
-    this.sms.statusMessage("player " + data.nextPlayer + " is playing");
-
-    if (data.nextPlayer === undefined) {
-      //DEALER TURN
-      this.sms.statusMessage("dealer playing");
-      this.handService.showDealerHiddenCard(data.dealerHand);
-      this.wss.emit('dealerHand', {
-        table: this.tableService.tableNum,
-        socketid: this.wss.socketId
-      });
-    }
   }
-  */
-
-  /*
-  updateVisibleDash(nextPlayer, result) {
-    //this.logStuff('O o O o ================');
-    //his.logStuff('nextPlayer: ' + nextPlayer);
-    //this.logStuff('O o O o ================');
-    this.playerDashService.updateVisible(true, nextPlayer);
-    this.handService.handResult = result;
-  }
-  */
 
   dealerHandEmit(data) {
 
@@ -203,42 +159,24 @@ export class AppComponent implements OnInit, AfterViewInit {
     let playerResult = data.phResult;
     let dealerHandArray = data.dealerHand[0].hand;
     let playerHandArray = data.playerHand.hand;
-    let playerQue = data.playerQue;
-    let inPlayerQue = (playerQue !== undefined) ? playerQue.indexOf(this.seatService.currentSeat) : false;
+    //let playerQue = data.playerQue;
+    //let inPlayerQue = (playerQue !== undefined) ? playerQue.indexOf(this.seatService.currentSeat) : false;
 
-    if (this.seatService.sitting && inPlayerQue) {
+    if (this.seatService.sitting) {
       this.mdService.updateVisible(visible, dealerResult, playerResult,
         dealerHandArray, playerHandArray);
-    }else{
-      this.wss.emit('checkDone',
-        {
-          table: this.tableService.tableNum,
-          seat: this.seatService.currentSeat,
-          deactivated:true
-        });
     }
 
     this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
   }
 
-  //1st PLAYER SITS DOWN
-  /*
-  playersBetting(data) {
-    this.logStuff('*: ' + JSON.stringify(data));
-    let seats = data.seats;
-    this.placeBetsService.currentBank = 0;
-    this.wss.startChange.next(true);
-    this.tableService.tablePlaying = true;
-    this.placeBetsService.setVisible(true, seats);
-    //this.sms.statusMessage(data.status);//player x is betting
-  }
-  */
-
   openBetDash(data) {
+    this.logStuff('openBetDash(): ' + JSON.stringify(data));
+    let noPlayers = data.noPlayers;
     this.wss.startChange.next(true);
-    this.logStuff(JSON.stringify(data));
-    let allActiveSeatsArray = data.allActiveSeatsArray;
-    this.placeBetsService.setVisible(true, allActiveSeatsArray);
+    if(!noPlayers) {
+      this.placeBetsService.setVisible(true, data.seat);
+    }
     //this.placeBetsService.currentBank = data.chips;
     //this.placeBetsService.setStatus(false, seat);
   }
@@ -258,31 +196,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.playerDashService.updateVisible(true, currentSeat);
     this.handService.handResult = result;
-    this.sms.statusMessage("player " + currentSeat + " is playing");
-
-
-    /*
-    if (data.nextPlayer === undefined) {
-      //DEALER TURN
-      this.sms.statusMessage("dealer playing");
-      this.handService.showDealerHiddenCard(data.dealerHand);
-      this.wss.emit('dealerHand', {
-        table: this.tableService.tableNum,
-        socketid: this.wss.socketId
-      });
-    }
-    */
-
-
-    /*
-    if (data.nextPlayer === this.seatService.currentSeat) {
-      this.wss.emit('tablePlaying', {
-        table: this.tableService.tableNum,
-        seat: data.nextPlayer,
-        socketid: this.wss.socketId
-      });
-    }
-    */
+    //this.sms.statusMessage("player " + currentSeat + " is playing");
 
   }
 
@@ -314,15 +228,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     if (!broadcast) {
       this.wss.startChange.next(true);
-      this.seatService.currentSeat = data.sitting; //where i am right now
+      this.seatService.currentSeat = data.sitting;
       if (data.playerCount === 1) {
         this.statusUpdateService.showStatus();
-      }
-    }
-
-    if (!broadcast) {
-      if (this.tableService.tablePlaying) {
-
       }
     }
 
@@ -354,25 +262,79 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async connect(): Promise<void> {
+  socketReconnect(data) {
+    this.router.navigate(['']).then(r => {
+      this.wss.startChange.next(true);
+      this.connect().then(r => {
+        this.logStuff('CONNECTION TYPE: Reconnection Occured.');
+      })
+    });
+    this.logStuff(JSON.stringify(data));
+  }
 
-    this.wss.startChange.next(false);
+  resetClient(data) {
+    this.wss.startChange.next(true);
+    this.logStuff('reset:'+JSON.stringify(data));
+    if(!data.reset) {
+      this.logStuff('currentSeats: ' + this.seatService.currentSeats);
+      this.resetTimer = Observable.timer(1000, 1000);
+      this.resetSubTimer = this.resetTimer.subscribe(t => this.resetClientTimer(t));
+    }
+  }
+
+  resetClientTimer(t) {
+    this.resetCounter--;
+    if (this.resetCounter === 0) {
+      this.logStuff('READYTOBET');
+      this.wss.emit('readyToBet',
+        {
+          table: this.tableService.tableNum,
+          seat: this.seatService.currentSeat,
+          reset:true
+        });
+      this.resetCounter = 5;
+      this.resetSubTimer.unsubscribe();
+    }
+  }
+
+  blankEmit(data){
+    this.logStuff(JSON.stringify(data));
+    this.wss.startChange.next(true);
+  }
+
+  ngOnDestroy(): void {
+    if (this.resetSubTimer !== undefined) {
+      this.resetSubTimer.unsubscribe();
+    }
+    if (this.noActivitySubTimer !== undefined) {
+      this.noActivitySubTimer.unsubscribe();
+    }
+    if (this.subTimer !== undefined) {
+      this.subTimer.unsubscribe();
+    }
+  }
+
+  async connect(): Promise<void> {
 
     let result = await this.wss.authConnect();
     if (result) {
 
       this.wss.startChange.next(true);
       this.wss.initEvents();
-
-
+      
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
-
-      /*
       this.wss
-        .onEvent('restartHandsEmit')
-        .subscribe(data => this.restartHands(data));
-      */
+        .onEvent('blankEmit')
+        .subscribe(data => this.blankEmit(data));
+
+      this.wss
+        .onEvent('resetClientEmit')
+        .subscribe(data => this.resetClient(data));
+
+      this.wss
+        .onEvent('checkDoneEmit')
+        .subscribe(data => this.checkDone(data));
 
       this.wss
         .onEvent('actionSeatEmit')
@@ -416,18 +378,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         .onEvent('openPlayerDashEmit')
         .subscribe(data => this.openPlayerDash(data));
 
-      /*
-      this.wss
-        .onEvent('playersBettingEmit')
-        .subscribe(data => this.playersBetting(data));
-      */
-
-      /*
-      this.wss
-        .onEvent('getHandsEmit')
-        .subscribe(data => this.getHands(data));
-       */
-
       this.wss
         .onEvent('standUpTableEmit')
         .subscribe(data => this.standUpTableEmit(data));
@@ -448,7 +398,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.connect().then(r => {
       this.logStuff('RECONNECTION TYPE: Initial Connection Occured.');
-    })
+    });
+
   }
 
   private navigationInterceptor(event: Event): void {

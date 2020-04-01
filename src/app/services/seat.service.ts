@@ -56,7 +56,6 @@ export class SeatService {
   }
 
   standUp(seat, bc, tableName: string) {
-
     let data = {
       sitting: seat,
       broadcast: bc,

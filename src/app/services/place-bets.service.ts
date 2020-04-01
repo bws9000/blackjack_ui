@@ -20,10 +20,10 @@ export class PlaceBetsService {
     this.currentBank = undefined;
   }
 
-  setVisible(value, allActiveSeatsArray) {
+  setVisible(value, seat) {
     let data = {
       value: value,
-      seats: allActiveSeatsArray
+      seat: seat
     };
     this.visible.next(data);
   }

@@ -68,10 +68,10 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
             let j = JSON.stringify(value);
             let o = JSON.parse(j);
             let v = o.value;
-            let s = o.seats;
+            let s = o.seat;
 
             if (v) {
-              if (s.indexOf(this.seatService.currentSeat) > -1) {
+              if (s === this.seatService.currentSeat) {
                 if (this.placeBetsVisible === 'hidden') {
 
                   this.wss.emit('actionOrder', {
@@ -135,8 +135,10 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.placeBetsService.currentBet = this.currentBet;
     let table = this.tableService.tableNum;
     this.playerboxService.reset(this.seatService.currentSeat);
-    this.wss.emit('openPlayerDash', {
-      currentSeat: this.seatService.currentSeat,
+    this.wss.emit('nextPlayerBet', {
+      timeOut:false,
+      socketid: this.wss.socketId,
+      seat: this.seatService.currentSeat,
       table: table
     });
     this.subTimer.unsubscribe();
@@ -151,10 +153,20 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       this.placeBetsVisible = 'hidden';
       this.playerboxService.reset(this.seatService.currentSeat);
       let table = this.tableService.tableNum;
-      this.wss.emit('openPlayerDash', {
-        currentSeat: this.seatService.currentSeat,
+      this.wss.emit('nextPlayerBet', {
+        timeOut:true,
+        socketid: this.wss.socketId,
+        seat: this.seatService.currentSeat,
         table: table
       });
+      /*
+      this.wss.emit('blank', {
+        purpose: 'timeoutbet',
+        timeOut: true,
+        seat: this.seatService.currentSeat,
+        table: table
+      });
+      */
       this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
       this.subTimer.unsubscribe();
 

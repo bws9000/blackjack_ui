@@ -140,6 +140,7 @@ export class SitComponent implements OnInit {
         this.sitOrLeaveText = 'STAND UP';
         this.seatService.sitting = true;
         this.sitOrLeave = true;
+        this.seatService.currentSeat = +this.id;
       }
     } else {
       this.wss.emit('standUpTable', {
@@ -149,6 +150,7 @@ export class SitComponent implements OnInit {
       this.sitOrLeaveText = 'SIT DOWN';
       this.seatService.sitting = false;
       this.sitOrLeave = false;
+      this.seatService.currentSeat = undefined;
     }
 
   }

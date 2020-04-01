@@ -193,12 +193,18 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.setTimer2Timer();
 
+    this.wss.emit('dealerHand', {
+      table: this.tableService.tableNum,
+      socketid: this.wss.socketId
+    });
+    /*
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
     });
+    */
     this.playerDashVisible = 'hidden';
 
   }
@@ -207,12 +213,20 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.handService.handPlayed = false;
 
+    this.wss.emit('dealerHand', {
+      table: this.tableService.tableNum,
+      socketid: this.wss.socketId
+    });
+
+    /*
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
     });
+    */
+
     this.playerDashVisible = 'hidden';
 
     this.setTimer2Timer();
