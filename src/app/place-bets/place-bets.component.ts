@@ -141,6 +141,13 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       seat: this.seatService.currentSeat,
       table: table
     });
+    /*
+    this.wss.emit('openPlayerDash', {
+      socketid: this.wss.socketId,
+      seat: this.seatService.currentSeat,
+      table: table
+    });
+    */
     this.subTimer.unsubscribe();
   }
 
@@ -159,14 +166,6 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
         seat: this.seatService.currentSeat,
         table: table
       });
-      /*
-      this.wss.emit('blank', {
-        purpose: 'timeoutbet',
-        timeOut: true,
-        seat: this.seatService.currentSeat,
-        table: table
-      });
-      */
       this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
       this.subTimer.unsubscribe();
 

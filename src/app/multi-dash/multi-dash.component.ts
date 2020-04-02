@@ -6,6 +6,7 @@ import {Card2} from "../Card2";
 import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
 import {SeatService} from "../services/seat.service";
+import {HandService} from "../services/hand.service";
 
 @Component({
   selector: 'app-multi-dash',
@@ -34,7 +35,8 @@ export class MultiDashComponent implements OnInit {
   constructor(private mdService: MultiDashService,
               private wss: WebsocketService,
               private tableService: TableService,
-              private seatService: SeatService) {
+              private seatService: SeatService,
+              private handService: HandService) {
 
     this.socketid = this.wss.socketId;
     this.table = 'table' + this.tableService.tableNum;
@@ -48,14 +50,21 @@ export class MultiDashComponent implements OnInit {
       let o = JSON.parse(j);
       let visible = o.visible;//true
       let dealerResult = o.dealerResult;
-      let playerResult = o.playerResult;
       let dHandArray = o.dHandArray;
-      let pHandArray = o.pHandArray;
+      let playerResults = o.playerResults;
 
-      //this.logStuff('dResult: ' + dealerResult);
-      //this.logStuff('pResult: ' + playerResult);
-      //this.logStuff('dHandArray: ' + dHandArray);
-      //this.logStuff('pHandArray: ' + pHandArray);
+      let playerResult = undefined;
+      let pHandArray = this.handService.lastPlayerHand;
+
+      let that = this;
+      playerResults.forEach(function(pr){
+        //console.log('seat: ' + pr.seat);
+        //console.log('hr: ' + pr.hr);
+        if(pr.seat === that.seatService.currentSeat ){
+          playerResult = pr.hr;
+          //alert(pr.seat + ' -playerResult: ' + playerResult);
+        }
+      });
 
       this.playerStatus = playerResult;
       this.dealerStatus = dealerResult;
@@ -71,8 +80,8 @@ export class MultiDashComponent implements OnInit {
       if (visible) {
         //this.logStuff('sitting: ' + this.seatService.sitting);
         this.multiDashVisible = 'visible';
-        this.multiTimer = Observable.timer(1000, 1000);
-        this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
+        //this.multiTimer = Observable.timer(1000, 1000);
+        //this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
       }
 
     });
@@ -127,12 +136,15 @@ export class MultiDashComponent implements OnInit {
 
       let tableNum = this.tableService.tableNum;
       let seatNum = this.seatService.currentSeat;
+
+      /*
       this.wss.emit('checkDone',
         {
           table: tableNum,
           seat: seatNum,
           deactivated: false
         });
+      */
 
     }
   }
@@ -141,7 +153,7 @@ export class MultiDashComponent implements OnInit {
     this.setOpenTime();
     this.multiSubTimer.unsubscribe();
     this.multiDashVisible = 'hidden';
-    this.restartHands();
+    //this.restartHands();
   }
 
   restartHands() {

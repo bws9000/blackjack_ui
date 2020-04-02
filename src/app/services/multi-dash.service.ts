@@ -12,14 +12,14 @@ export class MultiDashService {
   constructor() {
   }
 
-  updateVisible(visible, dealerResult,playerResult,
-                dealerHandArray, playerHandArray){
+  updateVisible(visible, dealerResult,playerResults,
+                dealerHandArray){
+
     let data = {
       visible: visible,
       dealerResult: dealerResult,
-      playerResult: playerResult,
+      playerResults: playerResults,
       dHandArray: dealerHandArray,
-      pHandArray: playerHandArray
     };
     this.visible.next(data);
   }

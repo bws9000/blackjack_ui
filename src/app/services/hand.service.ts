@@ -21,6 +21,8 @@ export class HandService {
   public handResult: string;
   public handPlayed: boolean;
 
+  public lastPlayerHand = [];
+
   constructor() {
     this.handResult = 'playing';
     this.handPlayed = false;

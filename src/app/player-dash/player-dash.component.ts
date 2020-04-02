@@ -65,9 +65,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
         this.dss.startTimerCount.subscribe(value => {
           if (this.dashId === value) {
-            //this.logStuff('OBSERVABLE');
-            //this.logStuff('this.dash: ' + this.dash);
-            //this.logStuff('value: ' + value);
             this.dashTimer2 = Observable.timer(1000, 1000);
             this.dashSubTimer2 = this.dashTimer2.subscribe(t => this.statusCount(t));
           }
@@ -96,7 +93,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               this.dashSubTimer = this.dashTimer.subscribe(t => this.statusOver(t));
             }
 
-            //this.statusBox();
           }
 
         });
@@ -127,12 +123,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           if (currentTable === params.tableId) {
             if (v) {
 
-              //this.logStuff('============================');
-              //this.logStuff('this.seatService.currentSeat:' + this.seatService.currentSeat);
-              //this.logStuff('this.dash: ' + this.dash);
-              //this.logStuff('s: ' + s);
-              //this.logStuff('============================');
-
               if (+this.dash == this.seatService.currentSeat &&
                 s === this.seatService.currentSeat) {
                 this.show();
@@ -142,8 +132,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             }
           }
 
-          //this.logStuff('j:' + j);
-
         });
 
       });
@@ -151,12 +139,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   stand() {
-    //this.logStuff('playerStatus: ' + this.playerStatus);
-    //this.logStuff('handResult2: ' + this.handService.handResult);
-    //this.logStuff('handPlayed: ' + this.handService.handPlayed);
 
     if (this.handService.handPlayed) {
       this.handService.handPlayed = false;
+      this.handService.lastPlayerHand = this.cards;
 
       this.wss.emit('nextPlayerDash', {
         action: 'stand',
@@ -182,6 +168,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   standClick() {
 
     this.handService.handPlayed = false;
+    this.handService.lastPlayerHand = this.cards;
 
     if (this.dashSubTimer !== undefined) {
       this.dashSubTimer.unsubscribe();
@@ -193,18 +180,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.setTimer2Timer();
 
-    this.wss.emit('dealerHand', {
-      table: this.tableService.tableNum,
-      socketid: this.wss.socketId
-    });
-    /*
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
     });
-    */
     this.playerDashVisible = 'hidden';
 
   }
@@ -212,12 +193,11 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   standTimeRanOut() {
 
     this.handService.handPlayed = false;
+    this.handService.lastPlayerHand = this.cards;
 
     this.wss.emit('dealerHand', {
-      table: this.tableService.tableNum,
-      socketid: this.wss.socketId
+      table: this.tableService.tableNum
     });
-
     /*
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
@@ -226,7 +206,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       socketId: this.wss.socketId
     });
     */
-
     this.playerDashVisible = 'hidden';
 
     this.setTimer2Timer();
@@ -341,10 +320,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
 
-    if(this.dashSubTimer !== undefined){
+    if (this.dashSubTimer !== undefined) {
       this.dashSubTimer.unsubscribe();
     }
-    if(this.dashSubTimer2 !== undefined) {
+    if (this.dashSubTimer2 !== undefined) {
       this.dashSubTimer2.unsubscribe();
     }
 
