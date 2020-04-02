@@ -62,7 +62,7 @@ export class MultiDashComponent implements OnInit {
         //console.log('hr: ' + pr.hr);
         if(pr.seat === that.seatService.currentSeat ){
           playerResult = pr.hr;
-          //alert(pr.seat + ' -playerResult: ' + playerResult);
+          alert(pr.seat + ' -playerResult: ' + playerResult);
         }
       });
 
