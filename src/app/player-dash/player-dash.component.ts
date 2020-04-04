@@ -79,17 +79,19 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let seat = o.currentSeat;
           let tname = o.tableName;
           let broadcast = o.broadcast;
+          let socketid = o.socketid;
           this.broadcast = broadcast;
 
-          this.logStuff('====================');
-          this.logStuff('tname: ' + tname);
-          this.logStuff('this.tableName: ' + this.tableName);
-          this.logStuff('seat: ' + seat);
-          this.logStuff('this.dash: ' + this.dash);
-          this.logStuff('====================');
-
           if (tname === this.tableName &&
-            seat === this.dash) {
+            seat === this.dash &&
+            this.wss.socketId === socketid) {
+
+            this.logStuff('====================');
+            this.logStuff('tname: ' + tname);
+            this.logStuff('this.tableName: ' + this.tableName);
+            this.logStuff('seat: ' + seat);
+            this.logStuff('this.dash: ' + this.dash);
+            this.logStuff('====================');
 
             this.playerStatus = result;
             this.statusBox();

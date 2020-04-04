@@ -14,11 +14,12 @@ export class DashStatusServiceService {
 
   }
 
-  activate(result, tableName, currentSeat, broadcast) {
+  activate(result, tableName, currentSeat, socketid,broadcast) {
     let data = {
       result: result,
       tableName: tableName,
       currentSeat: currentSeat,
+      socketid:socketid,
       broadcast: broadcast
     };
     this.statusMessage.next(data);

@@ -125,9 +125,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let result = data.result;
     let currentSeat = data.currentSeat;
     let tableName = data.table;
+    let socketid = data.socketid;
     let broadcast = data.broadcast;
 
-    this.dss.activate(result, tableName, currentSeat, broadcast);
+    this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
 
   }
 
@@ -185,9 +186,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let result = data.result;
     let currentSeat = data.currentSeat;
     let tableName = data.tableName;
+    let socketid = data.socketid;
     let broadcast = data.broadcast;
 
-    this.dss.activate(result, tableName, currentSeat, broadcast);
+    this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
 
     this.playerDashService.updateVisible(true, currentSeat);
     this.handService.handResult = result;
