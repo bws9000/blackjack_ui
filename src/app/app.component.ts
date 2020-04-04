@@ -35,11 +35,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private timer;
   private subTimer: Subscription;
 
-  //new counter
-  private resetCounter;
-  private resetTimer;
-  private resetSubTimer: Subscription;
-
   constructor(private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
@@ -54,8 +49,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               private playerDashService: PlayerDashService,
               private dss: DashStatusServiceService,
               private mdService: MultiDashService) {
-
-    this.resetCounter = 5;
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -122,7 +115,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   playerAction(data) {
 
     this.wss.startChange.next(true);
-    this.sms.statusMessage(data.status);
+    //this.sms.statusMessage(data.status);
 
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
@@ -130,10 +123,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logStuff('playerAction: ' + JSON.stringify(data));
 
     let result = data.result;
-    let seat = data.seat;
+    let currentSeat = data.currentSeat;
     let tableName = data.table;
     let broadcast = data.broadcast;
-    //this.dss.activate(result, seat, tableName, seat, broadcast);
+
+    this.dss.activate(result, tableName, currentSeat, broadcast);
+
   }
 
   checkDone(data) {
@@ -142,27 +137,35 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   dealerHandEmit(data) {
-
     this.wss.startChange.next(true);
-
     this.handService.showAllDealerHand(data.dealerHand);
 
     let visible = true;
-    let dealerResult = data.result;
+    let dealerResult = data.dealerResult;
     let playerResults = data.playerResults;
     let dealerHandArray = data.dealerHand[0].hand;
-    //let playerHandArray = data.playerHand.hand;
 
     if (this.seatService.sitting) {
       this.mdService.updateVisible(visible, dealerResult, playerResults,
         dealerHandArray);
     }
-
     this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
+
+    ////////////////////////////////////////
+    //stand up but still in table
+    if(!this.seatService.sitting){
+      this.playerboxService.resetAllSeats();
+    }
+    ////////////////////////////////////////
   }
 
-  openBetDash(data) {
+  openBetDashEmit(data) {
+    this.clearCards();
     this.logStuff('openBetDash(): ' + JSON.stringify(data));
+    ///////////////////////////////////////////////////////
+    this.placeBetsService.youCanSitNow = true;
+    ///////////////////////////////////////////////////////
+
     let noPlayers = data.noPlayers;
     this.wss.startChange.next(true);
     if (!noPlayers) {
@@ -175,19 +178,26 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   openPlayerDash(data) {
 
     this.logStuff('openPlayerDash: ' + JSON.stringify(data));
-
     this.wss.startChange.next(true);
 
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
     let result = data.result;
     let currentSeat = data.currentSeat;
+    let tableName = data.tableName;
+    let broadcast = data.broadcast;
 
-    //this.dss.activate(result, tableName, currentSeat, broadcast);//seat/nextPlayer
+    this.dss.activate(result, tableName, currentSeat, broadcast);
+
     this.playerDashService.updateVisible(true, currentSeat);
     this.handService.handResult = result;
     //this.sms.statusMessage("player " + currentSeat + " is playing");
 
+  }
+
+  clearCards() {
+    this.handService.clearPlayerHands();
+    this.handService.clearDealerHand();
   }
 
   standUpTableEmit(data) {
@@ -262,40 +272,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logStuff(JSON.stringify(data));
   }
 
-  resetClient(data) {
-    this.wss.startChange.next(true);
-    this.logStuff('reset:' + JSON.stringify(data));
-    if (!data.reset) {
-      this.logStuff('currentSeats: ' + this.seatService.currentSeats);
-      this.resetTimer = Observable.timer(1000, 1000);
-      this.resetSubTimer = this.resetTimer.subscribe(t => this.resetClientTimer(t));
-    }
-  }
-
-  resetClientTimer(t) {
-    this.resetCounter--;
-    if (this.resetCounter === 0) {
-      this.logStuff('READYTOBET');
-      this.wss.emit('readyToBet',
-        {
-          table: this.tableService.tableNum,
-          seat: this.seatService.currentSeat,
-          reset: true
-        });
-      this.resetCounter = 5;
-      this.resetSubTimer.unsubscribe();
-    }
-  }
-
   blankEmit(data) {
     this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
   }
 
   ngOnDestroy(): void {
-    if (this.resetSubTimer !== undefined) {
-      this.resetSubTimer.unsubscribe();
-    }
+
     if (this.noActivitySubTimer !== undefined) {
       this.noActivitySubTimer.unsubscribe();
     }
@@ -318,9 +301,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         .onEvent('blankEmit')
         .subscribe(data => this.blankEmit(data));
 
+      /*
       this.wss
         .onEvent('resetClientEmit')
         .subscribe(data => this.resetClient(data));
+      */
 
       this.wss
         .onEvent('checkDoneEmit')
@@ -362,7 +347,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.wss
         .onEvent('openBetDashEmit')
-        .subscribe(data => this.openBetDash(data));
+        .subscribe(data => this.openBetDashEmit(data));
 
       this.wss
         .onEvent('openPlayerDashEmit')

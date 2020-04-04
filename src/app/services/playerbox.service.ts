@@ -9,9 +9,14 @@ export class PlayerboxService {
   playerSeats: Subject<Array<any>> = new Subject<Array<any>>();
   playerAction: Subject<Object> = new Subject<Object>();
   resetSubject: Subject<Object> = new Subject<Object>();
+  resetAllSubject: Subject<boolean> = new Subject<boolean>();
 
   constructor() {
 
+  }
+
+  resetAllSeats(){
+    this.resetAllSubject.next(true);
   }
 
   seats(playerSeats) {

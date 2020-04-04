@@ -5,6 +5,7 @@ import {TableService} from "../services/table.service";
 import {StatusUpdateService} from "../services/status-update.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {HandService} from "../services/hand.service";
+import {PlaceBetsService} from "../services/place-bets.service";
 
 @Component({
   selector: 'app-sit',
@@ -28,7 +29,7 @@ export class SitComponent implements OnInit {
               private tableService: TableService,
               private playerboxService: PlayerboxService,
               private statusUpdateService: StatusUpdateService,
-              private handService: HandService) {
+              private placeBetsService: PlaceBetsService) {
 
     this.isHidden = true;
     this.opHidden = true;
@@ -130,18 +131,24 @@ export class SitComponent implements OnInit {
   }
 
   sitStand() {
-
     if (!this.sitOrLeave) {
-      this.wss.emit('sitTable', {
-        player: this.id,
-        tableNum: this.table
-      });
-      if (!this.sitOrLeave) {
-        this.sitOrLeaveText = 'STAND UP';
-        this.seatService.sitting = true;
-        this.sitOrLeave = true;
-        this.seatService.currentSeat = +this.id;
+
+      if(this.placeBetsService.youCanSitNow) {
+        this.wss.emit('sitTable', {
+          player: this.id,
+          tableNum: this.table
+        });
+        if (!this.sitOrLeave) {
+          this.sitOrLeaveText = 'STAND UP';
+          this.seatService.sitting = true;
+          this.sitOrLeave = true;
+          this.seatService.currentSeat = +this.id;
+        }
+      }else{
+        alert('please try again');
       }
+
+
     } else {
       this.wss.emit('standUpTable', {
         player: this.id,

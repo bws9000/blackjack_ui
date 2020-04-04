@@ -44,6 +44,12 @@ export class PlayerboxComponent implements OnInit {
 
     });
 
+    this.playerboxService.resetAllSubject.subscribe(value => {
+      this.action = false;
+      this.sitting = false;
+      this.playerInnerbox();
+    });
+
     this.playerboxService.resetSubject.subscribe(value => {
       let j = JSON.stringify(value);
       let o = JSON.parse(j);

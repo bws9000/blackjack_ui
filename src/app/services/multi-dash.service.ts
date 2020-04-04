@@ -12,8 +12,8 @@ export class MultiDashService {
   constructor() {
   }
 
-  updateVisible(visible, dealerResult,playerResults,
-                dealerHandArray){
+  updateVisible(visible, dealerResult, playerResults,
+                dealerHandArray) {
 
     let data = {
       visible: visible,

@@ -15,9 +15,12 @@ export class PlaceBetsService {
   public currentBank: number;
   public currentBet: number;
 
+  public youCanSitNow: boolean;
+
   constructor() {
     this.currentBet = undefined;
     this.currentBank = undefined;
+    this.youCanSitNow = true;
   }
 
   setVisible(value, seat) {

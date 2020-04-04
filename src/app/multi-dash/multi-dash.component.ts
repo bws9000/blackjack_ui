@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MultiDashService} from "../services/multi-dash.service";
 import {Observable, Subscription} from "rxjs";
 import {environment} from "../../environments/environment";
@@ -7,6 +7,8 @@ import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
 import {SeatService} from "../services/seat.service";
 import {HandService} from "../services/hand.service";
+import {PlaceBetsService} from "../services/place-bets.service";
+import {PlayerboxService} from "../services/playerbox.service";
 
 @Component({
   selector: 'app-multi-dash',
@@ -14,7 +16,7 @@ import {HandService} from "../services/hand.service";
   styleUrls: ['./multi-dash.component.css']
 })
 
-export class MultiDashComponent implements OnInit {
+export class MultiDashComponent implements OnInit, OnDestroy {
 
   multiDashVisible: string;
 
@@ -32,11 +34,20 @@ export class MultiDashComponent implements OnInit {
   private readonly socketid;
   private readonly table;
 
+  //new counter
+  private resetCounter;
+  private resetTimer;
+  private resetSubTimer: Subscription;
+
   constructor(private mdService: MultiDashService,
               private wss: WebsocketService,
               private tableService: TableService,
               private seatService: SeatService,
-              private handService: HandService) {
+              private handService: HandService,
+              private placeBetsService: PlaceBetsService,
+              private playerBoxService: PlayerboxService) {
+
+    this.resetCounter = 5;
 
     this.socketid = this.wss.socketId;
     this.table = 'table' + this.tableService.tableNum;
@@ -57,12 +68,12 @@ export class MultiDashComponent implements OnInit {
       let pHandArray = this.handService.lastPlayerHand;
 
       let that = this;
-      playerResults.forEach(function(pr){
+      playerResults.forEach(function (pr) {
         //console.log('seat: ' + pr.seat);
         //console.log('hr: ' + pr.hr);
-        if(pr.seat === that.seatService.currentSeat ){
+        if (pr.seat === that.seatService.currentSeat) {
           playerResult = pr.hr;
-          alert(pr.seat + ' -playerResult: ' + playerResult);
+          //alert(pr.seat + ' -playerResult: ' + playerResult);
         }
       });
 
@@ -80,8 +91,8 @@ export class MultiDashComponent implements OnInit {
       if (visible) {
         //this.logStuff('sitting: ' + this.seatService.sitting);
         this.multiDashVisible = 'visible';
-        //this.multiTimer = Observable.timer(1000, 1000);
-        //this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
+        this.multiTimer = Observable.timer(1000, 1000);
+        this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
       }
 
     });
@@ -131,17 +142,14 @@ export class MultiDashComponent implements OnInit {
       this.setOpenTime();
       this.multiSubTimer.unsubscribe();
       this.multiDashVisible = 'hidden';
-      //this.restartHands();
+      this.resetClient();
       //start game over
-
-      let tableNum = this.tableService.tableNum;
-      let seatNum = this.seatService.currentSeat;
 
       /*
       this.wss.emit('checkDone',
         {
-          table: tableNum,
-          seat: seatNum,
+          table: this.tableService.tableNum,
+          seat: this.seatService.currentSeat,
           deactivated: false
         });
       */
@@ -149,35 +157,54 @@ export class MultiDashComponent implements OnInit {
     }
   }
 
-  closeWindow() {
-    this.setOpenTime();
-    this.multiSubTimer.unsubscribe();
-    this.multiDashVisible = 'hidden';
-    //this.restartHands();
+  resetClient() {
+    this.clearSeats();
+    this.playerBoxService.resetAllSeats();
+    ///////////////////////////////////////////////////////
+    //specifically added in use case sat down started countdown
+    //after next possible opportunity stand and sit down again
+    this.placeBetsService.youCanSitNow = false;
+    ///////////////////////////////////////////////////////
+    this.resetTimer = Observable.timer(1000, 1000);
+    this.resetSubTimer = this.resetTimer.subscribe(t => this.resetClientTimer(t));
   }
 
-  restartHands() {
-    this.wss.emit('restartHands',
-      {
-        table: this.tableService.tableNum,
-        seat: this.seatService.currentSeat
-      });
+  private resetClientTimer(t: PopStateEvent) {
+    this.resetCounter--;
+    if (this.resetCounter === 0) {
+      this.wss.emit('readyToBet',
+        {
+          table: this.tableService.tableNum,
+          seat: this.seatService.currentSeat,
+          reset: true
+        });
+      this.resetCounter = 5;
+      this.resetSubTimer.unsubscribe();
+    }
   }
 
-  ngOnDestroy(): void {
+  clearSeats(){
+    this.handService.clearDealerHand();
+    this.handService.clearPlayerHands();
+  }
+
+  ngOnDestroy() {
+    if (this.resetSubTimer !== undefined) {
+      this.resetSubTimer.unsubscribe();
+    }
     if (this.multiSubTimer !== undefined) {
       this.multiSubTimer.unsubscribe();
     }
   }
 
-  logStuff(stuff: any) {
+  private static logStuff(stuff: any) {
     if (!environment.production) {
       console.log(stuff);
     }
   }
 
-  ngOnInit() {
-
+  ngOnInit(): void {
   }
 
 }
+

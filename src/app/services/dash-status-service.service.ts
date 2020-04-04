@@ -14,7 +14,6 @@ export class DashStatusServiceService {
 
   }
 
-  /*
   activate(result, tableName, currentSeat, broadcast) {
     let data = {
       result: result,
@@ -24,7 +23,6 @@ export class DashStatusServiceService {
     };
     this.statusMessage.next(data);
   }
-   */
 
   startTimer(seat) {
     this.startTimerCount.next(seat);
