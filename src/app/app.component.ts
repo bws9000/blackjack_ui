@@ -17,6 +17,8 @@ import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Observable, Subscription} from "rxjs";
 import {MultiDashService} from "./services/multi-dash.service";
 
+declare var $: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -128,6 +130,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let socketid = data.socketid;
     let broadcast = data.broadcast;
 
+
+    //if(result !== 'playing') {
+
+    //}
     //this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
 
   }
@@ -154,7 +160,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ////////////////////////////////////////
     //stand up but still in table
-    if(!this.seatService.sitting){
+    if (!this.seatService.sitting) {
       this.playerboxService.resetAllSeats();
     }
     ////////////////////////////////////////
@@ -188,7 +194,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let tableName = data.tableName;
     let socketid = data.socketid;
     let broadcast = data.broadcast;
-
 
 
     this.playerDashService.updateVisible(true, currentSeat);
@@ -371,6 +376,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+
+    //$('body').addClass('df');
 
     this.count = 0;
 

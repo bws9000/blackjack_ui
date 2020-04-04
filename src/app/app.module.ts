@@ -21,6 +21,9 @@ import { StatusMessageComponent } from './status-message/status-message.componen
 import { PlayerDashComponent } from './player-dash/player-dash.component';
 import { MultiDashComponent } from './multi-dash/multi-dash.component';
 
+//declare var $: any;
+//console.log(`jQuery version: ${$.fn.jquery}`);
+
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
     return initModule.init();
