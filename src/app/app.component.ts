@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
+//import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Location} from '@angular/common';
 
 import {Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private timer;
   private subTimer: Subscription;
 
-  constructor(private loadingBar: SlimLoadingBarService,
+  constructor(//private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
               private router: Router,
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               private mdService: MultiDashService) {
 
     this.router.events.subscribe((event: Event) => {
-      this.navigationInterceptor(event);
+      //this.navigationInterceptor(event);
     });
 
     this.wss.startChange.subscribe(value => {
@@ -387,6 +387,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
+  /*
   private navigationInterceptor(event: Event): void {
     if (event instanceof NavigationStart) {
       this.loadingBar.start();
@@ -401,6 +402,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loadingBar.stop();
     }
   }
+  */
 
   logStuff(stuff: any) {
     if (!environment.production) {
