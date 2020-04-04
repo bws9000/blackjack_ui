@@ -29,7 +29,6 @@
     "express": "^4.17.1",
     "jquery": "^3.4.1",
     "jquery-ui": "github:components/jqueryui#1.11.4",
-    "ng2-slim-loading-bar": "^4.0.0",
     "observable-webworker": "^3.2.3",
     "os": "^0.1.1",
     "path": "^0.12.7",
