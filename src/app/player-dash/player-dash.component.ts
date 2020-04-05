@@ -142,8 +142,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let currentTable = 'table' + this.tableService.tableNum;
           if (currentTable === params.tableId) {
             if (v) {
-              let seatServiceCurrentSeat = this.seatService.currentSeat.toString();
-              if (this.dash === seatServiceCurrentSeat &&
+              if (+this.dash === this.seatService.currentSeat &&
                 s === this.seatService.currentSeat) {
                 this.show();
               }
