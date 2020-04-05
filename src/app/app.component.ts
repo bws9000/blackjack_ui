@@ -197,6 +197,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let broadcast = data.broadcast;
 
     this.playerDashService.updateVisible(true, currentSeat);
+    
     if(result !== 'playing') {
       this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
     }
