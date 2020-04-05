@@ -97,7 +97,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
             this.playerStatus = result;
             this.timer2time = 3;
-            this.setPlayerStatus();
+            this.statusBoxVisible = 'visible';
+            this.handService.handPlayed = true;
             //display message from action then hide dashboard
             //this.dashTimer = Observable.timer(1000, 1000);
             //this.dashSubTimer = this.dashTimer.subscribe(t => this.statusOver(t));
@@ -158,8 +159,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   stand() {
 
-    this.playerDashVisible = 'hidden';
-
     if (this.handService.handPlayed) {
       this.handService.handPlayed = false;
       this.handService.lastPlayerHand = this.cards;
@@ -170,7 +169,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         table: this.tableService.tableNum,
         socketId: this.wss.socketId
       });
-
+      this.playerDashVisible = 'hidden';
 
       if (this.dashSubTimer !== undefined) {
         this.dashSubTimer.unsubscribe();
@@ -222,6 +221,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     */
 
     this.playerDashVisible = 'hidden';
+    this.statusBoxVisible = 'hidden';
     this.setTimer2Timer();
 
     this.wss.emit('nextPlayerDash', {
@@ -230,8 +230,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
     });
-
-    this.playerDashVisible = 'hidden';
 
     this.setTimer2Timer();
 
@@ -291,6 +289,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       this.playerStatus !== 'playing') {
       this.handService.handPlayed = true;
       result = 'visible';
+      alert('visible');
     } else {
       result = 'hidden';
     }

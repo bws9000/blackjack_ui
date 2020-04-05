@@ -8,7 +8,6 @@ import {TableService} from "../services/table.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Observable, Subscription} from "rxjs";
-import {HandService} from "../services/hand.service";
 
 
 @Component({
@@ -42,8 +41,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
               private tableService: TableService,
               private wss: WebsocketService,
               private playerboxService: PlayerboxService,
-              private route: ActivatedRoute,
-              private handService: HandService) {
+              private route: ActivatedRoute) {
 
 
     this.placeBetsVisible = 'hidden';
@@ -144,8 +142,6 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       table: table
     });
 
-    this.handService.clearDealerHand();
-    this.handService.clearPlayerHands();
     /*
     this.wss.emit('openPlayerDash', {
       socketid: this.wss.socketId,
@@ -171,10 +167,6 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
         seat: this.seatService.currentSeat,
         table: table
       });
-
-      this.handService.clearDealerHand();
-      this.handService.clearPlayerHands();
-      
       this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
       this.subTimer.unsubscribe();
 

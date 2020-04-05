@@ -189,15 +189,17 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
+
     let result = data.result;
     let currentSeat = data.currentSeat;
     let tableName = data.tableName;
     let socketid = data.socketid;
     let broadcast = data.broadcast;
 
-
     this.playerDashService.updateVisible(true, currentSeat);
-    this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
+    if(result !== 'playing') {
+      this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
+    }
     this.handService.handResult = result;
     //this.sms.statusMessage("player " + currentSeat + " is playing");
 
