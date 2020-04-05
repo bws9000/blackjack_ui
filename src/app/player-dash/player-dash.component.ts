@@ -24,6 +24,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   cards: [number];
   dcards: [number, number];
   playerDashVisible: string;
+  playerDashBoxVisible: string;
   seat: string;
   tableName: string;
   statusBoxVisible: string;
@@ -56,6 +57,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.playerStatus = 'playing';
     this.statusBoxVisible = 'hidden';
     this.playerDashVisible = 'hidden';
+    this.playerDashBoxVisible = 'visible';
 
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
@@ -71,7 +73,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         });
 
         this.dss.statusMessage.subscribe(value => {
-        //this.dss.activate(result, tableName, seat, broadcast);
+          //this.dss.activate(result, tableName, seat, broadcast);
+          let v = value;
 
           let j = JSON.stringify(value);
           let o = JSON.parse(j);
@@ -94,16 +97,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             this.logStuff('====================');
 
             this.playerStatus = result;
-            this.statusBox();
-            if (result !== 'playing' && !broadcast) {
-              this.timer2time = 3;
-              //this.setPlayerStatus();
-              //display message from action then hide dashboard
-              //this.dashTimer = Observable.timer(1000, 1000);
-              //this.dashSubTimer = this.dashTimer.subscribe(t => this.statusOver(t));
-            }
-
+            this.timer2time = 3;
+            this.setPlayerStatus();
+            //display message from action then hide dashboard
+            //this.dashTimer = Observable.timer(1000, 1000);
+            //this.dashSubTimer = this.dashTimer.subscribe(t => this.statusOver(t));
           }
+
 
         });
 
@@ -118,6 +118,16 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           for (let i = 0; i < value.length; i++) {
             if (value[i].seat === this.dash) {
               that.cards = value[i].hand;
+            }
+          }
+        });
+
+        this.playerDashService.hide.subscribe(value => {
+          let seat = value;
+          let currentTable = 'table' + this.tableService.tableNum;
+          if (currentTable === params.tableId) {
+            if (this.dash === seat) {
+              this.hide();
             }
           }
         });
@@ -141,7 +151,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               this.hide();
             }
           }
-
         });
 
       });
@@ -284,6 +293,20 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  /*
+  setPlayerDashBoxVisible() {
+    let result = '';
+    if (this.playerDashBoxVisible === 'visible' &&
+      this.playerStatus !== 'playing') {
+      this.handService.handPlayed = true;
+      result = 'visible';
+    } else {
+      result = 'hidden';
+    }
+    return result;
+  }
+  */
+
   setTimer2Timer() {
     this.timer2time = 30;
     if (!environment.production) {
@@ -314,12 +337,16 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   show() {
+    this.playerDashVisible = 'visible';
+    this.dss.startTimer(this.dash);
+    /*
     this.wss.emit('actionOrder', {
       seat: this.seatService.currentSeat,
       table: this.tableService.tableNum
     });
     this.playerDashVisible = 'visible';
-    this.dss.startTimer(this.dash);
+
+    */
   }
 
   ngOnInit() {

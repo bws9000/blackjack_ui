@@ -9,8 +9,13 @@ import {environment} from "../../environments/environment";
 export class PlayerDashService {
 
   visible: Subject<Object> = new Subject<Object>();
+  hide: Subject<string> = new Subject<string>();
 
   constructor() {
+  }
+
+  hideDash(seat){
+    this.hide.next(seat);
   }
 
   updateVisible(value, seat) {

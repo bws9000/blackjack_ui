@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-//import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
+import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Location} from '@angular/common';
 
 import {Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
@@ -17,6 +17,7 @@ import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Observable, Subscription} from "rxjs";
 import {MultiDashService} from "./services/multi-dash.service";
 
+//import * as $ from 'jquery';
 declare var $: any;
 
 @Component({
@@ -37,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private timer;
   private subTimer: Subscription;
 
-  constructor(//private loadingBar: SlimLoadingBarService,
+  constructor(private loadingBar: SlimLoadingBarService,
               private wss: WebsocketService,
               private statusUpdateService: StatusUpdateService,
               private router: Router,
@@ -53,7 +54,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               private mdService: MultiDashService) {
 
     this.router.events.subscribe((event: Event) => {
-      //this.navigationInterceptor(event);
+      this.navigationInterceptor(event);
     });
 
     this.wss.startChange.subscribe(value => {
@@ -130,11 +131,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let socketid = data.socketid;
     let broadcast = data.broadcast;
 
-
-    //if(result !== 'playing') {
-
-    //}
-    //this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
+    if(result !== 'playing') {
+      //this.playerDashService.hideDash(currentSeat);
+      this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
+    }
 
   }
 
@@ -197,7 +197,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.playerDashService.updateVisible(true, currentSeat);
-    //this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
+    this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
     this.handService.handResult = result;
     //this.sms.statusMessage("player " + currentSeat + " is playing");
 
@@ -377,8 +377,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
 
-    //$('body').addClass('df');
-
     this.count = 0;
 
     this.connect().then(r => {
@@ -387,7 +385,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  /*
   private navigationInterceptor(event: Event): void {
     if (event instanceof NavigationStart) {
       this.loadingBar.start();
@@ -402,7 +399,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loadingBar.stop();
     }
   }
-  */
 
   logStuff(stuff: any) {
     if (!environment.production) {
