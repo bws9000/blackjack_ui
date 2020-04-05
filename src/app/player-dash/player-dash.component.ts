@@ -158,6 +158,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   stand() {
 
+    this.playerDashVisible = 'hidden';
+
     if (this.handService.handPlayed) {
       this.handService.handPlayed = false;
       this.handService.lastPlayerHand = this.cards;
@@ -168,7 +170,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         table: this.tableService.tableNum,
         socketId: this.wss.socketId
       });
-      this.playerDashVisible = 'hidden';
+
 
       if (this.dashSubTimer !== undefined) {
         this.dashSubTimer.unsubscribe();
@@ -325,6 +327,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     });
   }
 
+  /*
   other() {
     this.wss.emit('playerAction', {
       action: 'dd/split',
@@ -333,6 +336,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       socketId: this.wss.socketId
     });
   }
+*/
 
   hide() {
     this.playerDashVisible = 'hidden';
