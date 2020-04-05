@@ -57,7 +57,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.playerStatus = 'playing';
     this.statusBoxVisible = 'hidden';
     this.playerDashVisible = 'hidden';
-    this.playerDashBoxVisible = 'visible';
 
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
@@ -220,6 +219,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     });
     */
 
+    this.playerDashVisible = 'hidden';
+    this.setTimer2Timer();
+
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
       currentSeat: this.seatService.currentSeat,
@@ -356,7 +358,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
-
+    this.playerDashVisible = 'hidden';
     if (this.dashSubTimer !== undefined) {
       this.dashSubTimer.unsubscribe();
     }
