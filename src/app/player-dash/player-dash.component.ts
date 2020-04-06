@@ -95,6 +95,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             this.logStuff('this.dash: ' + this.dash);
             this.logStuff('====================');
 
+
             this.playerStatus = result;
             this.timer2time = 3;
             this.statusBoxVisible = 'visible';

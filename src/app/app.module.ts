@@ -20,9 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StatusMessageComponent } from './status-message/status-message.component';
 import { PlayerDashComponent } from './player-dash/player-dash.component';
 import { MultiDashComponent } from './multi-dash/multi-dash.component';
+import { GameHomeComponent } from './game-home/game-home.component';
 
-//declare var $: any;
-//console.log(`jQuery version: ${$.fn.jquery}`);
 
 export function initialize(initModule: InitModule) {
   return (): Promise<any> => {
@@ -44,7 +43,8 @@ export function initialize(initModule: InitModule) {
     PlaceBetsComponent,
     StatusMessageComponent,
     PlayerDashComponent,
-    MultiDashComponent
+    MultiDashComponent,
+    GameHomeComponent
   ],
   imports: [
     InitModule,
