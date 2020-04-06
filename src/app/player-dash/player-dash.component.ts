@@ -85,24 +85,23 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           this.broadcast = broadcast;
 
           if (tname === this.tableName &&
-            seat === this.dash &&
-            this.wss.socketId === socketid) {
+            seat === this.dash) {
 
+            /*
             this.logStuff('====================');
             this.logStuff('tname: ' + tname);
             this.logStuff('this.tableName: ' + this.tableName);
             this.logStuff('seat: ' + seat);
             this.logStuff('this.dash: ' + this.dash);
+            this.logStuff('this.wss.socketId: ' + this.wss.socketId);
+            this.logStuff('socketid: ' + socketid);
             this.logStuff('====================');
-
+            */
 
             this.playerStatus = result;
             this.timer2time = 3;
             this.statusBoxVisible = 'visible';
             this.handService.handPlayed = true;
-            //display message from action then hide dashboard
-            //this.dashTimer = Observable.timer(1000, 1000);
-            //this.dashSubTimer = this.dashTimer.subscribe(t => this.statusOver(t));
           }
 
 
