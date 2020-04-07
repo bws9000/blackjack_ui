@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
+import {WebsocketService} from "../services/websocket.service";
 
 @Component({
   selector: 'app-game-home',
@@ -8,13 +9,20 @@ import {Router} from "@angular/router";
 })
 export class GameHomeComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              private wss: WebsocketService) {
+
+    this.wss.emit('blank', {
+      process:'tablesInfo'
+    });
+  }
 
   ngOnInit() {
   }
-  joinTable(){
+
+  joinTable() {
     this.router.navigate(['/tables']).then(r => {
-      alert("Welcome to the Blackjack tables.");
+      //
     });
   }
 

@@ -287,6 +287,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   blankEmit(data) {
     this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
+    console.log('Blackjack Beta: snyder.burt@gmail.com');
+    console.log('Games: ' + data.gameSize);
+    console.log('Players: ' + data.playerSize);
   }
 
   ngOnDestroy(): void {
@@ -322,6 +325,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.wss
         .onEvent('checkDoneEmit')
         .subscribe(data => this.checkDone(data));
+
 
       this.wss
         .onEvent('actionSeatEmit')
