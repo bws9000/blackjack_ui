@@ -8,6 +8,7 @@ import {TableService} from "../services/table.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Observable, Subscription} from "rxjs";
+import {BetService} from "../services/bet.service";
 
 
 @Component({
@@ -41,7 +42,8 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
               private tableService: TableService,
               private wss: WebsocketService,
               private playerboxService: PlayerboxService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private betService: BetService) {
 
 
     this.placeBetsVisible = 'hidden';
@@ -130,6 +132,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.betService.playerBet = true;
     this.placeBetsVisible = 'hidden';
     this.currentBet = this.placeBetForm.get('chips').value;
     this.placeBetsService.currentBet = this.currentBet;

@@ -16,6 +16,7 @@ import {PlayerDashService} from "./services/player-dash.service";
 import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Observable, Subscription} from "rxjs";
 import {MultiDashService} from "./services/multi-dash.service";
+import {BetService} from "./services/bet.service";
 
 //import * as $ from 'jquery';
 declare var $: any;
@@ -51,7 +52,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               private handService: HandService,
               private playerDashService: PlayerDashService,
               private dss: DashStatusServiceService,
-              private mdService: MultiDashService) {
+              private mdService: MultiDashService,
+              private betService: BetService) {
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -131,8 +133,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let socketid = data.socketid;
     let broadcast = data.broadcast;
 
-    if(result !== 'playing') {
-      //this.playerDashService.hideDash(currentSeat);
+    if (result !== 'playing') {
+      this.handService.handPlayed = true;
       this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
     }
 
@@ -152,9 +154,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let playerResults = data.playerResults;
     let dealerHandArray = data.dealerHand[0].hand;
 
-    if (this.seatService.sitting) {
-      this.mdService.updateVisible(visible, dealerResult, playerResults,
-        dealerHandArray);
+    if (this.seatService.sitting && this.betService.playerBet) {
+      this.mdService.updateVisible(visible, dealerResult, playerResults, dealerHandArray);
+      this.betService.playerBet = false;
     }
     this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
 
@@ -198,7 +200,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.playerDashService.updateVisible(true, currentSeat);
 
-    if(result !== 'playing') {
+    if (result !== 'playing' && !this.handService.handPlayed) {
       this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
     }
 
@@ -288,6 +290,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logStuff(JSON.stringify(data));
     this.wss.startChange.next(true);
     console.log('Blackjack Beta: snyder.burt@gmail.com');
+    console.log('status: game reloading after inactivity');
     console.log('Games: ' + data.gameSize);
     console.log('Players: ' + data.playerSize);
   }

@@ -24,7 +24,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   cards: [number];
   dcards: [number, number];
   playerDashVisible: string;
-  playerDashBoxVisible: string;
+  //playerDashBoxVisible: string;
   seat: string;
   tableName: string;
   statusBoxVisible: string;
@@ -85,7 +85,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           this.broadcast = broadcast;
 
           if (tname === this.tableName &&
-            seat === this.dash) {
+            seat === this.dash && this.handService.handPlayed) {
 
             /*
             this.logStuff('====================');
@@ -99,9 +99,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             */
 
             this.playerStatus = result;
+
             this.timer2time = 3;
             this.statusBoxVisible = 'visible';
-            this.handService.handPlayed = true;
+            this.playerDashVisible = 'hidden';
+
+            this.handService.handPlayed = false;
+            //alert(result);
           }
 
 
@@ -126,9 +130,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let seat = value;
           let currentTable = 'table' + this.tableService.tableNum;
           if (currentTable === params.tableId) {
-            if (this.dash === seat) {
+            //if (this.dash === seat) {
               this.hide();
-            }
+            //}
           }
         });
 
@@ -151,16 +155,23 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               this.hide();
             }
           }
+
         });
 
       });
 
   }
 
+  hide() {
+    this.playerDashVisible = 'hidden';
+    this.statusBoxVisible = 'hidden';
+    this.handService.handPlayed = false;
+  }
+
   stand() {
 
-    if (this.handService.handPlayed) {
-      this.handService.handPlayed = false;
+    //if (this.handService.handPlayed) {
+      //this.handService.handPlayed = false;
       this.handService.lastPlayerHand = this.cards;
 
       this.wss.emit('nextPlayerDash', {
@@ -181,12 +192,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
       this.setTimer2Timer();
 
-    }
+    //}
   }
 
   standClick() {
 
-    this.handService.handPlayed = false;
+    this.playerDashService.hideDash(this.seatService.currentSeats);
     this.handService.lastPlayerHand = this.cards;
 
     if (this.dashSubTimer !== undefined) {
@@ -211,17 +222,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   standTimeRanOut() {
 
-    this.handService.handPlayed = false;
     this.handService.lastPlayerHand = this.cards;
-
-    /*
-    this.wss.emit('dealerHand', {
-      table: this.tableService.tableNum
-    });
-    */
-
-    this.playerDashVisible = 'hidden';
-    this.statusBoxVisible = 'hidden';
+    this.playerDashService.hideDash(this.seatService.currentSeats);
     this.setTimer2Timer();
 
     this.wss.emit('nextPlayerDash', {
@@ -238,8 +240,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   statusCount(t) {
     this.timer2time--;
     if (this.timer2time < 0) {
-      console.log('statusCount');
-      //this.playerStatus = 'playing';
+      this.playerDashService.hideDash(this.seatService.currentSeats);
       this.setTimer2Timer();
       if (this.dashSubTimer !== undefined) {
         this.dashSubTimer.unsubscribe();
@@ -283,11 +284,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  /*
   statusBox() {
     let result = '';
     if (this.playerDashVisible === 'visible' &&
       this.playerStatus !== 'playing') {
-      this.handService.handPlayed = true;
+      //this.handService.handPlayed = true;
       result = 'visible';
       alert('visible');
     } else {
@@ -295,6 +297,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     }
     return result;
   }
+  */
 
   /*
   setPlayerDashBoxVisible() {
@@ -336,10 +339,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     });
   }
 */
-
-  hide() {
-    this.playerDashVisible = 'hidden';
-  }
 
   show() {
     this.playerDashVisible = 'visible';
