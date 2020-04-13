@@ -10,13 +10,24 @@
       </div>
       <div class="pd_row cards">
         <div class="pd_col pcol">
+
           <!-- player cards -->
           <div class="cardRowDefault">
-            <div class="cardBox" *ngFor="let card of cards">
+            <div class="cardBox" *ngFor="let card of splitCards1">
               <div class="testCard" [ngClass]="'_'+card"></div>
             </div>
           </div>
           <!-- /cards -->
+
+          <!-- player cards -->
+          <div class="cardRowDefault">
+            <div class="cardBox" *ngFor="let card of splitCards2">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
+          </div>
+          <!-- /cards -->
+
+
         </div>
         <div class="pd_col dcol">
           <!-- dealer cards -->
