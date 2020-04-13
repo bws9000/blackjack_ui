@@ -1,12 +1,12 @@
-<div [style.visibility]="this.playerDashVisible" class="playerDash">
+<div [style.visibility]="this.splitDashVisible" class="playerDash">
   <div class="playerDash_box">
     <div class="playerdash_container">
       <div class="pd_row top">
-      <div class="inner_top_header">
-        <div class="inner_top_header_player_timer"> time: {{this.timer2time}}</div>
-        <div class="inner_top_header_player">&nbsp;</div>
-        <div class="inner_top_header_dealer">dealer</div>
-      </div>
+        <div class="inner_top_header">
+          <div class="inner_top_header_player_timer"> time: {{this.timer2time}}</div>
+          <div class="inner_top_header_player">&nbsp;</div>
+          <div class="inner_top_header_dealer">dealer</div>
+        </div>
       </div>
       <div class="pd_row cards">
         <div class="pd_col pcol">
@@ -30,16 +30,14 @@
       </div>
       <div class="pd_row actions">
         <div class="inner_actions">
-        <div class="command_col acol"><div class="command" (click)="hit()">HIT</div></div>
-        <div class="command_col acol"><div class="command" (click)="standClick()" >STAND</div></div>
-          <div class="command_col acol"><div [style.visibility]="this.splitButtonVisible" (click)="split()" class="command">SPLIT</div>
-          </div>
+          <div class="command_col acol"><div class="command" (click)="hit()">HIT</div></div>
+          <div class="command_col acol"><div class="command" (click)="standClick()" >STAND</div></div>
         </div>
       </div>
     </div>
   </div>
 
-
+  <!--
   <div [style.visibility]="this.statusBoxVisible" class="playerstatusupdate">
     <div class="playerstatus_update_box">
       <div class="statusMessageContainer">
@@ -47,5 +45,6 @@
       </div>
     </div>
   </div>
+  -->
 
 </div>

@@ -21,6 +21,7 @@ import { StatusMessageComponent } from './status-message/status-message.componen
 import { PlayerDashComponent } from './player-dash/player-dash.component';
 import { MultiDashComponent } from './multi-dash/multi-dash.component';
 import { GameHomeComponent } from './game-home/game-home.component';
+import { SplitDashComponent } from './split-dash/split-dash.component';
 
 
 export function initialize(initModule: InitModule) {
@@ -44,7 +45,8 @@ export function initialize(initModule: InitModule) {
     StatusMessageComponent,
     PlayerDashComponent,
     MultiDashComponent,
-    GameHomeComponent
+    GameHomeComponent,
+    SplitDashComponent
   ],
   imports: [
     InitModule,

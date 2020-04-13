@@ -24,12 +24,14 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   cards: [number];
   dcards: [number, number];
   playerDashVisible: string;
-  //playerDashBoxVisible: string;
+  splitButtonVisible: string;
   seat: string;
   tableName: string;
   statusBoxVisible: string;
   playerStatus: string;
   actionTimerCount: number;
+
+  result: string;
 
   private broadcast;
 
@@ -57,6 +59,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.playerStatus = 'playing';
     this.statusBoxVisible = 'hidden';
     this.playerDashVisible = 'hidden';
+    this.splitButtonVisible = 'hidden';
 
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
@@ -71,13 +74,28 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           }
         });
 
+        this.handService.playerHands.subscribe(value => {
+          let that = this;
+          for (let i = 0; i < value.length; i++) {
+            if (value[i].seat === that.seatService.currentSeat) {
+              that.cards = value[i].hand;
+              that.result = value[i].result;
+              if (that.result === 'split') {
+                if(that.playerDashService.seatInFocus === that.seatService.currentSeat) {
+                  that.setSplitButtonVisible('visible');
+                }
+              }
+            }
+          }
+        });
+
         this.dss.statusMessage.subscribe(value => {
           //this.dss.activate(result, tableName, seat, broadcast);
           let v = value;
 
           let j = JSON.stringify(value);
           let o = JSON.parse(j);
-          let result = o.result;
+          //let result = o.result;
           let seat = o.currentSeat;
           let tname = o.tableName;
           let broadcast = o.broadcast;
@@ -85,29 +103,26 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           this.broadcast = broadcast;
 
           if (tname === this.tableName &&
-            seat === this.dash && this.handService.handPlayed) {
+            seat === this.dash) {
+            // this.logStuff('====================');
+            // this.logStuff('tname: ' + tname);
+            // this.logStuff('this.tableName: ' + this.tableName);
+            // this.logStuff('seat: ' + seat);
+            // this.logStuff('this.dash: ' + this.dash);
+            // this.logStuff('this.wss.socketId: ' + this.wss.socketId);
+            // this.logStuff('socketid: ' + socketid);
+            // this.logStuff('====================');
+            this.playerStatus = this.result;
+            this.handService.handPlayed = this.result !== 'playing';
+            if (this.handService.handPlayed && this.result !== 'split' &&
+            this.playerDashVisible !== 'hidden') {
+              this.timer2time = 3;
+              this.statusBoxVisible = 'visible';
+              this.playerDashVisible = 'hidden';
+              this.handService.handPlayed = false;
+            }
 
-            /*
-            this.logStuff('====================');
-            this.logStuff('tname: ' + tname);
-            this.logStuff('this.tableName: ' + this.tableName);
-            this.logStuff('seat: ' + seat);
-            this.logStuff('this.dash: ' + this.dash);
-            this.logStuff('this.wss.socketId: ' + this.wss.socketId);
-            this.logStuff('socketid: ' + socketid);
-            this.logStuff('====================');
-            */
-
-            this.playerStatus = result;
-
-            this.timer2time = 3;
-            this.statusBoxVisible = 'visible';
-            this.playerDashVisible = 'hidden';
-
-            this.handService.handPlayed = false;
-            //alert(result);
           }
-
 
         });
 
@@ -117,21 +132,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           }
         });
 
-        this.handService.playerHands.subscribe(value => {
-          let that = this;
-          for (let i = 0; i < value.length; i++) {
-            if (value[i].seat === this.dash) {
-              that.cards = value[i].hand;
-            }
-          }
-        });
-
         this.playerDashService.hide.subscribe(value => {
           let seat = value;
           let currentTable = 'table' + this.tableService.tableNum;
           if (currentTable === params.tableId) {
             //if (this.dash === seat) {
-              this.hide();
+            this.hide();
             //}
           }
         });
@@ -146,7 +152,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           let currentTable = 'table' + this.tableService.tableNum;
           if (currentTable === params.tableId) {
             if (v) {
-              //let seatServiceCurrentSeat = this.seatService.currentSeat.toString();
               if (+this.dash == this.seatService.currentSeat &&
                 s === this.seatService.currentSeat) {
                 this.show();
@@ -162,35 +167,45 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   }
 
+  setSplitButtonVisible(status = 'hidden') {
+    this.splitButtonVisible = status;
+  }
+
+  split() {
+    alert('split');
+  }
+
   hide() {
     this.playerDashVisible = 'hidden';
     this.statusBoxVisible = 'hidden';
+    this.splitButtonVisible = 'hidden';
     this.handService.handPlayed = false;
+    this.setSplitButtonVisible('hidden');
   }
 
   stand() {
 
     //if (this.handService.handPlayed) {
-      //this.handService.handPlayed = false;
-      this.handService.lastPlayerHand = this.cards;
+    //this.handService.handPlayed = false;
+    this.handService.lastPlayerHand = this.cards;
 
-      this.wss.emit('nextPlayerDash', {
-        action: 'stand',
-        currentSeat: this.seatService.currentSeat,
-        table: this.tableService.tableNum,
-        socketId: this.wss.socketId
-      });
-      this.playerDashVisible = 'hidden';
+    this.wss.emit('nextPlayerDash', {
+      action: 'stand',
+      currentSeat: this.seatService.currentSeat,
+      table: this.tableService.tableNum,
+      socketId: this.wss.socketId
+    });
+    this.playerDashVisible = 'hidden';
 
-      if (this.dashSubTimer !== undefined) {
-        this.dashSubTimer.unsubscribe();
-      }
+    if (this.dashSubTimer !== undefined) {
+      this.dashSubTimer.unsubscribe();
+    }
 
-      if (this.dashSubTimer2 !== undefined) {
-        this.dashSubTimer2.unsubscribe();
-      }
+    if (this.dashSubTimer2 !== undefined) {
+      this.dashSubTimer2.unsubscribe();
+    }
 
-      this.setTimer2Timer();
+    this.setTimer2Timer();
 
     //}
   }
@@ -250,22 +265,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*
-  statusOver(t) {
-    this.actionTimerCount--;
-    if (this.actionTimerCount == -1) {
-      console.log('statusOver');
-      //this.playerStatus = 'playing';
-      this.setPlayerStatus();
-      this.actionTimerCount = 2;
-      if (this.dashSubTimer2 !== undefined) {
-        this.dashSubTimer2.unsubscribe();
-      }
-      this.dashSubTimer.unsubscribe();
-    }
-  }
-  */
-
   setPlayerStatus() {
     let result = '';
 
@@ -284,39 +283,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  /*
-  statusBox() {
-    let result = '';
-    if (this.playerDashVisible === 'visible' &&
-      this.playerStatus !== 'playing') {
-      //this.handService.handPlayed = true;
-      result = 'visible';
-      alert('visible');
-    } else {
-      result = 'hidden';
-    }
-    return result;
-  }
-  */
-
-  /*
-  setPlayerDashBoxVisible() {
-    let result = '';
-    if (this.playerDashBoxVisible === 'visible' &&
-      this.playerStatus !== 'playing') {
-      this.handService.handPlayed = true;
-      result = 'visible';
-    } else {
-      result = 'hidden';
-    }
-    return result;
-  }
-  */
-
   setTimer2Timer() {
     this.timer2time = 30;
     if (!environment.production) {
-      this.timer2time = 10;
+      this.timer2time = 30;
     }
   }
 
@@ -329,28 +299,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     });
   }
 
-  /*
-  other() {
-    this.wss.emit('playerAction', {
-      action: 'dd/split',
-      currentSeat: this.seatService.currentSeat,
-      table: this.tableService.tableNum,
-      socketId: this.wss.socketId
-    });
-  }
-*/
-
   show() {
+    //this.setSplitButtonVisible('visible');
     this.playerDashVisible = 'visible';
     this.dss.startTimer(this.dash);
-    /*
-    this.wss.emit('actionOrder', {
-      seat: this.seatService.currentSeat,
-      table: this.tableService.tableNum
-    });
-    this.playerDashVisible = 'visible';
-
-    */
   }
 
   ngOnInit() {

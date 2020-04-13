@@ -10,8 +10,10 @@ export class PlayerDashService {
 
   visible: Subject<Object> = new Subject<Object>();
   hide: Subject<string> = new Subject<string>();
+  seatInFocus: number;
 
   constructor() {
+    this.seatInFocus = undefined;
   }
 
   hideDash(seat){

@@ -14,9 +14,8 @@ export class DashStatusServiceService {
 
   }
 
-  activate(result, tableName, currentSeat, socketid,broadcast) {
+  activate(tableName, currentSeat, socketid,broadcast) {
     let data = {
-      result: result,
       tableName: tableName,
       currentSeat: currentSeat,
       socketid:socketid,

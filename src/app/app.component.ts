@@ -118,25 +118,20 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ////////////////////////////////////////////////////////
 
   playerAction(data) {
-
     this.wss.startChange.next(true);
-    //this.sms.statusMessage(data.status);
-
-    this.handService.getPlayerHands(data.playerHands);
-    this.handService.getDealerHand(data.dealerHand);
-
     this.logStuff('playerAction: ' + JSON.stringify(data));
 
-    let result = data.result;
     let currentSeat = data.currentSeat;
     let tableName = data.table;
     let socketid = data.socketid;
     let broadcast = data.broadcast;
 
-    if (result !== 'playing') {
-      this.handService.handPlayed = true;
-      this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
-    }
+    this.playerDashService.seatInFocus = currentSeat;
+    this.handService.getPlayerHands(data.playerHands);
+    this.handService.getDealerHand(data.dealerHand);
+
+    this.dss.activate(tableName, currentSeat, socketid, broadcast);
+    //this.sms.statusMessage(data.status);
 
   }
 
@@ -185,12 +180,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openPlayerDash(data) {
-
-    this.logStuff('openPlayerDash: ' + JSON.stringify(data));
     this.wss.startChange.next(true);
-
-    this.handService.getPlayerHands(data.playerHands);
-    this.handService.getDealerHand(data.dealerHand);
+    this.logStuff('openPlayerDash: ' + JSON.stringify(data));
 
     let result = data.result;
     let currentSeat = data.currentSeat;
@@ -198,11 +189,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let socketid = data.socketid;
     let broadcast = data.broadcast;
 
-    this.playerDashService.updateVisible(true, currentSeat);
+    this.playerDashService.seatInFocus = currentSeat;
+    this.handService.getPlayerHands(data.playerHands);
+    this.handService.getDealerHand(data.dealerHand);
 
-    if (result !== 'playing' && !this.handService.handPlayed) {
-      this.dss.activate(result, tableName, currentSeat, socketid, broadcast);
-    }
+    this.dss.activate(tableName, currentSeat, socketid, broadcast);
+    this.playerDashService.updateVisible(true, currentSeat);
 
     this.handService.handResult = result;
     //this.sms.statusMessage("player " + currentSeat + " is playing");
