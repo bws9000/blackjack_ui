@@ -10,10 +10,15 @@ export class PlayerDashService {
 
   visible: Subject<Object> = new Subject<Object>();
   hide: Subject<string> = new Subject<string>();
+  actionResult: Subject<boolean> = new Subject<boolean>();
   seatInFocus: number;
 
   constructor() {
     this.seatInFocus = undefined;
+  }
+
+  hitResult(){
+    this.actionResult.next(true);
   }
 
   hideDash(seat){
@@ -21,7 +26,6 @@ export class PlayerDashService {
   }
 
   updateVisible(value, seat) {
-
     let data = {
       value: value,
       seat: seat

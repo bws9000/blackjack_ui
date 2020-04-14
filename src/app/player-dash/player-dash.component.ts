@@ -80,8 +80,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             if (value[i].seat === that.seatService.currentSeat) {
               that.cards = value[i].hand;
               that.result = value[i].result;
+              that.seat = value[i].seat;
               if (that.result === 'split') {
-                if(that.playerDashService.seatInFocus === that.seatService.currentSeat) {
+                if (that.playerDashService.seatInFocus === that.seatService.currentSeat) {
                   that.setSplitButtonVisible('visible');
                 }
               }
@@ -89,41 +90,18 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           }
         });
 
-        this.dss.statusMessage.subscribe(value => {
-          //this.dss.activate(result, tableName, seat, broadcast);
-          let v = value;
-
-          let j = JSON.stringify(value);
-          let o = JSON.parse(j);
-          //let result = o.result;
-          let seat = o.currentSeat;
-          let tname = o.tableName;
-          let broadcast = o.broadcast;
-          let socketid = o.socketid;
-          this.broadcast = broadcast;
-
-          if (tname === this.tableName &&
-            seat === this.dash) {
-            // this.logStuff('====================');
-            // this.logStuff('tname: ' + tname);
-            // this.logStuff('this.tableName: ' + this.tableName);
-            // this.logStuff('seat: ' + seat);
-            // this.logStuff('this.dash: ' + this.dash);
-            // this.logStuff('this.wss.socketId: ' + this.wss.socketId);
-            // this.logStuff('socketid: ' + socketid);
-            // this.logStuff('====================');
-            this.playerStatus = this.result;
-            this.handService.handPlayed = this.result !== 'playing';
-            if (this.handService.handPlayed && this.result !== 'split' &&
-            this.playerDashVisible !== 'hidden') {
-              this.timer2time = 3;
-              this.statusBoxVisible = 'visible';
-              this.playerDashVisible = 'hidden';
-              this.handService.handPlayed = false;
+        //hit result
+        this.playerDashService.actionResult.subscribe(value => {
+          if (this.playerDashService.seatInFocus === this.seatService.currentSeat) {
+            if (this.result !== 'playing') {
+              if (this.result !== 'split') {
+                this.playerStatus = this.result;
+                if(this.dash === this.seat) {
+                  this.setStatusBoxVisible();
+                }
+              }
             }
-
           }
-
         });
 
         this.handService.dealerHand.subscribe(value => {
@@ -165,6 +143,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
       });
 
+  }
+
+  setStatusBoxVisible() {
+    this.timer2time = 3;
+    this.statusBoxVisible = 'visible';
+    //this.playerDashVisible = 'hidden';
+    this.handService.handPlayed = false;
   }
 
   setSplitButtonVisible(status = 'hidden') {
@@ -300,9 +285,20 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   show() {
-    //this.setSplitButtonVisible('visible');
+
+    //main dash
     this.playerDashVisible = 'visible';
     this.dss.startTimer(this.dash);
+
+    //statusBox
+    this.playerStatus = this.result;
+    if (+this.seat == this.seatService.currentSeat) {
+      if (this.result !== 'playing') {
+        if (this.result !== 'split') {
+          this.setStatusBoxVisible();
+        }
+      }
+    }
   }
 
   ngOnInit() {

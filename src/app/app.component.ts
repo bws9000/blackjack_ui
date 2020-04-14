@@ -14,7 +14,7 @@ import {StatusMessageService} from "./services/status-message.service";
 import {HandService} from "./services/hand.service";
 import {PlayerDashService} from "./services/player-dash.service";
 import {DashStatusServiceService} from "./services/dash-status-service.service";
-import {Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {MultiDashService} from "./services/multi-dash.service";
 import {BetService} from "./services/bet.service";
 
@@ -121,18 +121,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wss.startChange.next(true);
     this.logStuff('playerAction: ' + JSON.stringify(data));
 
-    let currentSeat = data.currentSeat;
-    let tableName = data.table;
-    let socketid = data.socketid;
-    let broadcast = data.broadcast;
-
-    this.playerDashService.seatInFocus = currentSeat;
+    this.playerDashService.seatInFocus = data.currentSeat;
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
+    this.playerDashService.hitResult();
 
-    this.dss.activate(tableName, currentSeat, socketid, broadcast);
     //this.sms.statusMessage(data.status);
-
   }
 
   checkDone(data) {
@@ -193,7 +187,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.handService.getPlayerHands(data.playerHands);
     this.handService.getDealerHand(data.dealerHand);
 
-    this.dss.activate(tableName, currentSeat, socketid, broadcast);
+    //this.dss.activate(tableName, currentSeat, socketid, broadcast);
     this.playerDashService.updateVisible(true, currentSeat);
 
     this.handService.handResult = result;
