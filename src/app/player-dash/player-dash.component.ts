@@ -176,6 +176,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
+      fromm:'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
@@ -212,6 +213,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
+      fromm:'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
@@ -228,6 +230,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
+      fromm:'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
@@ -278,6 +281,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   hit() {
     this.wss.emit('playerAction', {
       action: 'hit',
+      fromm:'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId

@@ -140,6 +140,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.playerboxService.reset(this.seatService.currentSeat);
     this.wss.emit('nextPlayerBet', {
       timeOut:false,
+      fromm:'betDash',
       socketid: this.wss.socketId,
       seat: this.seatService.currentSeat,
       table: table
@@ -166,6 +167,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       let table = this.tableService.tableNum;
       this.wss.emit('nextPlayerBet', {
         timeOut:true,
+        fromm:'betDash',
         socketid: this.wss.socketId,
         seat: this.seatService.currentSeat,
         table: table
