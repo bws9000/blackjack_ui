@@ -17,6 +17,7 @@ import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Subscription} from "rxjs";
 import {MultiDashService} from "./services/multi-dash.service";
 import {BetService} from "./services/bet.service";
+import {ErrorService} from "./services/error.service";
 
 //import * as $ from 'jquery';
 declare var $: any;
@@ -53,7 +54,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               private playerDashService: PlayerDashService,
               private dss: DashStatusServiceService,
               private mdService: MultiDashService,
-              private betService: BetService) {
+              private betService: BetService,
+              private errorService: ErrorService) {
 
     this.router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
@@ -221,6 +223,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     //this.playerboxService.reset(data.standing);
   }
 
+  errorEmit(data) {
+    this.logStuff('ERROR EMIT: ' + JSON.stringify(data));
+    this.errorService.handleError(data.errorNum, data.errorText);
+  }
 
   satDownTableEmit(data) {
 
@@ -305,11 +311,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         .onEvent('blankEmit')
         .subscribe(data => this.blankEmit(data));
 
-      /*
       this.wss
-        .onEvent('resetClientEmit')
-        .subscribe(data => this.resetClient(data));
-      */
+        .onEvent('errorEmit')
+        .subscribe(data => this.errorEmit(data));
 
       this.wss
         .onEvent('checkDoneEmit')

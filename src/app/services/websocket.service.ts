@@ -95,7 +95,7 @@ export class WebsocketService {
     //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat', this.socket));
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));
-    //this.eventMap.set('resetClientEmit', new SocketObservable('resetClientEmit', this.socket));
+    this.eventMap.set('errorEmit', new SocketObservable('errorEmit', this.socket));
     this.eventMap.set('blankEmit', new SocketObservable('blankEmit', this.socket));
     }
 
