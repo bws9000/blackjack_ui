@@ -224,8 +224,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   errorEmit(data) {
-    this.logStuff('ERROR EMIT: ' + JSON.stringify(data));
-    this.errorService.handleError(data.errorNum, data.errorText);
+    // this.logStuff('ERROR EMIT: ' + JSON.stringify(data));
+    // this.errorService.handleError(data.errorNum, data.errorText);
   }
 
   satDownTableEmit(data) {

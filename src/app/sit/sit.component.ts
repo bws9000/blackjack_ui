@@ -51,26 +51,21 @@ export class SitComponent implements OnInit {
       }
     });
 
-    this.errorService.error.subscribe(value => {
-
-      let j = JSON.stringify(value);
-      let o = JSON.parse(j);
-
-      let errorNum = o.errorNum;
-      let errorText = o.errorText;
-
-      if(+this.id === this.seatService.currentSeat) {
-        if (errorNum === 0) {
-          alert(errorText);
-          this.sitOrLeaveText = 'SIT DOWN';
-          this.seatService.sitting = false;
-          this.sitOrLeave = false;
-          this.seatService.currentSeat = undefined;
-        }
-      }
-
-
-    });
+    // this.errorService.error.subscribe(value => {
+    //   let j = JSON.stringify(value);
+    //   let o = JSON.parse(j);
+    //   let errorNum = o.errorNum;
+    //   let errorText = o.errorText;
+    //   if(+this.id === this.seatService.currentSeat) {
+    //     if (errorNum === 0) {
+    //       alert(errorText);
+    //       this.sitOrLeaveText = 'SIT DOWN';
+    //       this.seatService.sitting = false;
+    //       this.sitOrLeave = false;
+    //       this.seatService.currentSeat = undefined;
+    //     }
+    //   }
+    // });
 
 
     this.seatService.reset.subscribe(value => {
@@ -154,10 +149,9 @@ export class SitComponent implements OnInit {
   }
 
   sitStand() {
-
     if (!this.sitOrLeave) {
 
-      if (this.placeBetsService.youCanSitNow) {
+      if(this.placeBetsService.youCanSitNow) {
         this.wss.emit('sitTable', {
           player: this.id,
           tableNum: this.table
@@ -168,9 +162,10 @@ export class SitComponent implements OnInit {
           this.sitOrLeave = true;
           this.seatService.currentSeat = +this.id;
         }
-      } else {
+      }else{
         alert('please try again');
       }
+
 
     } else {
       this.wss.emit('standUpTable', {
@@ -182,7 +177,6 @@ export class SitComponent implements OnInit {
       this.sitOrLeave = false;
       this.seatService.currentSeat = undefined;
     }
-
   }
 
   ngOnInit() {
