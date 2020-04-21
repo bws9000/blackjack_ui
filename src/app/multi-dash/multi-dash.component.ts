@@ -9,6 +9,7 @@ import {SeatService} from "../services/seat.service";
 import {HandService} from "../services/hand.service";
 import {PlaceBetsService} from "../services/place-bets.service";
 import {PlayerboxService} from "../services/playerbox.service";
+import {StatusMessageService} from "../services/status-message.service";
 
 @Component({
   selector: 'app-multi-dash',
@@ -45,7 +46,8 @@ export class MultiDashComponent implements OnInit, OnDestroy {
               private seatService: SeatService,
               private handService: HandService,
               private placeBetsService: PlaceBetsService,
-              private playerBoxService: PlayerboxService) {
+              private playerBoxService: PlayerboxService,
+              private sms:StatusMessageService) {
 
     this.resetCounter = 5;
 
@@ -167,6 +169,7 @@ export class MultiDashComponent implements OnInit, OnDestroy {
     ///////////////////////////////////////////////////////
     this.resetTimer = Observable.timer(1000, 1000);
     this.resetSubTimer = this.resetTimer.subscribe(t => this.resetClientTimer(t));
+    this.sms.statusMessage("game updating...");
   }
 
   private resetClientTimer(t: PopStateEvent) {

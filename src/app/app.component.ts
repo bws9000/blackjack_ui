@@ -189,7 +189,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         this.handService.getDealerHandDeal(data);
       }
     }else{
-      console.log("DONE DEALING");
+      this.logStuff("DONE DEALING");
     }
 
   }
@@ -209,7 +209,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.playerDashService.updateVisible(true, currentSeat);
 
     this.handService.handResult = result;
-    //this.sms.statusMessage("player " + currentSeat + " is playing");
 
   }
 
