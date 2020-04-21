@@ -21,7 +21,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   private dashId;
 
-  cards: [number];
+  //cards: [number];
+  cards:number[] = new Array<number>();
+
   dcards: [number, number];
   playerDashVisible: string;
   splitButtonVisible: string;
@@ -53,7 +55,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               private dss: DashStatusServiceService,
               private wss: WebsocketService) {
 
-
     this.setTimer2Timer();
 
     this.playerStatus = 'playing';
@@ -71,6 +72,19 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           if (this.dashId === value) {
             this.dashTimer2 = Observable.timer(1000, 1000);
             this.dashSubTimer2 = this.dashTimer2.subscribe(t => this.statusCount(t));
+          }
+        });
+
+        this.handService.playerHandsDeal.subscribe(value => {
+          let j = JSON.stringify(value);
+          let o = JSON.parse(j);
+          // this.logStuff('seat: ' + this.seat);
+          // this.logStuff('o.card.s: ' + o.card.s);
+          // this.logStuff('this.seatService.currentSeat: ' +
+          // this.seatService.currentSeat);
+          if (o.card.s === this.seatService.currentSeat) {
+            this.cards.push(o.card.h);
+            //this.logStuff('this.cards: ' + this.cards);
           }
         });
 
@@ -104,11 +118,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           }
         });
 
+        /*
         this.handService.dealerHand.subscribe(value => {
           if (value !== null) {
             this.dcards = [98, value[0].hand[1]];
           }
         });
+        */
 
         this.playerDashService.hide.subscribe(value => {
           let seat = value;
@@ -176,7 +192,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
-      fromm:'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
@@ -213,7 +228,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
-      fromm:'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId

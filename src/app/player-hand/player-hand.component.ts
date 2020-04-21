@@ -12,8 +12,7 @@ import {StatusUpdateService} from "../services/status-update.service";
 export class PlayerHandComponent implements OnInit {
 
   @Input() hand: string;
-  //cards: [number,number];
-  cards: [number];
+  cards: number[] = new Array<number>();
   interval;
 
   constructor(private wss: WebsocketService,
@@ -23,9 +22,7 @@ export class PlayerHandComponent implements OnInit {
     this.handService.standUp.subscribe(value => {
       if (this.cards !== undefined) {
         if (+this.hand == value) {
-          for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i] = 99;
-          }
+          this.cards = [];
         }
         if (this.statusUpdateService.currentSeatedPlayers == 1) {
           this.handService.dealerHandVisible(false);
@@ -36,10 +33,16 @@ export class PlayerHandComponent implements OnInit {
     this.handService.clearPlayerHandsSubject.subscribe(value => {
       if (value) {
         if (this.cards !== undefined) {
-          for (let i = 0; i < this.cards.length; i++) {
-            this.cards[i] = 99;
-          }
+          this.cards = [];
         }
+      }
+    });
+
+    this.handService.playerHandsDeal.subscribe(value => {
+      let j = JSON.stringify(value);
+      let o = JSON.parse(j);
+      if (o.card.s === this.hand) {
+        this.cards.push(o.card.h);
       }
     });
 

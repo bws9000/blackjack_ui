@@ -23,9 +23,21 @@ export class HandService {
 
   public lastPlayerHand = [];
 
+  //deal cards
+  playerHandsDeal: Subject<Array<any>> = new Subject<Array<any>>();
+  dealerHandDeal: Subject<Array<any>> = new Subject<Array<any>>();
+
   constructor() {
     this.handResult = 'playing';
     this.handPlayed = false;
+  }
+
+  getDealerHandDeal(dealerHandDeal){
+    this.dealerHandDeal.next(dealerHandDeal);
+  }
+
+  getPlayerHandsDeal(playerHandsDeal){
+    this.playerHandsDeal.next(playerHandsDeal);
   }
 
   clearDealerHand() {

@@ -175,15 +175,31 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     //this.placeBetsService.setStatus(false, seat);
   }
 
+  dealCardEmit(data) {
+    this.wss.startChange.next(true);
+    console.log('dealerCardEmit: ' + JSON.stringify(data));
+
+    let initSeat = data.initSeat;
+    let seat = data.card.s;
+
+    if(!data.over) {
+      if (seat !== undefined) {
+        this.handService.getPlayerHandsDeal(data);
+      } else {
+        this.handService.getDealerHandDeal(data);
+      }
+    }else{
+      console.log("DONE DEALING");
+    }
+
+  }
+
   openPlayerDash(data) {
     this.wss.startChange.next(true);
     this.logStuff('openPlayerDash: ' + JSON.stringify(data));
 
     let result = data.result;
     let currentSeat = data.currentSeat;
-    let tableName = data.tableName;
-    let socketid = data.socketid;
-    let broadcast = data.broadcast;
 
     this.playerDashService.seatInFocus = currentSeat;
     this.handService.getPlayerHands(data.playerHands);
@@ -307,6 +323,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+      this.wss
+        .onEvent('dealCardEmit')
+        .subscribe(data => this.dealCardEmit(data));
+
       this.wss
         .onEvent('blankEmit')
         .subscribe(data => this.blankEmit(data));

@@ -9,13 +9,24 @@ import {HandService} from "../services/hand.service";
 })
 export class DealerHandComponent implements OnInit {
 
-  public cards: [number, number];
+  cards:number[] = new Array<number>();
 
   constructor(private handService: HandService) {
 
     this.handService.allDealerHand.subscribe(value => {
       if (value !== null) {
         this.cards = value[0].hand;
+      }
+    });
+
+    this.handService.dealerHandDeal.subscribe(value => {
+      let j = JSON.stringify(value);
+      let o = JSON.parse(j);
+      if(this.cards === null){
+        this.cards = new Array<number>();
+      }
+      if(this.cards !== null) {
+        this.cards.push(o.card.h);
       }
     });
 
@@ -34,7 +45,7 @@ export class DealerHandComponent implements OnInit {
     this.handService.hideDealerHand.subscribe(value => {
       //set in sit component
       if (!value) {
-        this.cards = [99, 99];
+        this.cards = null;
       }
     });
 

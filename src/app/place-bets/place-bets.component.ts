@@ -9,6 +9,7 @@ import {PlayerboxService} from "../services/playerbox.service";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Observable, Subscription} from "rxjs";
 import {BetService} from "../services/bet.service";
+import {HandService} from "../services/hand.service";
 
 
 @Component({
@@ -43,7 +44,8 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
               private wss: WebsocketService,
               private playerboxService: PlayerboxService,
               private route: ActivatedRoute,
-              private betService: BetService) {
+              private betService: BetService,
+              private handService: HandService) {
 
 
     this.placeBetsVisible = 'hidden';
@@ -139,43 +141,32 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     let table = this.tableService.tableNum;
     this.playerboxService.reset(this.seatService.currentSeat);
     this.wss.emit('nextPlayerBet', {
-      timeOut:false,
-      fromm:'betDash',
-      socketid: this.wss.socketId,
-      seat: this.seatService.currentSeat,
+      dealFinished:false,
       table: table
     });
-
-    /*
-    this.wss.emit('openPlayerDash', {
-      socketid: this.wss.socketId,
-      seat: this.seatService.currentSeat,
-      table: table
-    });
-    */
     this.subTimer.unsubscribe();
   }
 
   timerTest(t) {
     this.startcount--;
     this.countStatus = this.startcount;
-    if (this.startcount == -1) {
-      //this.clearSeat();
-      //this.onSubmit();
+    if (this.startcount == 0) {
       this.placeBetsVisible = 'hidden';
       this.playerboxService.reset(this.seatService.currentSeat);
       let table = this.tableService.tableNum;
       this.wss.emit('nextPlayerBet', {
-        timeOut:true,
-        fromm:'betDash',
-        socketid: this.wss.socketId,
-        seat: this.seatService.currentSeat,
+        dealFinished:false,
         table: table
       });
       this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
       this.subTimer.unsubscribe();
-
+      this.clearSeats();
     }
+  }
+
+  clearSeats(){
+    this.handService.clearDealerHand();
+    this.handService.clearPlayerHands();
   }
 
   getTime() {
