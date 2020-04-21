@@ -154,13 +154,14 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
       this.placeBetsVisible = 'hidden';
       this.playerboxService.reset(this.seatService.currentSeat);
       let table = this.tableService.tableNum;
+      this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
+      this.subTimer.unsubscribe();
+      this.clearSeats();
+
       this.wss.emit('nextPlayerBet', {
         dealFinished:false,
         table: table
       });
-      this.seatService.playerStandUp(this.seatService.currentSeat);//important after emit
-      this.subTimer.unsubscribe();
-      this.clearSeats();
     }
   }
 

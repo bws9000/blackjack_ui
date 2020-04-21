@@ -151,7 +151,7 @@ export class SitComponent implements OnInit {
   sitStand() {
     if (!this.sitOrLeave) {
 
-      if(this.placeBetsService.youCanSitNow) {
+      if (this.placeBetsService.youCanSitNow) {
         this.wss.emit('sitTable', {
           player: this.id,
           tableNum: this.table
@@ -162,12 +162,12 @@ export class SitComponent implements OnInit {
           this.sitOrLeave = true;
           this.seatService.currentSeat = +this.id;
         }
-      }else{
+      } else {
         alert('please try again');
       }
 
-
     } else {
+
       this.wss.emit('standUpTable', {
         player: this.id,
         tableNum: this.table
