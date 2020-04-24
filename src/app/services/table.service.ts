@@ -1,4 +1,7 @@
 import {Injectable} from '@angular/core';
+import {TableMap} from '../TableMap';
+import {Subject} from "rxjs";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -6,39 +9,31 @@ import {Injectable} from '@angular/core';
 
 export class TableService {
 
+  //tableArray: Subject<Array<Object>> = new Subject<Array<Object>>();
+  tableArray: Array<Object> = new Array<Object>();
+
   public tableNum: number;
   public tablePlaying: boolean;
-  public tableInstances;
+
+  //public tables = new Map<String,Object>();
+  //public maxTables = 10;
 
   constructor() {
-    this.tableInstances = new Array<string>();
     this.tablePlaying = false;
     this.tableNum = undefined;
   }
 
-  setTableInstance(){
-    let instanceId = this.setUnique();
-    this.tableInstances.push(instanceId);
+  setTables(tables){
+    //this.tableArray.next();
+    this.tableArray = tables;
+  }
+  getTables(){
+    return this.tableArray;
   }
 
-  getTableInstances(){
-    return this.tableInstances;
-  }
-
-  setUnique(){
-    return this.randomId(6);
-  }
-
-  randomId(length) {
-    let result = '';
-    //let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let characters = '0123456789';
-    let charactersLength = characters.length;
-    for ( let i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  logStuff(stuff: any) {
+    if (!environment.production) {
+      console.log(stuff);
     }
-    return result;
   }
-
-
 }

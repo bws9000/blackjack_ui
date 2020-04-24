@@ -43,7 +43,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
 
     this.playerSeats = {};
-    this.tableService.setTableInstance();
+    //this.tableService.setTableInstance();
     this.statusUpdateService.hideNavBar(false);
 
     this.userSubscription = this.route.params.subscribe(
@@ -69,19 +69,20 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
 
     location.onPopState(() => {
-      this.router.navigate(['/']).then((r) => {
-        window.location.reload();
-        //this.leaveTable();
+      this.router.navigate(['/tables']).then((r) => {
+        let table = this.tableService.tableNum;
+        this.wss.emit('leaveTable', {table: table});
+        this.resetTable();
       });
     });
 
   }
 
   leaveTable() {
-    this.router.navigate(['']).then((r) => {
+    this.router.navigate(['/tables']).then((r) => {
       let table = this.tableService.tableNum;
       this.wss.emit('leaveTable', {table: table});
-      window.location.reload()
+      this.resetTable();
     });
   }
 
@@ -119,6 +120,10 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     if (!environment.production) {
       console.log(stuff);
     }
+  }
+
+  resetTable(){
+    //
   }
 
   ngAfterViewChecked(): void {

@@ -57,9 +57,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
               private betService: BetService,
               private errorService: ErrorService) {
 
-    this.router.events.subscribe((event: Event) => {
-      this.navigationInterceptor(event);
-    });
+
+    // this.router.events.subscribe((event: Event) => {
+    //   this.navigationInterceptor(event);
+    // });
 
     this.wss.startChange.subscribe(value => {
       if (value) {
@@ -111,9 +112,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.playerboxService.seats(data.playerSeats);
   }
 
-  init(data) {
-    this.wss.socketId = data.socketid;
-  }
 
   ////////////////////////////////////////////////////////
   ////////////////// table emit //////////////////////////
@@ -182,13 +180,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let initSeat = data.initSeat;
     let seat = data.card.s;
 
-    if(!data.over) {
+    if (!data.over) {
       if (seat !== undefined) {
         this.handService.getPlayerHandsDeal(data);
       } else {
         this.handService.getDealerHandDeal(data);
       }
-    }else{
+    } else {
       this.logStuff("DONE DEALING");
     }
 
@@ -302,6 +300,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Players: ' + data.playerSize);
   }
 
+  init(data) {
+    //console.log(JSON.stringify(data));
+    this.wss.socketId = data.socketid;
+    this.tableService.setTables(data.tables);
+  }
+
   ngOnDestroy(): void {
 
     if (this.noActivitySubTimer !== undefined) {
@@ -322,6 +326,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+
       this.wss
         .onEvent('dealCardEmit')
         .subscribe(data => this.dealCardEmit(data));
@@ -389,9 +394,29 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         .onEvent('dealerHandEmit')
         .subscribe(data => this.dealerHandEmit(data));
 
+      this.wss
+        .onEvent('getTablesEmit')
+        .subscribe(data => this.getTablesEmit(data));
+
       ////////////////// Environment Updates //////////////////////
       /////////////////////////////////////////////////////////////
       //
+    }
+  }
+
+  getTablesEmit(data) {
+    this.logStuff(JSON.stringify(data));
+    this.wss.startChange.next(true);
+    if (data.tables !== undefined) {
+      this.tableService.setTables(data.tables);
+    }
+    if (data.newTableName !== undefined) {
+      this.tableService.tableNum = data.newTableName;
+      this.wss.emit('joinTable', {room: data.newTableName});
+    }
+    if (data.notExist === true) {
+      alert('Added Tables Are Deleted When Empty');
+      window.location.reload();
     }
   }
 
@@ -400,6 +425,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.count = 0;
 
     this.connect().then(r => {
+
       this.logStuff('RECONNECTION TYPE: Initial Connection Occured.');
     });
 

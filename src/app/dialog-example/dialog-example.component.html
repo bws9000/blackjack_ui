@@ -1,0 +1,20 @@
+<div class="custom-dialog-container">
+  <h1>Table Options</h1>
+  <mat-dialog-content>
+    Deal Card Mode:
+    <mat-slide-toggle
+      class="toggle-margin"
+      [(ngModel)]="data.checked"
+      [color]="color"
+      [checked]="checked"
+      [disabled]="disabled"
+      (change)="toggleChange()">
+      {{this.getDealCardMode()}}
+    </mat-slide-toggle>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button [mat-dialog-close]="data.checked" class="btn btn-success" mat-dialog-close>
+      Create New Table
+    </button>
+  </mat-dialog-actions>
+</div>

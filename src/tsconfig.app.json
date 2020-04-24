@@ -6,7 +6,8 @@
   },
   "files": [
     "main.ts",
-    "polyfills.ts"
+    "polyfills.ts",
+    "app/TableMap.ts"
   ],
   "include": [
     "src/**/*.d.ts"

@@ -5,6 +5,7 @@ import {SocketConnectComponent} from "./socket-connect/socket-connect.component"
 import {TableDetailComponent} from "./table-detail/table-detail.component";
 import {AppComponent} from "./app.component";
 import {GameHomeComponent} from "./game-home/game-home.component";
+import {NotfoundComponent} from "./notfound/notfound.component";
 
 const routes: Routes = [
   {
@@ -16,6 +17,9 @@ const routes: Routes = [
   {
     path: 'tables/:tableId', component: TableDetailComponent
   },
+  {
+    path: '**', pathMatch: 'full', component: NotfoundComponent
+  }
 ];
 
 @NgModule({

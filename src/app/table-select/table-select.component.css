@@ -8,7 +8,7 @@
 }
 
 .tables2 {
-  font-size: 2vw;
+  /* font-size: 2vw; */
   color: white;
   margin: 5px;
   background-color: darkgreen;
@@ -17,6 +17,10 @@
   text-align: center;
   display: inline-block;
   width: 15%;
+}
+.add{
+  color:black;
+  background-color:mediumseagreen;
 }
 
 

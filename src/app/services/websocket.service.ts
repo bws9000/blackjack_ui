@@ -75,7 +75,7 @@ export class WebsocketService {
 
   public initEvents() {
     //USER EVENTS
-    //this.eventMap.set('createTableEmit', new SocketObservable('createTableEmit', this.socket))
+    this.eventMap.set('getTablesEmit', new SocketObservable('getTablesEmit', this.socket))
     this.eventMap.set('getHandsEmit', new SocketObservable('getHandsEmit', this.socket));
     this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
     this.eventMap.set('memberOfRoomEmit', new SocketObservable('memberOfRoomEmit', this.socket));
