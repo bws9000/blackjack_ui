@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {WebsocketService} from "../services/websocket.service";
+import {ControlService} from "../services/control.service";
 
 @Component({
   selector: 'app-game-home',
@@ -10,11 +11,19 @@ import {WebsocketService} from "../services/websocket.service";
 export class GameHomeComponent implements OnInit {
 
   constructor(private router: Router,
-              private wss: WebsocketService) {
+              private wss: WebsocketService,
+              private control:ControlService) {
 
+    ////////////////////////////////
+    this.control.gamePosition = 0;//
+    ////////////////////////////////
+
+    /*
     this.wss.emit('blank', {
       process:'tablesInfo'
     });
+    */
+
   }
 
   ngOnInit() {

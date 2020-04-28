@@ -7,6 +7,8 @@ import {PlatformLocation} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {DialogExampleComponent} from "../dialog-example/dialog-example.component";
+import {ControlService} from "../services/control.service";
+import {SeatService} from "../services/seat.service";
 
 @Component({
   selector: 'app-table-select',
@@ -26,8 +28,14 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
               private router: Router,
               private location: PlatformLocation,
               private route: ActivatedRoute,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private control: ControlService,
+              private seatService: SeatService) {
 
+
+    ////////////////////////////////
+    this.control.gamePosition = 1;//
+    ////////////////////////////////
 
     this.checked = true;
     this.tableArray = this.tableService.getTables();
@@ -48,10 +56,11 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogExampleComponent, this.config);
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        this.wss.emit('getTables', {
+        this.wss.emit('addTable', {
+          socketid:this.wss.socketId,
           add: true,
           result:result
-        })
+        });
       } else {
         alert('error adding table');
       }
@@ -67,9 +76,13 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   joinRoom(roomNum) {
     this.tableService.tableNum = roomNum;
     this.wss.emit('joinTable', {room: roomNum});
+    this.control.playerLeftGame = false;
   }
 
+
+
   ngOnInit() {
+
     if (this.wss.start) {
     } else {
        this.router.navigate(['/']).then((r) => {
@@ -92,7 +105,7 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.wss.emit('getTables', {});
+    //this.wss.emit('getTables', {});
   }
 
 }

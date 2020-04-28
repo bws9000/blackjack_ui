@@ -4,10 +4,11 @@ import {SeatService} from "../services/seat.service";
 import {environment} from "../../environments/environment";
 import {HandService} from "../services/hand.service";
 import {Observable, Subscription} from "rxjs";
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {TableService} from "../services/table.service";
 import {WebsocketService} from "../services/websocket.service";
 import {DashStatusServiceService} from "../services/dash-status-service.service";
+import {ControlService} from "../services/control.service";
 
 @Component({
   selector: 'app-player-dash',
@@ -53,7 +54,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private tableService: TableService,
               private dss: DashStatusServiceService,
-              private wss: WebsocketService) {
+              private wss: WebsocketService,
+              private control: ControlService,
+              private router: Router) {
 
     this.setTimer2Timer();
 
@@ -190,12 +193,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     //this.handService.handPlayed = false;
     this.handService.lastPlayerHand = this.cards;
 
-    this.wss.emit('nextPlayerDash', {
-      action: 'stand',
-      currentSeat: this.seatService.currentSeat,
-      table: this.tableService.tableNum,
-      socketId: this.wss.socketId
-    });
+      this.wss.emit('nextPlayerDash', {
+        action: 'stand',
+        currentSeat: this.seatService.currentSeat,
+        table: this.tableService.tableNum,
+        socketId: this.wss.socketId
+      });
+
     this.playerDashVisible = 'hidden';
 
     if (this.dashSubTimer !== undefined) {
@@ -226,12 +230,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.setTimer2Timer();
 
-    this.wss.emit('nextPlayerDash', {
-      action: 'stand',
-      currentSeat: this.seatService.currentSeat,
-      table: this.tableService.tableNum,
-      socketId: this.wss.socketId
-    });
+      this.wss.emit('nextPlayerDash', {
+        action: 'stand',
+        currentSeat: this.seatService.currentSeat,
+        table: this.tableService.tableNum,
+        socketId: this.wss.socketId
+      });
+
     this.playerDashVisible = 'hidden';
 
   }
@@ -244,7 +249,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
     this.wss.emit('nextPlayerDash', {
       action: 'stand',
-      fromm:'playerDash',
+      fromm: 'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
@@ -256,15 +261,24 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   statusCount(t) {
     this.timer2time--;
-    if (this.timer2time < 0) {
-      this.playerDashService.hideDash(this.seatService.currentSeats);
-      this.setTimer2Timer();
-      if (this.dashSubTimer !== undefined) {
-        this.dashSubTimer.unsubscribe();
+
+    // if(!this.control.playerLeftGame) {
+
+      if (this.timer2time < 0) {
+
+        this.playerDashService.hideDash(this.seatService.currentSeats);
+        this.setTimer2Timer();
+        if (this.dashSubTimer !== undefined) {
+          this.dashSubTimer.unsubscribe();
+        }
+        this.dashSubTimer2.unsubscribe();
+        this.standTimeRanOut();
       }
-      this.dashSubTimer2.unsubscribe();
-      this.standTimeRanOut();
-    }
+
+    // }else{
+    //   this.logStuff('playerdash timer unsubscribed');
+    //   this.dashSubTimer2.unsubscribe();
+    // }
   }
 
   setPlayerStatus() {

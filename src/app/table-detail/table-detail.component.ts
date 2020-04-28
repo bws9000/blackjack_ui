@@ -9,6 +9,7 @@ import {PlatformLocation} from '@angular/common'
 import {HandService} from "../services/hand.service";
 import {PlaceBetsService} from "../services/place-bets.service";
 import {Subscription} from "rxjs";
+import {ControlService} from "../services/control.service";
 
 @Component({
   selector: 'app-table-detail',
@@ -37,9 +38,14 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private tableService: TableService,
               private handService: HandService,
               private router: Router,
-              private location: PlatformLocation,
+              private _location: PlatformLocation,
               private placeBetsService: PlaceBetsService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private control: ControlService) {
+
+    ////////////////////////////////
+    this.control.gamePosition = 2;//
+    ////////////////////////////////
 
 
     this.playerSeats = {};
@@ -67,32 +73,31 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     ///////////////////////////////////////////////////////////////////
     //this.placeBetsService.setVisible(false, this.seatService.currentSeat);
 
-
-    location.onPopState(() => {
+    _location.onPopState(() => {
       this.router.navigate(['/tables']).then((r) => {
         let table = this.tableService.tableNum;
-        this.wss.emit('leaveTable', {table: table});
+        this.wss.emit('leaveTable', {
+          table: table,
+          socketid:this.wss.socketId
+        });
         this.resetTable();
       });
+      this.control.playerLeftGame = true;
     });
 
   }
 
   leaveTable() {
-    this.router.navigate(['/tables']).then((r) => {
-      let table = this.tableService.tableNum;
-      this.wss.emit('leaveTable', {table: table});
-      this.resetTable();
-    });
+    this._location.back();
   }
 
   memberOfRoomEmit(data) {
     this.wss.startChange.next(true);
-    if (!data.member) {
-      this.router.navigate(['/tables']).then((r) => {
-        this.logStuff('no longer in room: ' + JSON.stringify(data));
-      });
-    }
+    // if (!data.member) {
+    //   this.router.navigate(['/tables']).then((r) => {
+    //     this.logStuff('no longer in room: ' + JSON.stringify(data));
+    //   });
+    // }
   }
 
   ngOnInit() {
@@ -111,7 +116,6 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     //leave room/table
     let table = this.tableService.tableNum;
     //this.logStuff('NG ON DESTROY CALLED');
-    this.wss.emit('leaveTable', {table: table});
     this.statusUpdateService.hideNavBar(true);
     this.userSubscription.unsubscribe();
   }

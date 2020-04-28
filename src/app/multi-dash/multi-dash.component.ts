@@ -10,6 +10,7 @@ import {HandService} from "../services/hand.service";
 import {PlaceBetsService} from "../services/place-bets.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {StatusMessageService} from "../services/status-message.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-multi-dash',
@@ -47,7 +48,8 @@ export class MultiDashComponent implements OnInit, OnDestroy {
               private handService: HandService,
               private placeBetsService: PlaceBetsService,
               private playerBoxService: PlayerboxService,
-              private sms:StatusMessageService) {
+              private sms:StatusMessageService,
+              private router: Router) {
 
     this.resetCounter = 5;
 
@@ -175,12 +177,14 @@ export class MultiDashComponent implements OnInit, OnDestroy {
   private resetClientTimer(t: PopStateEvent) {
     this.resetCounter--;
     if (this.resetCounter === 0) {
-      this.wss.emit('readyToBet',
-        {
-          table: this.tableService.tableNum,
-          seat: this.seatService.currentSeat,
-          reset: true
-        });
+
+        this.wss.emit('readyToBet',
+          {
+            table: this.tableService.tableNum,
+            seat: this.seatService.currentSeat,
+            reset: true
+          });
+
       this.resetCounter = 5;
       this.resetSubTimer.unsubscribe();
     }
@@ -201,6 +205,12 @@ export class MultiDashComponent implements OnInit, OnDestroy {
   }
 
   private static logStuff(stuff: any) {
+    if (!environment.production) {
+      console.log(stuff);
+    }
+  }
+
+  logStuff(stuff: any) {
     if (!environment.production) {
       console.log(stuff);
     }

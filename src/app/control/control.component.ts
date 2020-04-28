@@ -22,9 +22,9 @@ export class ControlComponent implements OnInit, OnDestroy {
   statusBoxVisible: string;
   status: string;
   startcount: number;
-  active:boolean;
+  active: boolean;
   tableName: string;
-  test:string;
+  test: string;
 
   //new counter
   private timer;
@@ -37,7 +37,8 @@ export class ControlComponent implements OnInit, OnDestroy {
               private tableService: TableService,
               private placeBetsService: PlaceBetsService,
               private seatService: SeatService,
-              private route:ActivatedRoute) {
+              private route: ActivatedRoute,
+              private router: Router) {
 
     this.statusBoxVisible = 'hidden';
 
@@ -49,8 +50,8 @@ export class ControlComponent implements OnInit, OnDestroy {
         this.tableName = params.tableId;
 
         this.statusUpdateService.updateStatusSubject.subscribe(value => {
-          let currentTable = 'table'+this.tableService.tableNum;
-          if(currentTable === params.tableId) {
+          let currentTable = 'table' + this.tableService.tableNum;
+          if (currentTable === params.tableId) {
 
             if (value) {
               this.statusBoxVisible = 'hidden';
@@ -58,13 +59,12 @@ export class ControlComponent implements OnInit, OnDestroy {
               if (+this.controlNum == this.seatService.currentSeat) {
                 this.statusBoxVisible = 'visible';
                 ///////////////////////////////////
+                //this.logStuff('currentSeats: ' + this.seatService.currentSeats);
                 if (this.seatService.currentSeats < 2) {
-
                   //timer
                   this.status = 'Waiting for players to join:';
-                  this.timer = Observable.timer(1000,1000);
-                  this.subTimer = this.timer.subscribe(t =>this.timerTest(t));
-
+                  this.timer = Observable.timer(1000, 1000);
+                  this.subTimer = this.timer.subscribe(t => this.timerTest(t));
                 }
                 ///////////////////////////////////
               }
@@ -83,13 +83,12 @@ export class ControlComponent implements OnInit, OnDestroy {
     }
   }
 
-  timerTest(t){
+  timerTest(t) {
     //t
-
     this.startcount--;
     this.status = 'game starting in: ' + this.startcount + ' seconds';
 
-    if(this.startcount == -1){
+    if (this.startcount == -1) {
 
       this.setStartCount();
       this.statusBoxVisible = 'hidden';
@@ -111,7 +110,7 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
-    if(this.subTimer !== undefined) {
+    if (this.subTimer !== undefined) {
       this.subTimer.unsubscribe();
     }
   }

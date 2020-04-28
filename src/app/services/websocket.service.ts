@@ -3,6 +3,8 @@ import * as io from 'socket.io-client';
 import {Observable, Subject} from "rxjs";
 import {environment} from '../../environments/environment';
 import {SocketObservable} from "../SocketObservable";
+import {Router} from "@angular/router";
+import {ControlService} from "./control.service";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,9 @@ export class WebsocketService {
   eventMap: Map<string, SocketObservable> = new Map<string, SocketObservable>();
   socketId: string;
 
-  constructor() {
+  constructor(private router: Router,
+              private control: ControlService) {
+
     let that = this;
 
     this.logStuff('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
@@ -34,11 +38,16 @@ export class WebsocketService {
   }
 
   public onEvent(event: string): Observable<any> {
-      let so = this.eventMap.get(event);
-      return so.getEvent();
+    let so = this.eventMap.get(event);
+    return so.getEvent();
   }
 
   public emit(event: string, data: any) {
+    // this.logStuff('--------------');
+    this.logStuff('EMIT: ' + event);
+    // this.logStuff('gamePostion: ' + this.control.gamePosition);
+    // this.logStuff('emit url'+this.router.routerState.snapshot.url);
+    // this.logStuff('--------------');
     this.startChange.next(false);
     this.socket.emit(event, data);
   }
@@ -80,6 +89,7 @@ export class WebsocketService {
     this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
     this.eventMap.set('memberOfRoomEmit', new SocketObservable('memberOfRoomEmit', this.socket));
     this.eventMap.set('joinTableEmit', new SocketObservable('joinTableEmit', this.socket));
+    this.eventMap.set('addTableEmit', new SocketObservable('addTableEmit', this.socket));
     this.eventMap.set('leftTableEmit', new SocketObservable('leftTableEmit', this.socket));
     this.eventMap.set('standUpTableEmit', new SocketObservable('standUpTableEmit', this.socket));
     this.eventMap.set('satDownTableEmit', new SocketObservable('satDownTableEmit', this.socket));
@@ -97,7 +107,7 @@ export class WebsocketService {
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));
     this.eventMap.set('errorEmit', new SocketObservable('errorEmit', this.socket));
     this.eventMap.set('blankEmit', new SocketObservable('blankEmit', this.socket));
-    }
+  }
 
   logStuff(stuff: any) {
     if (!environment.production) {

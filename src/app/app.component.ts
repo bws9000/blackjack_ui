@@ -84,8 +84,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ///////////////////////////////////////////////////////
   joinTable(data) {
 
+    this.logStuff('joinTable(data): ' + JSON.stringify(data));
+
     let tableNum = data.tableNum;
     let tableName = 'table' + tableNum;
+    this.tableService.tableNum = tableNum;
+
     this.router.navigate(['/tables/' + tableName]).then(async r => {
       this.wss.startChange.next(true);
       let playerSeats = JSON.parse(data.playerSeats);
@@ -97,7 +101,35 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  addTable(data) {
+
+    this.logStuff('addTable(data): ' + JSON.stringify(data));
+
+    let tableNum = data.tableNum;
+    let tableName = 'table' + tableNum;
+    this.tableService.tableNum = tableNum;
+
+    this.router.navigate(['/tables/' + tableName]).then(async r => {
+      this.wss.startChange.next(true);
+      let playerSeats = JSON.parse(data.playerSeats);
+      let s = [];
+      for (let i = 0; i < playerSeats.length; i++) {
+        s.push(playerSeats[i][1]);
+      }
+      await this.seatService.setInitState(s, tableNum);
+    });
+
+    this.wss.emit('getTables',{});
+
+  }
+
   leftTable(data) {
+    /*
+    this.wss.emit('destroyGame', {
+      socketid: this.wss.socketId,
+      table: this.tableService.tableNum
+    });
+    */
     this.router.navigate(['/tables']).then(r => {
       this.wss.startChange.next(true);
     });
@@ -106,12 +138,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   tableDetailHeartBeat(data) {
+    this.logStuff('tableDetailHeartBeat():' + JSON.stringify(data));
     this.count++;
     this.statusUpdateService.watchPlay(data);
     this.seatService.updateSeats(data.playerSeats);
     this.playerboxService.seats(data.playerSeats);
   }
-
 
   ////////////////////////////////////////////////////////
   ////////////////// table emit //////////////////////////
@@ -301,7 +333,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   init(data) {
-    //console.log(JSON.stringify(data));
+    console.log('INIT' + JSON.stringify(data));
     this.wss.socketId = data.socketid;
     this.tableService.setTables(data.tables);
   }
@@ -361,6 +393,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         .subscribe(data => this.joinTable(data));
 
       this.wss
+        .onEvent('addTableEmit')
+        .subscribe(data => this.addTable(data));
+
+      this.wss
         .onEvent('leftTableEmit')
         .subscribe(data => this.leftTable(data));
 
@@ -409,10 +445,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wss.startChange.next(true);
     if (data.tables !== undefined) {
       this.tableService.setTables(data.tables);
-    }
-    if (data.newTableName !== undefined) {
-      this.tableService.tableNum = data.newTableName;
-      this.wss.emit('joinTable', {room: data.newTableName});
     }
     if (data.notExist === true) {
       alert('Added Tables Are Deleted When Empty');
