@@ -18,6 +18,9 @@ import {SeatService} from "../services/seat.service";
 export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checked: boolean;
+  deckOption: number;
+  shuffle: number;
+
   tableArray: Array<Object>;
   config: MatDialogConfig;
   dialogRef: any;
@@ -32,12 +35,14 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
               private control: ControlService,
               private seatService: SeatService) {
 
-
     ////////////////////////////////
     this.control.gamePosition = 1;//
     ////////////////////////////////
 
     this.checked = true;
+    this.deckOption = 1;
+    this.shuffle = 75;
+
     this.tableArray = this.tableService.getTables();
     // let j = JSON.stringify(tables);
     // this.logStuff(j);
@@ -45,7 +50,8 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.config = new MatDialogConfig();
     this.config.disableClose = false;
     this.config.autoFocus = true;
-    this.config.data = {checked: this.checked};
+    this.config.data = {checked: this.checked,
+      deckOption: this.deckOption,shuffle:this.shuffle};
     this.config.height = '60%';
     this.config.width = '60%';
     this.config.hasBackdrop = true;
@@ -56,10 +62,11 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogExampleComponent, this.config);
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
+        // this.logStuff('RESULT: ' + result);
         this.wss.emit('addTable', {
-          socketid:this.wss.socketId,
+          socketid: this.wss.socketId,
           add: true,
-          result:result
+          result: result
         });
       } else {
         alert('error adding table');
@@ -68,6 +75,7 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
       //console.log('result: ' + result);
     });
   }
+
 
   createTable() {
     //
@@ -80,13 +88,12 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-
   ngOnInit() {
 
     if (this.wss.start) {
     } else {
-       this.router.navigate(['/']).then((r) => {
-       });
+      this.router.navigate(['/']).then((r) => {
+      });
     }
   }
 

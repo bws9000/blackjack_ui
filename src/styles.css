@@ -103,6 +103,7 @@ html, body {
 
 /* custom dialog for table-select */
 .custom-dialog > mat-dialog-container{
+  color:#000000;
   background-color: cornsilk;
 }
 

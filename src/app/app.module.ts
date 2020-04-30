@@ -29,6 +29,9 @@ import {DialogExampleComponent} from './dialog-example/dialog-example.component'
 import {MatButtonModule} from "@angular/material/button";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import { NotfoundComponent } from './notfound/notfound.component';
+import {MatSelectModule} from "@angular/material/select";
+import {MatCardModule} from "@angular/material/card";
+import {MatListModule} from "@angular/material/list";
 
 
 export function initialize(initModule: InitModule) {
@@ -58,19 +61,22 @@ export function initialize(initModule: InitModule) {
     DialogExampleComponent,
     NotfoundComponent
   ],
-  imports: [
-    InitModule,
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    SlimLoadingBarModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatSlideToggleModule,
-    FormsModule
-  ],
+    imports: [
+        InitModule,
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        SlimLoadingBarModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatSlideToggleModule,
+        FormsModule,
+        MatSelectModule,
+        MatCardModule,
+        MatListModule
+    ],
   entryComponents:[DialogExampleComponent],
   providers: [InitModule,
     //{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},

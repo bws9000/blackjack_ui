@@ -107,6 +107,7 @@ export class WebsocketService {
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));
     this.eventMap.set('errorEmit', new SocketObservable('errorEmit', this.socket));
     this.eventMap.set('blankEmit', new SocketObservable('blankEmit', this.socket));
+    this.eventMap.set('emptyEmit', new SocketObservable('emptyEmit', this.socket));
   }
 
   logStuff(stuff: any) {

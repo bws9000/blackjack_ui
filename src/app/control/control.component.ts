@@ -94,12 +94,15 @@ export class ControlComponent implements OnInit, OnDestroy {
       this.statusBoxVisible = 'hidden';
       this.tableService.tablePlaying = true;
 
-      this.wss.emit('readyToBet',
-        {
-          table: this.tableService.tableNum,
-          seat: this.seatService.currentSeat,
-          reset: false
-        });
+      let _route = this.router.routerState.snapshot.url;
+      if(_route !== '/tables') {
+        this.wss.emit('readyToBet',
+          {
+            table: this.tableService.tableNum,
+            seat: this.seatService.currentSeat,
+            reset: false
+          });
+      }
       this.subTimer.unsubscribe();
 
     }

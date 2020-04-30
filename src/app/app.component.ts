@@ -119,7 +119,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       await this.seatService.setInitState(s, tableNum);
     });
 
-    this.wss.emit('getTables',{});
+    this.wss.emit('getTables', {});
 
   }
 
@@ -332,6 +332,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Players: ' + data.playerSize);
   }
 
+  emptyEmit(data) {
+    this.wss.startChange.next(true);
+  }
+
   init(data) {
     console.log('INIT' + JSON.stringify(data));
     this.wss.socketId = data.socketid;
@@ -358,6 +362,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+
+      this.wss
+        .onEvent('emptyEmit')
+        .subscribe(data => this.emptyEmit(data));
 
       this.wss
         .onEvent('dealCardEmit')
