@@ -207,7 +207,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dealCardEmit(data) {
     this.wss.startChange.next(true);
-    console.log('dealerCardEmit: ' + JSON.stringify(data));
+    this.logStuff('dealerCardEmit: ' + JSON.stringify(data));
 
     let initSeat = data.initSeat;
     let seat = data.card.s;
@@ -337,7 +337,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   init(data) {
-    console.log('INIT' + JSON.stringify(data));
+    this.logStuff('INIT' + JSON.stringify(data));
     this.wss.socketId = data.socketid;
     this.tableService.setTables(data.tables);
   }

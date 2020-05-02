@@ -35,6 +35,9 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
               private control: ControlService,
               private seatService: SeatService) {
 
+
+    this.logStuff(' * * * TableSelectComponent * * * ');
+
     ////////////////////////////////
     this.control.gamePosition = 1;//
     ////////////////////////////////

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
 import {WebsocketService} from "./websocket.service";
 import {TableService} from "./table.service";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -45,13 +46,11 @@ export class SeatService {
   }
 
   sitDown(seat, bc, tableName: string) {
-
     let data = {
       sitting: seat,
       broadcast: bc,
       tableName: tableName
     };
-
     this.sitState.next(data);
   }
 
@@ -61,6 +60,7 @@ export class SeatService {
       broadcast: bc,
       tableName: tableName
     };
+    //this.logStuff(' >>> seat.service.standUp');
     this.standState.next(data);
   }
 
@@ -68,5 +68,11 @@ export class SeatService {
     let ps = JSON.parse(playerSeats);
     this.currentSeats = ps.length;
     this.playerSeats.next(ps);
+  }
+
+  logStuff(stuff: any) {
+    if (!environment.production) {
+      console.log(stuff);
+    }
   }
 }

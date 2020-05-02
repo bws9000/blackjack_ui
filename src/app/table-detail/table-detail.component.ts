@@ -43,6 +43,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private route: ActivatedRoute,
               private control: ControlService) {
 
+    this.logStuff(' * * * TableDetailComponent * * * ')
+
     ////////////////////////////////
     this.control.gamePosition = 2;//
     ////////////////////////////////
@@ -74,21 +76,36 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     //this.placeBetsService.setVisible(false, this.seatService.currentSeat);
 
     _location.onPopState(() => {
-      this.router.navigate(['/tables']).then((r) => {
-        let table = this.tableService.tableNum;
-        this.wss.emit('leaveTable', {
-          table: table,
-          socketid:this.wss.socketId
-        });
-        this.resetTable();
-      });
+      // this.router.navigate(['/tables']).then((r) => {
+      //   let table = this.tableService.tableNum;
+      //   this.wss.emit('leaveTable', {
+      //     table: table,
+      //     socketid:this.wss.socketId
+      //   });
+      //   this.resetTable();
+      // });
+      // this.control.playerLeftGame = true;
+      let table = this.tableService.tableNum;
+      this.wss.emit('leaveTable', {
+            table: table,
+            socketid:this.wss.socketId
+          });
       this.control.playerLeftGame = true;
+      window.location.reload();
     });
 
   }
 
   leaveTable() {
-    this._location.back();
+    //this._location.back();
+    let table = this.tableService.tableNum;
+    this.wss.emit('leaveTable', {
+      table: table,
+      socketid:this.wss.socketId
+    });
+    this.control.playerLeftGame = true;
+    window.location.reload();
+    window.location.reload();
   }
 
   memberOfRoomEmit(data) {

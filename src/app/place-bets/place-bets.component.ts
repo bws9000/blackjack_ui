@@ -11,7 +11,6 @@ import {Observable, Subscription} from "rxjs";
 import {BetService} from "../services/bet.service";
 import {HandService} from "../services/hand.service";
 
-
 @Component({
   selector: 'app-place-bets',
   templateUrl: './place-bets.component.html',
@@ -31,6 +30,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
   selectedValue: number;
   countStatus: number;
   tableName: string;
+  timerActivate:number;
 
   private timer;
   private subTimer: Subscription;
@@ -61,6 +61,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
 
+        this.timerActivate = 0;
         this.tableName = params.tableId;
         this.startcount = 10;
 

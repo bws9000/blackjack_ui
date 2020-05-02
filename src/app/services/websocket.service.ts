@@ -72,7 +72,7 @@ export class WebsocketService {
       });
       //on reconnect
       this.socket.on('reconnect', function () {
-        console.log('you have been reconnected');
+        that.logStuff('you have been reconnected');
         that.reconnected();
       });
     });
