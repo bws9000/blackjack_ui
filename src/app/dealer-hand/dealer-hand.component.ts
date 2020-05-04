@@ -9,7 +9,7 @@ import {HandService} from "../services/hand.service";
 })
 export class DealerHandComponent implements OnInit {
 
-  cards:number[] = new Array<number>();
+  cards: number[] = new Array<number>();
 
   constructor(private handService: HandService) {
 
@@ -22,11 +22,16 @@ export class DealerHandComponent implements OnInit {
     this.handService.dealerHandDeal.subscribe(value => {
       let j = JSON.stringify(value);
       let o = JSON.parse(j);
-      if(this.cards === null){
+      if (this.cards === null) {
         this.cards = new Array<number>();
       }
-      if(this.cards !== null) {
-        this.cards.push(o.card.h);
+      if (this.cards !== null) {
+        //this.cards.push(o.card.h);
+       if(this.cards.length === 0){
+         this.cards.push(98);
+       }else{
+         this.cards.push(o.card.h);
+       }
       }
     });
 

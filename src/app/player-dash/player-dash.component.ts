@@ -121,13 +121,12 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
           }
         });
 
-        /*
+
         this.handService.dealerHand.subscribe(value => {
           if (value !== null) {
             this.dcards = [98, value[0].hand[1]];
           }
         });
-        */
 
         this.playerDashService.hide.subscribe(value => {
           let seat = value;

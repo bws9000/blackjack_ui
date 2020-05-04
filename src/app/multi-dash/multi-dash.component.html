@@ -8,8 +8,12 @@
 
       <div class="sectionOne">
         <div class="dealerStatus">
-          <h3>YOU</h3>
-          <h1>{{this.playerStatus}}</h1>
+          <h3>player:&nbsp;<span style="font-size: larger;font-weight: bold;" > {{this.playerStatus}}</span></h3>
+          <div class="statusContainer">
+            <div class="statusContainer_row">
+              <div class="wlp" [ngClass]="pwlp"></div>
+            </div>
+          </div>
         </div>
 
         <div class="cardRowDefault">
@@ -21,8 +25,12 @@
 
       <div class="sectionTwo">
         <div class="playerStatus">
-          <h3>DEALER</h3>
-          <h1>{{this.dealerStatus}}</h1>
+          <h3>dealer:&nbsp;<span style="font-size: larger;font-weight: bold;" > {{this.dealerStatus}}</span></h3>
+          <div class="statusContainer">
+            <div class="statusContainer_row">
+              <div class="wlp" [ngClass]="dwlp"></div>
+            </div>
+          </div>
         </div>
 
         <div class="cardRowDefault">

@@ -40,6 +40,8 @@ export class MultiDashComponent implements OnInit, OnDestroy {
   private resetCounter;
   private resetTimer;
   private resetSubTimer: Subscription;
+  dwlp: any;
+  pwlp: any;
 
   constructor(private mdService: MultiDashService,
               private wss: WebsocketService,
@@ -48,7 +50,7 @@ export class MultiDashComponent implements OnInit, OnDestroy {
               private handService: HandService,
               private placeBetsService: PlaceBetsService,
               private playerBoxService: PlayerboxService,
-              private sms:StatusMessageService,
+              private sms: StatusMessageService,
               private router: Router) {
 
     this.resetCounter = 5;
@@ -92,20 +94,118 @@ export class MultiDashComponent implements OnInit, OnDestroy {
       this.playerStatus = (this.playerStatus === 'playing') ?
         this.setHandStatus(this.pCardsArray) : this.playerStatus;
 
-      if (visible) {
-        //this.logStuff('sitting: ' + this.seatService.sitting);
-        this.multiDashVisible = 'visible';
-        this.multiTimer = Observable.timer(1000, 1000);
-        this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
-      }
+
+      this.setWLP().then(()=>{
+
+        if (visible) {
+          //this.logStuff('sitting: ' + this.seatService.sitting);
+          this.multiDashVisible = 'visible';
+          this.multiTimer = Observable.timer(1000, 1000);
+          this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
+        }
+
+      });
+
+
 
     });
+  }
+
+  setWLP():Promise<void>{
+    return new Promise<void>(resolve => {
+      let p;
+      let d;
+
+      if (isNaN(this.playerStatus)) {
+        p = this.playerStatus;
+      } else { //is number
+        p = +this.playerStatus;
+      }
+      if (isNaN(this.dealerStatus)) {
+        d = this.dealerStatus;
+      } else { //is number
+        d = +this.dealerStatus;
+      }
+
+      if (!isNaN(p) && !isNaN(d)) { //both numbers
+        if (p === d) {
+          this.pwlp = 'push';
+          this.dwlp = 'push';
+        }
+        if (p < d) {
+          this.pwlp = 'lose';
+          this.dwlp = 'win';
+        }
+        if (p > d) {
+          this.pwlp = 'win';
+          this.dwlp = 'lose';
+        }
+      } else if (isNaN(p) && isNaN(d)) { //both strings
+
+        if (p === 'blackjack' && d === 'blackjack') {
+          this.pwlp = 'push';
+          this.dwlp = 'push';
+        }
+        if (p === 'busted' && d === 'busted') {
+          this.pwlp = 'lose';
+          this.dwlp = 'lose';
+        }
+        if (p === 'blackjack' && d === 'busted') {
+          this.pwlp = 'win';
+          this.dwlp = 'lose';
+        }
+        if (p === 'busted' && d === 'blackjack') {
+          this.pwlp = 'lose';
+          this.dwlp = 'win';
+        }
+
+      } else { //the mix
+
+        if (!isNaN(p)) {
+          if (p === 21) {
+            this.pwlp = 'win';
+          } else if (p === 21 && d === 'blackjack') {
+            this.pwlp = 'lose';
+            this.dwlp = 'win';
+          }
+
+          if (d === 'busted') {
+            this.pwlp = 'win';
+            this.dwlp = 'lose';
+          }
+          if (d === 'blackjack') {
+            this.pwlp = 'lose';
+            this.dwlp = 'win';
+          }
+        }
+        if (!isNaN(d)) {
+          if (d === 21) {
+            this.dwlp = 'win';
+          } else if (d === 21 && p === 'blackjack') {
+            this.pwlp = 'win';
+            this.dwlp = 'lose';
+          }
+
+          if (p === 'busted') {
+            this.pwlp = 'lose';
+            this.dwlp = 'win';
+          }
+          if (p === 'blackjack') {
+            this.pwlp = 'win';
+            this.dwlp = 'lose';
+          }
+        }
+      }
+
+      resolve();
+    });
+
   }
 
   setOpenTime() {
     this.openTime = 5;
     if (!environment.production) {
-      this.openTime = 2;
+      this.openTime = 5;
     }
   }
 
@@ -178,19 +278,19 @@ export class MultiDashComponent implements OnInit, OnDestroy {
     this.resetCounter--;
     if (this.resetCounter === 0) {
 
-        this.wss.emit('readyToBet',
-          {
-            table: this.tableService.tableNum,
-            seat: this.seatService.currentSeat,
-            reset: true
-          });
+      this.wss.emit('readyToBet',
+        {
+          table: this.tableService.tableNum,
+          seat: this.seatService.currentSeat,
+          reset: true
+        });
 
       this.resetCounter = 5;
       this.resetSubTimer.unsubscribe();
     }
   }
 
-  clearSeats(){
+  clearSeats() {
     this.handService.clearDealerHand();
     this.handService.clearPlayerHands();
   }

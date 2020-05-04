@@ -1,0 +1,23 @@
+.testcontainer{
+  width:600px;
+  height:200px;
+  background-color:#A0522D;
+}
+.statusContainer{
+  width:100%;
+  font-size:3em;
+}
+.statusContainer_row {
+  float:left;
+  width:33%;
+  height:100%;
+  text-align:center;
+}
+
+.wlp {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+}

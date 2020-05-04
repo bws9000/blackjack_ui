@@ -201,7 +201,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!noPlayers) {
       this.placeBetsService.setVisible(true, data.seat);
     }
-    //this.placeBetsService.currentBank = data.chips;
+
+    this.placeBetsService.currentBank = data.chips;
     //this.placeBetsService.setStatus(false, seat);
   }
 
@@ -212,14 +213,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let initSeat = data.initSeat;
     let seat = data.card.s;
 
-    if (!data.over) {
-      if (seat !== undefined) {
-        this.handService.getPlayerHandsDeal(data);
-      } else {
-        this.handService.getDealerHandDeal(data);
-      }
-    } else {
+    if (data.over) {
       this.logStuff("DONE DEALING");
+    } else {
+      if (seat === undefined) {
+        this.handService.getDealerHandDeal(data);
+      } else {
+        this.handService.getPlayerHandsDeal(data);
+      }
     }
 
   }
