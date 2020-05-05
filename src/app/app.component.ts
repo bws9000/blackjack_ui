@@ -151,6 +151,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   playerAction(data) {
     this.wss.startChange.next(true);
+    this.handService.setCardCount(data.cc);
+    this.handService.setShuffleCount(data.sc);
+
     this.logStuff('playerAction: ' + JSON.stringify(data));
 
     this.playerDashService.seatInFocus = data.currentSeat;
@@ -187,6 +190,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.playerboxService.resetAllSeats();
     }
     ////////////////////////////////////////
+
+    this.handService.setCardCount(data.cc);
+    this.handService.setShuffleCount(data.sc);
   }
 
   openBetDashEmit(data) {
@@ -204,6 +210,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.placeBetsService.currentBank = data.chips;
     //this.placeBetsService.setStatus(false, seat);
+    this.handService.setCardCount(data.cc);
+    this.handService.setShuffleCount(data.sc);
   }
 
   dealCardEmit(data) {
@@ -241,6 +249,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.handService.handResult = result;
 
+    this.handService.setCardCount(data.cc);
+    this.handService.setShuffleCount(data.sc);
   }
 
   clearCards() {
@@ -325,7 +335,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   blankEmit(data) {
-    this.logStuff(JSON.stringify(data));
+    this.logStuff('blankEmit(): ' + JSON.stringify(data));
+    if(data.cc){
+      console.log('card count: ' + data.cc);
+      this.handService.setCardCount(data.cc);
+      this.handService.setShuffleCount(data.sc);
+    }
     this.wss.startChange.next(true);
     console.log('Blackjack Beta: snyder.burt@gmail.com');
     console.log('status: game reloading after inactivity');

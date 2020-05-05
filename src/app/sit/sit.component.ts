@@ -31,6 +31,7 @@ export class SitComponent implements OnInit {
               private playerboxService: PlayerboxService,
               private statusUpdateService: StatusUpdateService,
               private placeBetsService: PlaceBetsService,
+              private handService:HandService,
               private errorService: ErrorService) {
 
     this.isHidden = true;
@@ -41,10 +42,11 @@ export class SitComponent implements OnInit {
     this.table = tableService.tableNum;
 
     this.seatService.playerStand.subscribe(value => {
-      //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      //this.logStuff('this.id: ' + this.id);
-      //this.logStuff('value: ' + value);
-      //this.logStuff('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+
+      //AT THIS TIME ONE IS THE MAGIC NUMBER
+      //IF NOBODY IS SEATED AT THIS POINT
+      this.resetVariablesOnStand();
+
       if (+this.id == value) {
         this.sitOrLeave = true;
         this.sitStand();
@@ -148,6 +150,13 @@ export class SitComponent implements OnInit {
 
   }
 
+  resetVariablesOnStand(){
+    if(this.seatService.currentSeats === 1){
+      this.handService.setCardCount(0);
+      this.handService.setShuffleCount(0);
+    }
+  }
+
   sitStand() {
     if (!this.sitOrLeave) {
 
@@ -161,6 +170,7 @@ export class SitComponent implements OnInit {
           this.seatService.sitting = true;
           this.sitOrLeave = true;
           this.seatService.currentSeat = +this.id;
+          this.resetVariablesOnStand();
         }
       } else {
         alert('please try again');
@@ -176,6 +186,7 @@ export class SitComponent implements OnInit {
       this.seatService.sitting = false;
       this.sitOrLeave = false;
       this.seatService.currentSeat = undefined;
+      this.resetVariablesOnStand();
     }
   }
 

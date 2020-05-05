@@ -1,13 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
 import {environment} from "../../environments/environment";
+import {SeatService} from "./seat.service";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class HandService {
-
+  cardCount:number;
+  shuffleCount:number;
   playerHands: Subject<Array<any>> = new Subject<Array<any>>();
   dealerHand: Subject<Array<any>> = new Subject<Array<any>>();
   allDealerHand: Subject<Array<any>> = new Subject<Array<any>>();
@@ -27,9 +29,31 @@ export class HandService {
   playerHandsDeal: Subject<Array<any>> = new Subject<Array<any>>();
   dealerHandDeal: Subject<Array<any>> = new Subject<Array<any>>();
 
-  constructor() {
+  constructor(private seatService:SeatService) {
+    this.cardCount = 0;
     this.handResult = 'playing';
     this.handPlayed = false;
+  }
+
+  getCardCount(){
+    return this.cardCount;
+  }
+  setCardCount(cardCount){
+    if(this.seatService.currentSeats > 0) {
+      if (cardCount !== undefined) {
+        this.cardCount = cardCount;
+      }
+    }
+  }
+  getShuffleCount(){
+    return this.shuffleCount;
+  }
+  setShuffleCount(shuffleCount){
+    if(this.seatService.currentSeats > 0) {
+      if (shuffleCount !== undefined) {
+        this.shuffleCount = shuffleCount;
+      }
+    }
   }
 
   getDealerHandDeal(dealerHandDeal){

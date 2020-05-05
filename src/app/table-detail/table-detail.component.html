@@ -1,9 +1,11 @@
 <div class="gameTable">
   <div class="tableHeader">
     <div class="leaveTable" (click)="leaveTable()">&#8592;&nbsp;</div>
-    <div>watchers: {{watchers}} |</div>
-    <div>&nbsp;players: {{players}} |</div>
-    <div> bank: $0.00 </div>
+    <div>w: {{watchers}} |</div>
+    <div>&nbsp;p: {{players}} |</div>
+    <div> cc: {{getCardCount()}} |</div>
+    <div> s: {{getShuffleCount()}} |</div>
+    <div> bank: $0.00</div>
   </div>
   <app-dealer-hand></app-dealer-hand>
   <div class="playerAreaContainer">

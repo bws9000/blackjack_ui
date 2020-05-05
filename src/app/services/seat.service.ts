@@ -28,7 +28,7 @@ export class SeatService {
     //this.currentSeat = undefined;
   }
 
-  playerStandUp(seat){
+  playerStandUp(seat) {
     this.playerStand.next(seat);
   }
 

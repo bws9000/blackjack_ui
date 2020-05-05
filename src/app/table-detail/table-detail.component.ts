@@ -30,6 +30,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   tableName: string;
 
   userSubscription: Subscription;
+  shuffle: any;
 
 
   constructor(private wss: WebsocketService,
@@ -42,6 +43,9 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private placeBetsService: PlaceBetsService,
               private route: ActivatedRoute,
               private control: ControlService) {
+
+
+    this.shuffle = 0;
 
     this.logStuff(' * * * TableDetailComponent * * * ')
 
@@ -151,4 +155,10 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     //console.log('VIEWCHECKED');
   }
 
+  getCardCount() {
+    return this.handService.getCardCount();
+  }
+  getShuffleCount(){
+    return this.handService.getShuffleCount();
+  }
 }
