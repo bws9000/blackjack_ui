@@ -41,15 +41,10 @@
   background-color: darkgreen;
 }
 
-.sectionOne {
-  font-size: 1vw;
+.section {
+  margin-top:2px;
   padding-top: 2%;
-  width: 100%;
-}
-
-.sectionTwo {
-  font-size: 1vw;
-  padding-top: 5%;
+  height:50%;
   width: 100%;
 }
 
@@ -68,7 +63,7 @@
   display: inline-block;
   margin: 0 auto;
   height: 111px;
-  width: 7%; /* ... */
+  width: 7%;
 }
 
 .cardRowDefault {
@@ -79,26 +74,22 @@
 }
 
 /* result */
-.statusContainer > div {
+.statusContainer{
   display: inline-block;
-  height: 50px;
-}
-
-.statusContainer_row {
-  padding: 2px;
-  overflow: hidden;
-  margin: 0 auto;
-  height: 100px;
-  width: 100px;
-  text-align:center;
 }
 
 .wlp {
-  width: 100%;
-  height: 100%;
+  width: 50px;
+  height: 50px;
   background-size: contain;
   background-repeat: no-repeat;
   margin: 0 auto;
+}
+.header{
+  margin:0 auto;
+}
+.headercol{
+  margin:3px;
 }
 
 
@@ -110,6 +101,7 @@
 
 @media (min-width: 1281px) {
   /* */
+
 }
 
 /*
@@ -119,6 +111,7 @@
 
 @media (min-width: 1025px) and (max-width: 1280px) {
   /* */
+
 }
 
 /*
@@ -148,29 +141,7 @@
 */
 
 @media (min-width: 481px) and (max-width: 767px) {
-  /* my browser minimum */
-  /* CARDS */
-  .testCard {
-    width: 100%;
-    height: 100%;
-    font-size: 1em;
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin: 0 auto;
-  }
 
-  .cardBox {
-    overflow: hidden;
-    display: inline-block;
-    margin: 0 auto;
-    height: 100px;
-    width: 10%; /* ... */
-  }
-
-  .cardRowDefault {
-    height: 70px;
-    width: 90%;
-  }
 
 }
 
@@ -180,55 +151,7 @@
 */
 
 @media (min-width: 320px) and (max-width: 480px) {
-  /*my phone? */
-  .testCard {
-    width: 100%;
-    height: 100%;
-    font-size: 1em;
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin: 0 auto;
-  }
 
-  .cardBox {
-    overflow: hidden;
-    display: inline-block;
-    margin: 0 auto;
-    height: 80px;
-    width: 10%;
-  }
-
-  .cardRowDefault {
-    height: 50px;
-    width: 100%;
-  }
-
-  .sectionOne {
-    font-size: 0.5vw;
-    padding: 0;
-    width: 100%;
-  }
-
-  .sectionTwo {
-    font-size: 0.5vw;
-    padding: 0;
-    width: 100%;
-  }
-
-  .statusContainer_row {
-    padding: 0;
-    overflow: hidden;
-    display: inline-block;
-    margin: 0 auto;
-    height: 50px;
-    width: 50px;
-    text-align: right;
-  }
-
-  .wlp {
-    height: 100%;
-    width: 100%;
-  }
 
 
 }

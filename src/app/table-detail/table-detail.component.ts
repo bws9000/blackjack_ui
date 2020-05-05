@@ -31,6 +31,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   userSubscription: Subscription;
   shuffle: any;
+  bank:number;
 
 
   constructor(private wss: WebsocketService,
@@ -42,12 +43,11 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               private _location: PlatformLocation,
               private placeBetsService: PlaceBetsService,
               private route: ActivatedRoute,
-              private control: ControlService) {
+              private control: ControlService,
+              private placeBetService: PlaceBetsService) {
 
 
-    this.shuffle = 0;
-
-    this.logStuff(' * * * TableDetailComponent * * * ')
+    this.bank = 0;
 
     ////////////////////////////////
     this.control.gamePosition = 2;//
@@ -161,4 +161,8 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   getShuffleCount(){
     return this.handService.getShuffleCount();
   }
+  getChips() {
+    return this.placeBetService.currentBank;
+  }
+
 }

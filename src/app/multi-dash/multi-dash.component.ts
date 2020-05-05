@@ -97,6 +97,8 @@ export class MultiDashComponent implements OnInit, OnDestroy {
 
       this.setWLP().then(()=>{
 
+        this.placeBetsService.calculateBet(this.pwlp,this.playerStatus);
+
         if (visible) {
           //this.logStuff('sitting: ' + this.seatService.sitting);
           this.multiDashVisible = 'visible';

@@ -208,8 +208,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.placeBetsService.setVisible(true, data.seat);
     }
 
-    this.placeBetsService.currentBank = data.chips;
-    //this.placeBetsService.setStatus(false, seat);
+    if(this.placeBetsService.currentBank <= 0) {
+      this.placeBetsService.currentBank = data.chips;
+    }
+
     this.handService.setCardCount(data.cc);
     this.handService.setShuffleCount(data.sc);
   }

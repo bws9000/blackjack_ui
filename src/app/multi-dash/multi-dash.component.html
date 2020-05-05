@@ -1,41 +1,40 @@
 <div [style.visibility]="this.multiDashVisible" class="multiDash">
-  <div class="multiDash_box">
-    <div class="multidash_container">
 
-      <!--
-      <div class="temp_close" (click)="closeWindow()">X CLOSE</div>
-      -->
+  <div class="multiDash">
+    <div class="multiDash_box">
+      <div class="multidash_container">
 
-      <div class="sectionOne">
-        <h3>player:&nbsp;<span style="font-size: larger;font-weight: bold;"> {{this.playerStatus}}</span></h3>
-        <div class="statusContainer">
-          <div class="statusContainer_row">
-            <div class="wlp" [ngClass]="pwlp"></div>
+        <div class="section">
+          <div class="header">
+            <div class="headercol"><h4>PLAYER&nbsp;{{this.playerStatus}}</h4></div>
+            <div class="headercol">
+              <div class="wlp" [ngClass]="pwlp"></div>
+            </div>
+          </div>
+
+          <div class="cardRowDefault">
+            <div class="cardBox" *ngFor="let card of dCardsArray">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
           </div>
         </div>
 
-        <div class="cardRowDefault">
-          <div class="cardBox" *ngFor="let card of pCardsArray">
-            <div class="testCard" [ngClass]="'_'+card"></div>
+        <div class="section">
+          <div class="header">
+            <div class="headercol"><h4>DEALER&nbsp;{{this.dealerStatus}}</h4></div>
+            <div class="headercol">
+              <div class="wlp" [ngClass]="dwlp"></div>
+            </div>
+          </div>
+
+          <div class="cardRowDefault">
+            <div class="cardBox" *ngFor="let card of dCardsArray">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
           </div>
         </div>
+
       </div>
-
-      <div class="sectionTwo">
-        <h3>dealer:&nbsp;<span style="font-size: larger;font-weight: bold;"> {{this.dealerStatus}}</span></h3>
-        <div class="statusContainer">
-          <div class="statusContainer_row">
-            <div class="wlp" [ngClass]="dwlp"></div>
-          </div>
-        </div>
-
-        <div class="cardRowDefault">
-          <div class="cardBox" *ngFor="let card of dCardsArray">
-            <div class="testCard" [ngClass]="'_'+card"></div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>

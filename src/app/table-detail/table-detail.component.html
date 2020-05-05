@@ -4,8 +4,8 @@
     <div>w: {{watchers}} |</div>
     <div>&nbsp;p: {{players}} |</div>
     <div> cc: {{getCardCount()}} |</div>
-    <div> s: {{getShuffleCount()}} |</div>
-    <div> bank: $0.00</div>
+    <div> sc: {{getShuffleCount()}} |</div>
+    <div> bank: {{getChips() | currency:'USD':true}}</div>
   </div>
   <app-dealer-hand></app-dealer-hand>
   <div class="playerAreaContainer">
