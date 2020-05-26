@@ -11,10 +11,15 @@ export class PlayerDashService {
   visible: Subject<Object> = new Subject<Object>();
   hide: Subject<string> = new Subject<string>();
   actionResult: Subject<boolean> = new Subject<boolean>();
+  splitActive: Subject<boolean> = new Subject<boolean>();
   seatInFocus: number;
 
   constructor() {
     this.seatInFocus = undefined;
+  }
+
+  setSplitActive(){
+    this.splitActive.next();
   }
 
   hitResult(){

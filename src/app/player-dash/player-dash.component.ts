@@ -22,11 +22,13 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
   private dashId;
 
-  //cards: [number];
-  cards:number[] = new Array<number>();
+  cards: number[] = new Array<number>();
+  splitCards1: [number];
+  splitCards2: [number];
 
   dcards: [number, number];
   playerDashVisible: string;
+  splitActive: boolean;
   splitButtonVisible: string;
   seat: string;
   tableName: string;
@@ -64,6 +66,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.statusBoxVisible = 'hidden';
     this.playerDashVisible = 'hidden';
     this.splitButtonVisible = 'hidden';
+    this.splitActive = false;
 
     this.userSubscription = this.route.params.subscribe(
       (params: Params) => {
@@ -73,6 +76,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
 
         this.dss.startTimerCount.subscribe(value => {
           if (this.dashId === value) {
+            this.logStuff("dashTimer2 started");
             this.dashTimer2 = Observable.timer(1000, 1000);
             this.dashSubTimer2 = this.dashTimer2.subscribe(t => this.statusCount(t));
           }
@@ -81,13 +85,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         this.handService.playerHandsDeal.subscribe(value => {
           let j = JSON.stringify(value);
           let o = JSON.parse(j);
-          // this.logStuff('seat: ' + this.seat);
-          // this.logStuff('o.card.s: ' + o.card.s);
-          // this.logStuff('this.seatService.currentSeat: ' +
-          // this.seatService.currentSeat);
           if (o.card.s === this.seatService.currentSeat) {
             this.cards.push(o.card.h);
-            //this.logStuff('this.cards: ' + this.cards);
           }
         });
 
@@ -113,7 +112,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             if (this.result !== 'playing') {
               if (this.result !== 'split') {
                 this.playerStatus = this.result;
-                if(this.dash === this.seat) {
+                if (this.dash === this.seat) {
                   this.setStatusBoxVisible();
                 }
               }
@@ -129,12 +128,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
         });
 
         this.playerDashService.hide.subscribe(value => {
-          let seat = value;
           let currentTable = 'table' + this.tableService.tableNum;
           if (currentTable === params.tableId) {
-            //if (this.dash === seat) {
             this.hide();
-            //}
           }
         });
 
@@ -156,10 +152,15 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               this.hide();
             }
           }
-
         });
-
       });
+
+
+    this.playerDashService.splitActive.subscribe(value => {
+      this.splitActive = true;
+      this.setSplitButtonVisible('hidden');
+      this.setSplitTimer();
+    });
 
   }
 
@@ -174,8 +175,22 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.splitButtonVisible = status;
   }
 
+  hideDashService() {
+    this.playerDashService.hideDash(this.seatService.currentSeats);
+  }
+
   split() {
-    alert('split');
+    this.playerDashService.setSplitActive();
+  }
+
+  nextPlayerDashEmit() {
+    this.wss.emit('nextPlayerDash', {
+      action: 'stand',
+      fromm: 'playerDash',
+      currentSeat: this.seatService.currentSeat,
+      table: this.tableService.tableNum,
+      socketId: this.wss.socketId
+    });
   }
 
   hide() {
@@ -186,37 +201,29 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.setSplitButtonVisible('hidden');
   }
 
-  stand() {
-
-    //if (this.handService.handPlayed) {
-    //this.handService.handPlayed = false;
-    this.handService.lastPlayerHand = this.cards;
-
-      this.wss.emit('nextPlayerDash', {
-        action: 'stand',
-        currentSeat: this.seatService.currentSeat,
-        table: this.tableService.tableNum,
-        socketId: this.wss.socketId
-      });
-
-    this.playerDashVisible = 'hidden';
-
-    if (this.dashSubTimer !== undefined) {
-      this.dashSubTimer.unsubscribe();
-    }
-
-    if (this.dashSubTimer2 !== undefined) {
-      this.dashSubTimer2.unsubscribe();
-    }
-
-    this.setTimer2Timer();
-
-    //}
-  }
+  // stand() {
+  //   //if (this.handService.handPlayed) {
+  //   //this.handService.handPlayed = false;
+  //   this.handService.lastPlayerHand = this.cards;
+  //   this.nextPlayerDashEmit();
+  //
+  //   this.playerDashVisible = 'hidden';
+  //
+  //   if (this.dashSubTimer !== undefined) {
+  //     this.dashSubTimer.unsubscribe();
+  //   }
+  //
+  //   if (this.dashSubTimer2 !== undefined) {
+  //     this.dashSubTimer2.unsubscribe();
+  //   }
+  //
+  //   this.setTimer2Timer();
+  //
+  //   //}
+  // }
 
   standClick() {
-
-    this.playerDashService.hideDash(this.seatService.currentSeats);
+    this.hideDashService();
     this.handService.lastPlayerHand = this.cards;
 
     if (this.dashSubTimer !== undefined) {
@@ -226,53 +233,35 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     if (this.dashSubTimer2 !== undefined) {
       this.dashSubTimer2.unsubscribe();
     }
-
     this.setTimer2Timer();
-
-      this.wss.emit('nextPlayerDash', {
-        action: 'stand',
-        currentSeat: this.seatService.currentSeat,
-        table: this.tableService.tableNum,
-        socketId: this.wss.socketId
-      });
-
+    this.nextPlayerDashEmit();
     this.playerDashVisible = 'hidden';
 
   }
 
   standTimeRanOut() {
-
     this.handService.lastPlayerHand = this.cards;
     this.playerDashService.hideDash(this.seatService.currentSeats);
     this.setTimer2Timer();
-
-    this.wss.emit('nextPlayerDash', {
-      action: 'stand',
-      fromm: 'playerDash',
-      currentSeat: this.seatService.currentSeat,
-      table: this.tableService.tableNum,
-      socketId: this.wss.socketId
-    });
-
+    this.nextPlayerDashEmit();
     this.setTimer2Timer();
-
   }
 
   statusCount(t) {
+
     this.timer2time--;
+    this.logStuff('timer2time: ' + this.timer2time);
 
-    // if(!this.control.playerLeftGame) {
+    if (this.timer2time < 0) {
 
-      if (this.timer2time < 0) {
-
-        this.playerDashService.hideDash(this.seatService.currentSeats);
-        this.setTimer2Timer();
-        if (this.dashSubTimer !== undefined) {
-          this.dashSubTimer.unsubscribe();
-        }
-        this.dashSubTimer2.unsubscribe();
-        this.standTimeRanOut();
+      this.playerDashService.hideDash(this.seatService.currentSeats);
+      this.setTimer2Timer();
+      if (this.dashSubTimer !== undefined) {
+        this.dashSubTimer.unsubscribe();
       }
+      this.dashSubTimer2.unsubscribe();
+      this.standTimeRanOut();
+    }
 
     // }else{
     //   this.logStuff('playerdash timer unsubscribed');
@@ -304,11 +293,17 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       this.timer2time = 30;
     }
   }
+  setSplitTimer() {
+    this.timer2time = 60;
+    if (!environment.production) {
+      this.timer2time = 60;
+    }
+  }
 
   hit() {
     this.wss.emit('playerAction', {
       action: 'hit',
-      fromm:'playerDash',
+      fromm: 'playerDash',
       currentSeat: this.seatService.currentSeat,
       table: this.tableService.tableNum,
       socketId: this.wss.socketId
@@ -316,11 +311,10 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   }
 
   show() {
-
     //main dash
+    this.splitActive = false;
     this.playerDashVisible = 'visible';
     this.dss.startTimer(this.dash);
-
     //statusBox
     this.playerStatus = this.result;
     if (+this.seat == this.seatService.currentSeat) {

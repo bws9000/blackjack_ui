@@ -1,51 +1,73 @@
 <div [style.visibility]="this.playerDashVisible" class="playerDash">
+
   <div class="playerDash_box">
     <div class="playerdash_container">
       <div class="pd_row top">
-      <div class="inner_top_header">
-        <div class="inner_top_header_player_timer"> time: {{this.timer2time}}</div>
-        <div class="inner_top_header_player">&nbsp;</div>
-        <div class="inner_top_header_dealer">dealer</div>
+        <div class="inner_top_header">
+          <div class="inner_top_header_player_timer"> time: {{this.timer2time}}</div>
+          <div class="inner_top_header_player">&nbsp;</div>
+          <div class="inner_top_header_dealer">dealer</div>
+        </div>
       </div>
-      </div>
+
       <div class="pd_row cards">
-        <div class="pd_col pcol">
-          <!-- player cards -->
+
+        <div *ngIf="!splitActive; else playSplit" class="pd_col pcol">
           <div class="cardRowDefault">
             <div class="cardBox" *ngFor="let card of cards">
               <div class="testCard" [ngClass]="'_'+card"></div>
             </div>
           </div>
-          <!-- /cards -->
         </div>
+
+        <ng-template #playSplit>
+          <div class="pd_col pcol">
+            <div class="cardRowDefault">
+              <div class="cardBox" *ngFor="let card of splitCards1">
+                <div class="testCard" [ngClass]="'_'+card"></div>
+              </div>
+            </div>
+            <div class="cardRowDefault">
+              <div class="cardBox" *ngFor="let card of splitCards2">
+                <div class="testCard" [ngClass]="'_'+card"></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+
         <div class="pd_col dcol">
-          <!-- dealer cards -->
           <div class="cardRowDefault">
             <div class="cardBox" *ngFor="let dcard of dcards">
               <div class="testCard" [ngClass]="'_'+dcard"></div>
             </div>
           </div>
-          <!-- /dealer cards -->
         </div>
+
       </div>
+
       <div class="pd_row actions">
         <div class="inner_actions">
-        <div class="command_col acol"><div class="command" (click)="hit()">HIT</div></div>
-        <div class="command_col acol"><div class="command" (click)="standClick()" >STAND</div></div>
-          <div class="command_col acol"><div [style.visibility]="this.splitButtonVisible" (click)="split()" class="command">SPLIT</div>
+          <div class="command_col acol">
+            <div class="command" (click)="hit()">HIT</div>
+          </div>
+          <div class="command_col acol">
+            <div class="command" (click)="standClick()">STAND</div>
+          </div>
+          <div class="command_col acol">
+            <div [style.visibility]="this.splitButtonVisible" (click)="split()" class="command">SPLIT</div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
 
-  <div [style.visibility]="this.statusBoxVisible" class="playerstatusupdate">
-    <div class="playerstatus_update_box">
-      <div class="statusMessageContainer">
-        <div class="statusMessage">{{this.setPlayerStatus()}}</div>
+      <div [style.visibility]="this.statusBoxVisible" class="playerstatusupdate">
+        <div class="playerstatus_update_box">
+          <div class="statusMessageContainer">
+            <div class="statusMessage">{{this.setPlayerStatus()}}</div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
-
-</div>
