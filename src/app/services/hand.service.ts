@@ -17,6 +17,12 @@ export class HandService {
   showDealerHand: Subject<Array<any>> = new Subject<Array<any>>();
   standUp: Subject<number> = new Subject<number>();
 
+  splitHand1: Subject<Array<any>> = new Subject<Array<any>>();
+  splitHand2: Subject<Array<any>> = new Subject<Array<any>>();
+
+  splitCards1: number[] = new Array<number>();
+  splitCards2: number[] = new Array<number>();
+
   clearPlayerHandsSubject: Subject<boolean> = new Subject<boolean>();
   clearDealerHandSubject: Subject<boolean> = new Subject<boolean>();
 
@@ -81,8 +87,15 @@ export class HandService {
   }
 
   getPlayerHands(playerHands) {
-    //this.logStuff(JSON.stringify(playerHands));
     this.playerHands.next(playerHands);
+  }
+
+  getSplitHand(handNum,splitHand) {
+    if(handNum === 0) {
+      this.splitHand1.next(splitHand);
+    }else{
+      this.splitHand2.next(splitHand);
+    }
   }
 
   getDealerHand(dealerHand) {

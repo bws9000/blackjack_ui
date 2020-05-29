@@ -65,6 +65,10 @@
   height: 111px;
   width: 7%;
 }
+.split{
+  height: 67px;
+  width: 3%;
+}
 
 .cardRowDefault {
   display: block;

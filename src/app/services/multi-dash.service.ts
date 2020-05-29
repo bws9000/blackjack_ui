@@ -8,6 +8,7 @@ import {Subject} from "rxjs";
 export class MultiDashService {
 
   visible: Subject<Object> = new Subject<Object>();
+  splitVisible: Subject<Object> = new Subject<Object>();
 
   constructor() {
   }
@@ -22,5 +23,16 @@ export class MultiDashService {
       dHandArray: dealerHandArray,
     };
     this.visible.next(data);
+  }
+
+  updateSplitVisible(visible, sp1, sp2, dealerResult, dealerHandArray) {
+    let data = {
+      visible: visible,
+      splitResult1:sp1,
+      splitResult2:sp2,
+      dealerResult: dealerResult,
+      dHandArray: dealerHandArray,
+    };
+    this.splitVisible.next(data);
   }
 }

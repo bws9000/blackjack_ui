@@ -10,7 +10,10 @@ import {HandService} from "../services/hand.service";
 import {PlaceBetsService} from "../services/place-bets.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {StatusMessageService} from "../services/status-message.service";
+import {WinLosePush} from "../WinLosePush";
 import {Router} from "@angular/router";
+import {PlayerDashService} from "../services/player-dash.service";
+import {HandCount} from "../HandCount";
 
 @Component({
   selector: 'app-multi-dash',
@@ -32,6 +35,8 @@ export class MultiDashComponent implements OnInit, OnDestroy {
 
   public dCardsArray;
   public pCardsArray;
+  public split1Hand;
+  public split2Hand;
 
   private readonly socketid;
   private readonly table;
@@ -40,8 +45,23 @@ export class MultiDashComponent implements OnInit, OnDestroy {
   private resetCounter;
   private resetTimer;
   private resetSubTimer: Subscription;
+
   dwlp: any;
   pwlp: any;
+
+  split1_pwlp: any;
+  split2_pwlp: any;
+
+  splitActive: boolean;
+
+  splitResult1: string;
+  splitResult2: string;
+
+  splitHandCount1:number;
+  splitHandCount2:number;
+
+  dealerHand: [];
+
 
   constructor(private mdService: MultiDashService,
               private wss: WebsocketService,
@@ -50,8 +70,8 @@ export class MultiDashComponent implements OnInit, OnDestroy {
               private handService: HandService,
               private placeBetsService: PlaceBetsService,
               private playerBoxService: PlayerboxService,
-              private sms: StatusMessageService,
-              private router: Router) {
+              private playerDashService: PlayerDashService,
+              private sms: StatusMessageService) {
 
     this.resetCounter = 5;
 
@@ -59,9 +79,57 @@ export class MultiDashComponent implements OnInit, OnDestroy {
     this.table = 'table' + this.tableService.tableNum;
 
     this.setOpenTime();
-    //this.logStuff('>>>: ' + this.openTime);
     this.multiDashVisible = 'hidden';
+
+    this.split1Hand = [];
+    this.split2Hand = [];
+    this.pCardsArray = [];
+    this.dCardsArray = [];
+
+    this.mdService.splitVisible.subscribe(value => {
+      this.splitActive = true;
+
+      let j = JSON.stringify(value);
+      let o = JSON.parse(j);
+      let dealerResult = o.dealerResult;
+      let dHandArray = o.dHandArray;
+      this.dealerHand = dHandArray[0].hand;
+
+      this.splitResult1 = o.splitResult1;
+      this.splitResult2 = o.splitResult2;
+
+      this.split1Hand = this.handService.splitCards1;
+      this.split2Hand = this.handService.splitCards2;
+
+      this.dealerStatus = dealerResult;
+      this.dCardsArray = dHandArray;
+
+      this.dealerStatus = (this.dealerStatus === 'playing') ?
+        this.setHandStatus(this.dCardsArray) : this.dealerStatus;
+
+      this.splitWLP2(this.splitResult1, this.split1Hand).then((result) => {
+        this.split1_pwlp = result.getPlayerResult();
+        this.placeBetsService.calculateBet(this.split1_pwlp, this.splitResult1);
+        this.splitHandCount1 = new HandCount().setHandStatus(this.split1Hand);
+
+        this.splitWLP2(this.splitResult2, this.split2Hand).then((result2) => {
+          this.split2_pwlp = result2.getPlayerResult();
+          this.dwlp = result.getDealerResult();
+          this.placeBetsService.calculateBet(this.split2_pwlp, this.splitResult2);
+          this.splitHandCount2 = new HandCount().setHandStatus(this.split2Hand);
+
+          this.multiDashVisible = 'visible';
+          this.multiTimer = Observable.timer(1000, 1000);
+          this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
+        });
+
+      });
+
+    });
+
+
     this.mdService.visible.subscribe(value => {
+      this.splitActive = false;
 
       let j = JSON.stringify(value);
       let o = JSON.parse(j);
@@ -95,33 +163,36 @@ export class MultiDashComponent implements OnInit, OnDestroy {
         this.setHandStatus(this.pCardsArray) : this.playerStatus;
 
 
-      this.setWLP().then(()=>{
+      this.setWLP().then(() => {
 
-        this.placeBetsService.calculateBet(this.pwlp,this.playerStatus);
+        this.placeBetsService.calculateBet(this.pwlp, this.playerStatus);
 
         if (visible) {
-          //this.logStuff('sitting: ' + this.seatService.sitting);
           this.multiDashVisible = 'visible';
           this.multiTimer = Observable.timer(1000, 1000);
           this.multiSubTimer = this.multiTimer.subscribe(t => this.closeCount(t));
         }
 
       });
-
-
-
     });
   }
 
-  setWLP():Promise<void>{
-    return new Promise<void>(resolve => {
+  splitWLP2(playerStatus, pArray): Promise<WinLosePush> {
+    return new Promise<WinLosePush>(resolve => {
+      resolve(new WinLosePush(pArray, this.dealerHand, playerStatus, this.dealerStatus));
+    });
+  }
+
+  splitWLP(status): Promise<string> {
+    return new Promise<string>(resolve => {
+
       let p;
       let d;
 
-      if (isNaN(this.playerStatus)) {
-        p = this.playerStatus;
+      if (isNaN(status)) {
+        p = status;
       } else { //is number
-        p = +this.playerStatus;
+        p = +status;
       }
       if (isNaN(this.dealerStatus)) {
         d = this.dealerStatus;
@@ -198,7 +269,95 @@ export class MultiDashComponent implements OnInit, OnDestroy {
           }
         }
       }
+      resolve();
+    });
 
+  }
+
+  setWLP(): Promise<void> {
+    return new Promise<void>(resolve => {
+      let p;
+      let d;
+
+      if (isNaN(this.playerStatus)) {
+        p = this.playerStatus;
+      } else { //is number
+        p = +this.playerStatus;
+      }
+      if (isNaN(this.dealerStatus)) {
+        d = this.dealerStatus;
+      } else { //is number
+        d = +this.dealerStatus;
+      }
+
+      if (!isNaN(p) && !isNaN(d)) { //both numbers
+        if (p === d) {
+          this.pwlp = 'push';
+          this.dwlp = 'push';
+        }
+        if (p < d) {
+          this.pwlp = 'lose';
+          this.dwlp = 'win';
+        }
+        if (p > d) {
+          this.pwlp = 'win';
+          this.dwlp = 'lose';
+        }
+      } else if (isNaN(p) && isNaN(d)) { //both strings
+
+        if (p === 'blackjack' && d === 'blackjack') {
+          this.pwlp = 'push';
+          this.dwlp = 'push';
+        }
+        if (p === 'busted' && d === 'busted') {
+          this.pwlp = 'lose';
+          this.dwlp = 'lose';
+        }
+        if (p === 'blackjack' && d === 'busted') {
+          this.pwlp = 'win';
+          this.dwlp = 'lose';
+        }
+        if (p === 'busted' && d === 'blackjack') {
+          this.pwlp = 'lose';
+          this.dwlp = 'win';
+        }
+
+      } else { //the mix
+
+        if (!isNaN(p)) {
+          if (p === 21) {
+            this.pwlp = 'win';
+          } else if (p === 21 && d === 'blackjack') {
+            this.pwlp = 'lose';
+            this.dwlp = 'win';
+          }
+
+          if (d === 'busted') {
+            this.pwlp = 'win';
+            this.dwlp = 'lose';
+          }
+          if (d === 'blackjack') {
+            this.pwlp = 'lose';
+            this.dwlp = 'win';
+          }
+        }
+        if (!isNaN(d)) {
+          if (d === 21) {
+            this.dwlp = 'win';
+          } else if (d === 21 && p === 'blackjack') {
+            this.pwlp = 'win';
+            this.dwlp = 'lose';
+          }
+          if (p === 'busted') {
+            this.pwlp = 'lose';
+            this.dwlp = 'win';
+          }
+          if (p === 'blackjack') {
+            this.pwlp = 'win';
+            this.dwlp = 'lose';
+          }
+        }
+      }
       resolve();
     });
 
@@ -216,8 +375,6 @@ export class MultiDashComponent implements OnInit, OnDestroy {
     let result = 0;
     let cardArray = [];
     let aceCount = 0;
-
-    //if you're here it's always less than 21
 
     for (let i = 0; i < cardIndexArray.length; i++) {
       cardArray[i] = new Card2(cardIndexArray[i], this.socketid, this.table);
@@ -238,7 +395,6 @@ export class MultiDashComponent implements OnInit, OnDestroy {
       }
     }
     return result;
-
   }
 
   closeCount(t) {
@@ -265,6 +421,7 @@ export class MultiDashComponent implements OnInit, OnDestroy {
 
   resetClient() {
     this.clearSeats();
+
     this.playerBoxService.resetAllSeats();
     ///////////////////////////////////////////////////////
     //specifically added in use case sat down started countdown
@@ -289,6 +446,7 @@ export class MultiDashComponent implements OnInit, OnDestroy {
 
       this.resetCounter = 5;
       this.resetSubTimer.unsubscribe();
+
     }
   }
 

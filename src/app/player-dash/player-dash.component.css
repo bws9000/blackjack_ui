@@ -7,7 +7,7 @@
   bottom: 0;
   left: 0;
   background-color: rgba(0, 0, 0, .5);
-  z-index: 888888;
+  z-index: 777777;
 }
 
 .playerDash_box {
@@ -38,6 +38,7 @@
   height: 100%;
   background-color: black;
 }
+
 
 .top {
   height: 5%;

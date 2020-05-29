@@ -153,11 +153,17 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wss.startChange.next(true);
     this.handService.setCardCount(data.cc);
     this.handService.setShuffleCount(data.sc);
-
     this.logStuff('playerAction: ' + JSON.stringify(data));
 
     this.playerDashService.seatInFocus = data.currentSeat;
-    this.handService.getPlayerHands(data.playerHands);
+
+    if (data.action === 'split') {
+      this.playerDashService.setSplitResult(data.result);
+      this.handService.getSplitHand(data.handNum, data.splitHand);
+    } else {
+      this.handService.getPlayerHands(data.playerHands);
+    }
+
     this.handService.getDealerHand(data.dealerHand);
     this.playerDashService.hitResult();
 
@@ -179,7 +185,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     let dealerHandArray = data.dealerHand[0].hand;
 
     if (this.seatService.sitting && this.betService.playerBet) {
-      this.mdService.updateVisible(visible, dealerResult, playerResults, dealerHandArray);
+      if (data.split) {
+        this.mdService.updateSplitVisible(visible, data.sp1,
+          data.sp2, dealerResult, dealerHandArray);
+      } else {
+        this.mdService.updateVisible(visible, dealerResult,
+          playerResults, dealerHandArray);
+      }
       this.betService.playerBet = false;
     }
     this.logStuff('dealerHandEmit => ' + JSON.stringify(data));
@@ -208,7 +220,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.placeBetsService.setVisible(true, data.seat);
     }
 
-    if(this.placeBetsService.currentBank <= 0) {
+    if (this.placeBetsService.currentBank <= 0) {
       this.placeBetsService.currentBank = data.chips;
     }
 
@@ -338,7 +350,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   blankEmit(data) {
     this.logStuff('blankEmit(): ' + JSON.stringify(data));
-    if(data.cc){
+    if (data.cc) {
       console.log('card count: ' + data.cc);
       this.handService.setCardCount(data.cc);
       this.handService.setShuffleCount(data.sc);
@@ -358,6 +370,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logStuff('INIT' + JSON.stringify(data));
     this.wss.socketId = data.socketid;
     this.tableService.setTables(data.tables);
+  }
+
+  initSplitEmit(data) {
+    this.wss.startChange.next(true);
+    this.logStuff('INIT SPLIT EMIT' + JSON.stringify(data));
   }
 
   ngOnDestroy(): void {
@@ -380,6 +397,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+      this.wss
+        .onEvent('initSplitEmit')
+        .subscribe(data => this.initSplitEmit(data));
 
       this.wss
         .onEvent('emptyEmit')
