@@ -17,6 +17,7 @@ export class PlayerDashService {
   hideSplit: Subject<boolean> = new Subject<boolean>();
   seatInFocus: number;
   hideSplitB: Subject<boolean> = new Subject<boolean>();
+  hideddB: Subject<boolean> = new Subject<boolean>();
 
   constructor() {
     this.seatInFocus = undefined;
@@ -25,6 +26,9 @@ export class PlayerDashService {
 
   hideSplitButton(){
     return this.hideSplitB.next(true);
+  }
+  hideddButton(){
+    return this.hideddB.next(true);
   }
 
   hideSplitStatus() {

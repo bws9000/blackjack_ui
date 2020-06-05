@@ -1,4 +1,4 @@
-@import "../node_modules/ng2-slim-loading-bar/style.css";
+@import "../../node_modules/ng2-slim-loading-bar/style.css";
 
 html, body {
   height: 100%;
@@ -42,13 +42,12 @@ html, body {
 }
 
 .stage_content {
-  overflow: hidden;
   margin-right: auto;
   margin-left: auto;
   position: relative;
   width: 95%;
   height: 95%;
-  background-color: #7d4900;
+  background: #CCC;
   color: #000;
   top: 50%;
   -ms-transform: translateY(-50%);

@@ -8,6 +8,7 @@ import {ActivatedRoute, Params} from "@angular/router";
 import {TableService} from "../services/table.service";
 import {WebsocketService} from "../services/websocket.service";
 import {DashStatusServiceService} from "../services/dash-status-service.service";
+import {PlaceBetsService} from "../services/place-bets.service";
 
 
 @Component({
@@ -31,6 +32,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   playerDashVisible: string;
   splitActive: boolean;
   splitButtonVisible: string;
+  ddButtonVisible: string;
   seat: string;
   tableName: string;
   statusBoxVisible: string;
@@ -38,9 +40,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   actionTimerCount: number;
 
   result: string;
-
-  private broadcast;
-  private dashTimer;
   private dashSubTimer: Subscription;
 
   private dashTimer2;
@@ -60,7 +59,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private tableService: TableService,
               private dss: DashStatusServiceService,
-              private wss: WebsocketService) {
+              private wss: WebsocketService,
+              private placeBetsService: PlaceBetsService) {
 
     this.setTimer2Timer();
     this.setSplit2Time();
@@ -69,6 +69,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.statusBoxVisible = 'hidden';
     this.playerDashVisible = 'hidden';
     this.splitButtonVisible = 'hidden';
+    this.ddButtonVisible = 'hidden';
     this.splitActive = false;
     this.splitHand = 0;
 
@@ -123,7 +124,6 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
             }
           }
         });
-
 
         this.handService.dealerHand.subscribe(value => {
           if (value !== null) {
@@ -191,12 +191,17 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.playerDashService.hideSplitB.subscribe(value =>{
+    this.playerDashService.hideSplitB.subscribe(value => {
       this.setSplitButtonVisible('hidden');
+    });
+
+    this.playerDashService.hideddB.subscribe( value => {
+      this.ddButtonVisible = 'hidden';
     });
 
     this.playerDashService.hideSplit.subscribe(value => {
       this.statusBoxVisible = 'hidden';
+      this.ddButtonVisible = 'hidden';
     });
 
     this.handService.splitHand1.subscribe(value => {
@@ -255,28 +260,8 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     this.splitButtonVisible = 'hidden';
     this.handService.handPlayed = false;
     this.setSplitButtonVisible('hidden');
+    this.ddButtonVisible = 'hidden';
   }
-
-  // stand() {
-  //   //if (this.handService.handPlayed) {
-  //   //this.handService.handPlayed = false;
-  //   this.handService.lastPlayerHand = this.cards;
-  //   this.nextPlayerDashEmit();
-  //
-  //   this.playerDashVisible = 'hidden';
-  //
-  //   if (this.dashSubTimer !== undefined) {
-  //     this.dashSubTimer.unsubscribe();
-  //   }
-  //
-  //   if (this.dashSubTimer2 !== undefined) {
-  //     this.dashSubTimer2.unsubscribe();
-  //   }
-  //
-  //   this.setTimer2Timer();
-  //
-  //   //}
-  // }
 
   splitStandClick() {
     if (this.splitHand === 0) {
@@ -320,6 +305,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
   cssSplitOne() {
     return (this.splitHand === 0) ? {} : {'background-color': '#002A10'};
   }
+
   cssSplitTwo() {
     return (this.splitHand === 0) ? {'background-color': '#002A10'} : {};
   }
@@ -330,9 +316,9 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       this.setSplit2Time();
       this.splitTimer.unsubscribe();
       this.playerDashService.hideSplitStatus();
-      if(this.splitHand !== 0){
+      if (this.splitHand !== 0) {
         this.standTimeRanOut();
-      }else{
+      } else {
         this.splitHand = 1;
       }
     }
@@ -392,6 +378,14 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
       socketId: this.wss.socketId
     });
     this.playerDashService.hideSplitButton();
+    this.playerDashService.hideddButton();
+  }
+
+  dd() {
+    let currentBet = this.placeBetsService.currentBet;
+    this.placeBetsService.currentBet = currentBet * 2;
+    this.playerDashService.hideddButton();
+    this.hit();
   }
 
   splitHit() {
@@ -408,6 +402,7 @@ export class PlayerDashComponent implements OnInit, OnDestroy {
     //main dash
     this.splitActive = false;
     this.playerDashVisible = 'visible';
+    this.ddButtonVisible = 'visible';
     this.dss.startTimer(this.dash);
     //statusBox
     this.playerStatus = this.result;

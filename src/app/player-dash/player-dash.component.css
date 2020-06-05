@@ -116,8 +116,8 @@
 }
 
 .command {
-  width: 80%;
-  height: 80%;
+  width: 78%;
+  height: 78%;
   position: relative;
   cursor: pointer;
   background-color: saddlebrown;
@@ -128,6 +128,10 @@
   justify-content: center;
   align-content: center;
   flex-direction: column;
+}
+.command_smaller{
+  margin-top:2px;
+  height:36%;
 }
 
 .command:hover {
