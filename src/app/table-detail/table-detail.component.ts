@@ -48,11 +48,9 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
 
     this.bank = 0;
-
     ////////////////////////////////
     this.control.gamePosition = 2;//
     ////////////////////////////////
-
 
     this.playerSeats = {};
     //this.tableService.setTableInstance();
@@ -95,7 +93,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
             socketid:this.wss.socketId
           });
       this.control.playerLeftGame = true;
-      window.location.reload();
+      //window.location.reload();
     });
 
   }
@@ -108,8 +106,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       socketid:this.wss.socketId
     });
     this.control.playerLeftGame = true;
-    window.location.reload();
-    window.location.reload();
+    //window.location.reload();
   }
 
   memberOfRoomEmit(data) {
@@ -124,7 +121,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   ngOnInit() {
 
     if (this.wss.start) {
-
+      //...
     } else {
       this.ngOnDestroy();
       this.router.navigate(['']).then((r) => {

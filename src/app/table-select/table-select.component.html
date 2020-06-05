@@ -3,15 +3,9 @@
   <div class="tables_container2">
     <h4>Add/Join Table:</h4>
     <div class="tables_inner_table2">
-
       <div class="tables2" *ngFor="let table of this.tableArray | mapToIterable"
            (click)="joinRoom(table.k)">{{table.v}}</div>
       <div class="tables2 add" (click)="openDialog()">add+</div>
-      <!--
-      <div class="tables2" *ngFor="let table of this.getTables() | mapToIterable"
-      (click)="joinRoom(table[0])">{{table[1].getDisplayName()}}</div>
-      <div class="tables2 add" (click)="createTable()">add+</div>
-      -->
     </div>
   </div>
 

@@ -8,7 +8,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {DialogExampleComponent} from "../dialog-example/dialog-example.component";
 import {ControlService} from "../services/control.service";
-import {SeatService} from "../services/seat.service";
 
 @Component({
   selector: 'app-table-select',
@@ -32,11 +31,8 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
               private location: PlatformLocation,
               private route: ActivatedRoute,
               public dialog: MatDialog,
-              private control: ControlService,
-              private seatService: SeatService) {
+              private control: ControlService) {
 
-
-    this.logStuff(' * * * TableSelectComponent * * * ');
 
     ////////////////////////////////
     this.control.gamePosition = 1;//
@@ -45,27 +41,34 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checked = true;
     this.deckOption = 1;
     this.shuffle = 75;
-
     this.tableArray = this.tableService.getTables();
-    // let j = JSON.stringify(tables);
-    // this.logStuff(j);
 
     this.config = new MatDialogConfig();
     this.config.disableClose = false;
     this.config.autoFocus = true;
-    this.config.data = {checked: this.checked,
-      deckOption: this.deckOption,shuffle:this.shuffle};
+    this.config.data = {
+      checked: this.checked,
+      deckOption: this.deckOption, shuffle: this.shuffle
+    };
     this.config.height = '60%';
     this.config.width = '60%';
     this.config.hasBackdrop = true;
     this.config.panelClass = ['custom-dialog'];
+
+    this.wss.emit('getAllTables', {
+      loadTables: true
+    });
+
+    this.tableService.tableArrayDisplay.subscribe((next) => {
+      this.tableArray = this.tableService.getTables();
+    });
+
   }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogExampleComponent, this.config);
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        // this.logStuff('RESULT: ' + result);
         this.wss.emit('addTable', {
           socketid: this.wss.socketId,
           add: true,
@@ -74,14 +77,7 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         alert('error adding table');
       }
-      //console.log('The dialog was closed');
-      //console.log('result: ' + result);
     });
-  }
-
-
-  createTable() {
-    //
   }
 
   joinRoom(roomNum) {
@@ -90,18 +86,13 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.control.playerLeftGame = false;
   }
 
-
   ngOnInit() {
 
-    if (this.wss.start) {
-    } else {
-      this.router.navigate(['/']).then((r) => {
-      });
-    }
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
+    // if (this.wss.start) {
+    // } else {
+    //   this.router.navigate(['/']).then((r) => {
+    //   });
+    // }
   }
 
   logStuff(stuff: any) {

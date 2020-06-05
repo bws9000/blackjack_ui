@@ -103,6 +103,7 @@ export class WebsocketService {
     this.eventMap.set('restartHandsEmit', new SocketObservable('restartHandsEmit', this.socket));
     this.eventMap.set('checkDoneEmit', new SocketObservable('checkDoneEmit', this.socket));
     this.eventMap.set('initSplitEmit', new SocketObservable('initSplitEmit', this.socket));
+    this.eventMap.set('getAllTablesEmit', new SocketObservable('getAllTablesEmit', this.socket));
     //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat', this.socket));
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));

@@ -11,6 +11,7 @@ export class TableService {
 
   //tableArray: Subject<Array<Object>> = new Subject<Array<Object>>();
   tableArray: Array<Object> = new Array<Object>();
+  tableArrayDisplay: Subject<boolean> = new Subject<boolean>();
 
   public tableNum: number;
   public tablePlaying: boolean;
@@ -21,6 +22,14 @@ export class TableService {
   constructor() {
     this.tablePlaying = false;
     this.tableNum = undefined;
+  }
+
+  resetTableArray(){
+    this.tableArray = new Array<Object>();
+  }
+
+  displayTables(){
+    this.tableArrayDisplay.next(true);
   }
 
   setTables(tables){

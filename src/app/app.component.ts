@@ -84,21 +84,25 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ///////////////////////////////////////////////////////
   joinTable(data) {
 
+    this.wss.startChange.next(true);
     this.logStuff('joinTable(data): ' + JSON.stringify(data));
 
     let tableNum = data.tableNum;
-    let tableName = 'table' + tableNum;
-    this.tableService.tableNum = tableNum;
+    if(tableNum !== undefined) {
+      let tableName = 'table' + tableNum;
+      this.tableService.tableNum = tableNum;
 
-    this.router.navigate(['/tables/' + tableName]).then(async r => {
-      this.wss.startChange.next(true);
-      let playerSeats = JSON.parse(data.playerSeats);
-      let s = [];
-      for (let i = 0; i < playerSeats.length; i++) {
-        s.push(playerSeats[i][1]);
-      }
-      await this.seatService.setInitState(s, tableNum);
-    });
+      this.router.navigate(['/tables/' + tableName]).then(async r => {
+        let playerSeats = JSON.parse(data.playerSeats);
+        let s = [];
+        for (let i = 0; i < playerSeats.length; i++) {
+          s.push(playerSeats[i][1]);
+        }
+        await this.seatService.setInitState(s, tableNum);
+      });
+    }else{
+      alert('This table has closed.');
+    }
   }
 
   addTable(data) {
@@ -377,6 +381,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logStuff('INIT SPLIT EMIT' + JSON.stringify(data));
   }
 
+  getAllTablesEmit(data) {
+    this.wss.startChange.next(true);
+    this.logStuff('getAllTablesEmit() ' + JSON.stringify(data));
+    this.tableService.resetTableArray();
+    this.tableService.setTables(data.tables);
+    this.tableService.displayTables();
+  }
+
   ngOnDestroy(): void {
 
     if (this.noActivitySubTimer !== undefined) {
@@ -397,6 +409,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+      this.wss
+        .onEvent('getAllTablesEmit')
+        .subscribe(data => this.getAllTablesEmit(data));
+
       this.wss
         .onEvent('initSplitEmit')
         .subscribe(data => this.initSplitEmit(data));
