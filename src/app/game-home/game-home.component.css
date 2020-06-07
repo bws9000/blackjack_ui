@@ -57,6 +57,7 @@
   .ngc_right_inset {
     margin: 0 auto;
     font-size: 4vw;
+    line-height:4vw;
   }
 }
 

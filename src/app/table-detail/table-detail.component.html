@@ -1,6 +1,6 @@
 <div class="gameTable">
   <div class="tableHeader">
-    <div class="leaveTable" (click)="leaveTable()">&#8592;&nbsp;</div>
+    <div [style.visibility]="this.backButtonVisible" class="leaveTable" (click)="leaveTable()">&#8592;&nbsp;</div>
     <div>w: {{watchers}} |</div>
     <div>&nbsp;p: {{players}} |</div>
     <div> cc: {{getCardCount()}} |</div>

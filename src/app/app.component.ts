@@ -388,6 +388,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.tableService.setTables(data.tables);
     this.tableService.displayTables();
   }
+  getTableStateEmit(data){
+    this.logStuff('getTableStateEmit() ' + JSON.stringify(data));
+    this.tableService.displayTableDetail(data.tableState);
+  }
 
   ngOnDestroy(): void {
 
@@ -409,6 +413,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
       /////////////////// User Events /////////////////////////
       /////////////////////////////////////////////////////////
+      this.wss
+        .onEvent('getTableStateEmit')
+        .subscribe(data => this.getTableStateEmit(data));
+
       this.wss
         .onEvent('getAllTablesEmit')
         .subscribe(data => this.getAllTablesEmit(data));
@@ -519,7 +527,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.count = 0;
 
     this.connect().then(r => {
-
       this.logStuff('RECONNECTION TYPE: Initial Connection Occured.');
     });
 

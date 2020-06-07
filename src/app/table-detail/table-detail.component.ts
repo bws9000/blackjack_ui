@@ -28,6 +28,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   broadcast: any;
   tableNum: number;
   tableName: string;
+  backButtonVisible:string;
 
   userSubscription: Subscription;
   shuffle: any;
@@ -48,6 +49,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
 
     this.bank = 0;
+    this.backButtonVisible = 'hidden';
     ////////////////////////////////
     this.control.gamePosition = 2;//
     ////////////////////////////////
@@ -73,6 +75,23 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
           });
 
+
+        this.wss.emit('getTableState', {
+          tableNum: this.tableService.tableNum
+        });
+        this.tableService.checkTableActive.subscribe((value)=>{
+          this.wss.startChange.next(true);
+          if(value !== undefined) {
+            if (!value) {
+              alert('This table is now closed.');
+              this.router.navigate(['/tables']).then((r) => {
+              });
+            }else{
+              //alert('ok');
+            }
+          }
+        });
+
       });
     ///////////////////////////////////////////////////////////////////
     //this.placeBetsService.setVisible(false, this.seatService.currentSeat);
@@ -87,18 +106,16 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       //   this.resetTable();
       // });
       // this.control.playerLeftGame = true;
-      let table = this.tableService.tableNum;
-      this.wss.emit('leaveTable', {
-            table: table,
-            socketid:this.wss.socketId
-          });
-      this.control.playerLeftGame = true;
-      //window.location.reload();
+
+      this.leaveTable();
+
     });
+
 
   }
 
   leaveTable() {
+    this.logStuff('onPopState emit url'+this.router.routerState.snapshot.url);
     //this._location.back();
     let table = this.tableService.tableNum;
     this.wss.emit('leaveTable', {
@@ -120,14 +137,14 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
   ngOnInit() {
 
-    if (this.wss.start) {
-      //...
-    } else {
-      this.ngOnDestroy();
-      this.router.navigate(['']).then((r) => {
-        //do something...
-      })
-    }
+    // if (this.wss.start) {
+    //   //...
+    // } else {
+    //   this.ngOnDestroy();
+    //   this.router.navigate(['']).then((r) => {
+    //     //do something...
+    //   })
+    // }
   }
 
   ngOnDestroy() {

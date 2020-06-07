@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {SocketObservable} from "../SocketObservable";
 import {Router} from "@angular/router";
 import {ControlService} from "./control.service";
+import {CheckIllegalEmits} from "../CheckIllegalEmits";
 
 @Injectable({
   providedIn: 'root'
@@ -44,12 +45,43 @@ export class WebsocketService {
 
   public emit(event: string, data: any) {
     // this.logStuff('--------------');
-    this.logStuff('EMIT: ' + event);
     // this.logStuff('gamePostion: ' + this.control.gamePosition);
     // this.logStuff('emit url'+this.router.routerState.snapshot.url);
     // this.logStuff('--------------');
-    this.startChange.next(false);
-    this.socket.emit(event, data);
+    this.logStuff('EMIT: ' + event);
+
+    switch (this.control.gamePosition) {
+      case 0:
+        this.checkGameHome(event, data);
+        break;
+      case 1:
+        this.checkTableSelect(event, data);
+        break;
+      case 2:
+        this.checkTableDetail(event, data);
+        break;
+    }
+  }
+
+  checkGameHome(event, data) {
+    if (!CheckIllegalEmits.gameHome.checkForIllegals(event)) {
+      this.startChange.next(false);
+      this.socket.emit(event, data);
+    }
+  }
+
+  checkTableSelect(event,data) {
+    if (!CheckIllegalEmits.tableSelect.checkForIllegals(event)) {
+      this.startChange.next(false);
+      this.socket.emit(event, data);
+    }
+  }
+
+  checkTableDetail(event,data) {
+    if (!CheckIllegalEmits.tableDetail.checkForIllegals(event)) {
+      this.startChange.next(false);
+      this.socket.emit(event, data);
+    }
   }
 
   authConnect() {
@@ -104,6 +136,7 @@ export class WebsocketService {
     this.eventMap.set('checkDoneEmit', new SocketObservable('checkDoneEmit', this.socket));
     this.eventMap.set('initSplitEmit', new SocketObservable('initSplitEmit', this.socket));
     this.eventMap.set('getAllTablesEmit', new SocketObservable('getAllTablesEmit', this.socket));
+    this.eventMap.set('getTableStateEmit', new SocketObservable('getTableStateEmit', this.socket));
     //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat', this.socket));
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));

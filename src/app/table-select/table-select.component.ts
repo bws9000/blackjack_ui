@@ -8,6 +8,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {DialogExampleComponent} from "../dialog-example/dialog-example.component";
 import {ControlService} from "../services/control.service";
+import {ConfigService} from "../services/config.service";
 
 @Component({
   selector: 'app-table-select',
@@ -31,7 +32,9 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
               private location: PlatformLocation,
               private route: ActivatedRoute,
               public dialog: MatDialog,
-              private control: ControlService) {
+              private control: ControlService,
+              private _location: PlatformLocation,
+              private configService: ConfigService) {
 
 
     ////////////////////////////////
@@ -63,6 +66,14 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
       this.tableArray = this.tableService.getTables();
     });
 
+    // _location.onPopState(() => {
+    //   if (!environment.production) {
+    //     window.location.replace(configService.URL_DEV_GAME_HOME);
+    //   }else{
+    //     window.location.replace(configService.URL_PRO_GAME_HOME);
+    //   }
+    // });
+
   }
 
   openDialog(): void {
@@ -81,6 +92,7 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   joinRoom(roomNum) {
+    //this.logStuff('roomNum: ' + roomNum);
     this.tableService.tableNum = roomNum;
     this.wss.emit('joinTable', {room: roomNum});
     this.control.playerLeftGame = false;
