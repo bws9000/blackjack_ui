@@ -13,7 +13,7 @@ import {environment} from "../../environments/environment";
 export class InitModule {
 
   private appUrl = (environment.production) ?
-    'https://multiplayer.blackjackgame.us' : 'http://localhost:5000';
+    'https://development-1.blackjackgame.us' : 'http://localhost:5000';
   env;
 
   constructor(private http: HttpClient) {
