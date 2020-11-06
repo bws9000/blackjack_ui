@@ -16,6 +16,7 @@ import {ErrorService} from "../services/error.service";
 export class SitComponent implements OnInit {
 
   @Input() seat: string;
+  multiPlayerMode:boolean;
   sitOrLeaveText: string;
   sitOrLeave: boolean;
   isHidden: boolean;
@@ -40,11 +41,10 @@ export class SitComponent implements OnInit {
     this.sitOrLeave = false;
     this.localSocket = this.wss.socketId;
     this.table = tableService.tableNum;
+    this.multiPlayerMode = tableService.multiPlayerMode;
 
     this.seatService.playerStand.subscribe(value => {
 
-      //AT THIS TIME ONE IS THE MAGIC NUMBER
-      //IF NOBODY IS SEATED AT THIS POINT
       this.resetVariablesOnStand();
 
       if (+this.id == value) {
@@ -53,28 +53,13 @@ export class SitComponent implements OnInit {
       }
     });
 
-    // this.errorService.error.subscribe(value => {
-    //   let j = JSON.stringify(value);
-    //   let o = JSON.parse(j);
-    //   let errorNum = o.errorNum;
-    //   let errorText = o.errorText;
-    //   if(+this.id === this.seatService.currentSeat) {
-    //     if (errorNum === 0) {
-    //       alert(errorText);
-    //       this.sitOrLeaveText = 'SIT DOWN';
-    //       this.seatService.sitting = false;
-    //       this.sitOrLeave = false;
-    //       this.seatService.currentSeat = undefined;
-    //     }
-    //   }
-    // });
-
-
     this.seatService.reset.subscribe(value => {
+
       if (this.id === value) {
         this.sitOrLeaveText = 'SIT DOWN';
         this.sitOrLeave = false;
       }
+
     });
 
     this.seatService.playerSeats.subscribe(value => {
@@ -99,7 +84,6 @@ export class SitComponent implements OnInit {
           }
         }
       }
-
       //set "global" seatNum
       this.statusUpdateService.currentSeatedPlayers = seatNum.length;
     });
@@ -158,35 +142,37 @@ export class SitComponent implements OnInit {
   }
 
   sitStand() {
-    if (!this.sitOrLeave) {
-
-      if (this.placeBetsService.youCanSitNow) {
-        this.wss.emit('sitTable', {
+    let currentSeats = this.seatService.getInitState();
+    if (currentSeats.length > 0 && !this.multiPlayerMode) {
+      alert('Multiplayer mode is turned off for this table.');
+    }else {
+      if (!this.sitOrLeave) {
+        if (this.placeBetsService.youCanSitNow) {
+          this.wss.emit('sitTable', {
+            player: this.id,
+            tableNum: this.table
+          });
+          if (!this.sitOrLeave) {
+            this.sitOrLeaveText = 'STAND UP';
+            this.seatService.sitting = true;
+            this.sitOrLeave = true;
+            this.seatService.currentSeat = +this.id;
+            this.resetVariablesOnStand();
+          }
+        } else {
+          alert('please try again');
+        }
+      } else {
+        this.wss.emit('standUpTable', {
           player: this.id,
           tableNum: this.table
         });
-        if (!this.sitOrLeave) {
-          this.sitOrLeaveText = 'STAND UP';
-          this.seatService.sitting = true;
-          this.sitOrLeave = true;
-          this.seatService.currentSeat = +this.id;
-          this.resetVariablesOnStand();
-        }
-      } else {
-        alert('please try again');
+        this.sitOrLeaveText = 'SIT DOWN';
+        this.seatService.sitting = false;
+        this.sitOrLeave = false;
+        this.seatService.currentSeat = undefined;
+        this.resetVariablesOnStand();
       }
-
-    } else {
-
-      this.wss.emit('standUpTable', {
-        player: this.id,
-        tableNum: this.table
-      });
-      this.sitOrLeaveText = 'SIT DOWN';
-      this.seatService.sitting = false;
-      this.sitOrLeave = false;
-      this.seatService.currentSeat = undefined;
-      this.resetVariablesOnStand();
     }
   }
 

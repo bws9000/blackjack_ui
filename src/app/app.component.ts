@@ -100,6 +100,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         await this.seatService.setInitState(s, tableNum);
       });
+
     }else{
       alert('This table has closed.');
     }
@@ -111,7 +112,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     let tableNum = data.tableNum;
     let tableName = 'table' + tableNum;
+    let multiPlayerMode = data.multiPlayerMode;
     this.tableService.tableNum = tableNum;
+    this.tableService.multiPlayerMode = multiPlayerMode;
 
     this.router.navigate(['/tables/' + tableName]).then(async r => {
       this.wss.startChange.next(true);
@@ -304,6 +307,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   satDownTableEmit(data) {
 
+    this.logStuff('!!!! SAT DOWN TABLE EMIT !!!!  ' + data);
     let broadcast = JSON.parse(data.broadcast);
 
     if (!broadcast) {

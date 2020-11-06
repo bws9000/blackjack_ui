@@ -2,9 +2,11 @@ import {Component, OnInit, Inject, EventEmitter, ViewEncapsulation} from '@angul
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 export interface DialogData {
+  multiPlayerChecked: boolean;
+  dealCardChecked: boolean;
   shuffle: number;
   deckOption: number;
-  checked: boolean;
+  multiPlayerOption: number;
 }
 
 @Component({
@@ -16,8 +18,10 @@ export interface DialogData {
 export class DialogExampleComponent implements OnInit {
 
   dealCardMode: string;
+  multiPlayerMode: string;
   color: any;
-  checked: boolean;
+  dealCardChecked: boolean;
+  multiPlayerChecked: boolean;
   deckOption:number;
   shuffle:number;
   disabled: boolean;
@@ -36,24 +40,41 @@ export class DialogExampleComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DialogExampleComponent>
     , @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+
     this.color = 'accent';
-    this.checked = data.checked;
+    this.dealCardChecked = data.dealCardChecked;
+    this.multiPlayerChecked = data.multiPlayerChecked;
     this.deckOption = data.deckOption;
     this.shuffle = data.shuffle;
     this.disabled = false;
-    this.toggleChange();
+    this.dealCardToggleChange();
+    this.multiPlayerToggleChange();
+
+    //default on state
+    this.data.dealCardChecked = true;
+    this.dealCardMode = 'on';
   }
 
-  toggleChange() {
-    if(this.data.checked){
+  dealCardToggleChange() {
+    if(this.data.dealCardChecked){
       this.dealCardMode = 'on';
     }else{
       this.dealCardMode = 'off';
     }
   }
 
+  multiPlayerToggleChange() {
+    this.multiPlayerMode = 'off';
+    alert('Multi player mode is temporarily offline. Continuing in' +
+      ' single player mode.');
+  }
+
   getDealCardMode() {
     return this.dealCardMode;
+  }
+
+  getMultiPlayerMode() {
+    return this.multiPlayerMode;
   }
 
   changeSources(value: any){

@@ -47,7 +47,6 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
               private betService: BetService,
               private handService: HandService) {
 
-
     this.placeBetsVisible = 'hidden';
 
     this.chips = this.placeBetsService.currentBank;
@@ -81,7 +80,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
 
                   this.wss.emit('actionOrder', {
                     seat: this.seatService.currentSeat,
-                    table: this.tableService.tableNum
+                    tableNum: this.tableService.tableNum
                   });
 
                   this.logStuff('* placebet timer started *');

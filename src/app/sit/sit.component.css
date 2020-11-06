@@ -1,4 +1,8 @@
 .sit {
+  margin-bottom:50px;
+  position:absolute;
+  bottom:0;
+  right:0;
   width: 50%;
   float: right;
   cursor: pointer;
@@ -12,10 +16,18 @@
   background-color: darkcyan;
 }
 
+.sit_container{
+
+}
+
 
 @media (min-width: 320px) and (max-width: 1024px) {
+  .sit_container{
+    overflow:auto;
+    position:relative;
+    height:75px;
+  }
   .sit {
-    float: none;
-    width: 100%;
+    font-size:smaller;
   }
 }

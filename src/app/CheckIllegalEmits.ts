@@ -7,7 +7,6 @@ export class CheckIllegalEmits {
    *  current game position enum pattern class
    */
 
-
   public static gameHome = new CheckIllegalEmits(
     0,
     [

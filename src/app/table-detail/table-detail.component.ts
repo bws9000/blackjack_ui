@@ -115,7 +115,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   leaveTable() {
-    this.logStuff('onPopState emit url'+this.router.routerState.snapshot.url);
+    this.logStuff('leaveTable() emit: ' + this.router.routerState.snapshot.url);
     //this._location.back();
     let table = this.tableService.tableNum;
     this.wss.emit('leaveTable', {
@@ -136,13 +136,13 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   ngOnInit() {
-
     // if (this.wss.start) {
     //   //...
     // } else {
     //   this.ngOnDestroy();
+    //   let that = this;
     //   this.router.navigate(['']).then((r) => {
-    //     //do something...
+    //     that.leaveTable();
     //   })
     // }
   }
@@ -150,7 +150,7 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   ngOnDestroy() {
     //leave room/table
     let table = this.tableService.tableNum;
-    //this.logStuff('NG ON DESTROY CALLED');
+    this.leaveTable();
     this.statusUpdateService.hideNavBar(true);
     this.userSubscription.unsubscribe();
   }

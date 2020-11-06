@@ -13,7 +13,7 @@ import {environment} from "../../environments/environment";
 export class InitModule {
 
   private appUrl = (environment.production) ?
-    'https://development-1.blackjackgame.us' : 'http://localhost:5000';
+    'https://blackjackgame.us' : 'http://localhost:5000';
   env;
 
   constructor(private http: HttpClient) {
@@ -23,20 +23,22 @@ export class InitModule {
 
     return new Promise<void>((resolve, reject) => {
       this.logStuff("init.module");
-      return this.getEnv()
-        .subscribe((data: '') => {
-          let s = JSON.stringify(data);
-          this.env = JSON.parse(s);
-          environment.devpass = this.env.devpass;
-          environment.socketurl = this.env.socketurl;
-          environment.devsocketurl = this.env.devsocketurl;
-          //console.log(environment.devsocketurl);
-          //console.log(environment.devpass);
-          //console.log(environment.socketurl);
-          resolve();
-        });
+      console.log('devpass: ' + environment.devpass);
+      console.log('socketurl ' + environment.socketurl);
+      console.log('devsocketurl ' + environment.devsocketurl);
+      resolve();
+      // return this.getEnv()
+      //   .subscribe((data: '') => {
+      //     let s = JSON.stringify(data);
+      //     this.env = JSON.parse(s);
+      //     environment.devpass = this.env.devpass;
+      //     environment.socketurl = this.env.socketurl;
+      //     environment.devsocketurl = this.env.devsocketurl;
+      //     resolve();
+      //   });
 
     });
+
   }
 
   getEnv() {

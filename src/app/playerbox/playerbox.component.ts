@@ -40,14 +40,14 @@ export class PlayerboxComponent implements OnInit {
       } else {
         this.action = false;
       }
-      this.playerInnerbox();
+      //this.playerInnerbox();
 
     });
 
     this.playerboxService.resetAllSubject.subscribe(value => {
       this.action = false;
-      this.sitting = false;
-      this.playerInnerbox();
+      //this.sitting = false;
+      //this.playerInnerbox();
     });
 
     this.playerboxService.resetSubject.subscribe(value => {
@@ -56,8 +56,8 @@ export class PlayerboxComponent implements OnInit {
       let seat = o.seat;
       if (this.player === seat) {
         this.action = false;
-        this.sitting = false;
-        this.playerInnerbox();
+        //this.sitting = false;
+        //this.playerInnerbox();
       }
     });
 
@@ -79,15 +79,11 @@ export class PlayerboxComponent implements OnInit {
   }
 
   playerInnerbox() {
-    if (this.action) {
-      return '3';
-    } else {
       if (this.sitting) {
         return '1';
       } else {
         return '2';
       }
-    }
   }
 
 

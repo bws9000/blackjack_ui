@@ -16,13 +16,12 @@ export class TableService {
 
   public tableNum: number;
   public tablePlaying: boolean;
-
-  //public tables = new Map<String,Object>();
-  //public maxTables = 10;
+  multiPlayerMode:boolean;
 
   constructor() {
     this.tablePlaying = false;
     this.tableNum = undefined;
+    this.multiPlayerMode = false;
   }
 
   displayTableDetail(state){

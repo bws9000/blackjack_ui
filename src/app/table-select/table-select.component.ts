@@ -58,7 +58,11 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.config.hasBackdrop = true;
     this.config.panelClass = ['custom-dialog'];
 
-    this.wss.emit('getAllTables', {
+    // this.wss.emit('getAllTables', {
+    //   loadTables: true
+    // });
+
+    this.wss.emit('tableSelectTables', {
       loadTables: true
     });
 
@@ -80,6 +84,7 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogExampleComponent, this.config);
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
+        //alert(result);
         this.wss.emit('addTable', {
           socketid: this.wss.socketId,
           add: true,

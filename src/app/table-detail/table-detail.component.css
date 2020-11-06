@@ -1,33 +1,3 @@
-/*
-.dealerZone {
-  display: inline-block;
-  position: relative;
-  height: 20%;
-  width: 100%;
-}
-
-.dzOne {
-  width: 10%;
-  height: 100%;
-  background: url("../../assets/ui1/dealer.png") no-repeat;
-  background-size: contain;
-  position: relative;
-  float: right;
-}
-
-.dzTwo {
-  width: 90%;
-  height: 100%;
-  position: relative;
-  float: right;
-}
-
-.dealerCards > div {
-  display: inline-block;
-  color: white;
-}
-*/
-
 .leaveTable {
   cursor: pointer;
   border: solid darkgreen;
@@ -48,117 +18,34 @@
 .gameTable {
   height: 100%;
   position: relative;
-  background-color: darkgreen;
+  /*background-color: darkgreen;*/
   overflow: hidden;
 }
 
 .playerAreaContainer {
+  background: url("../../assets/ui1/blackjack_back.png") no-repeat;
+  background-size:100%;
+  background-position: center center;
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 75%;
-  /* background-color: lightpink; */
 }
 
-/*
-.testCard {
-  width: 100%;
-  height: 100%;
-  font-size: 1em;
-  background-size: contain;
-  background-image: url("../../assets/deck1/1.png");
-  background-repeat: no-repeat;
-}
-
-.cardBox {
-  display: inline-block;
-  width: 10%;
-  height: 25%;
-  position: relative;
-}
-
-.cardRowDefault {
-  width: 35%;
-  height: 100%;
-  position: relative;
-  float:right;
-}
-*/
-
-/* ***************************************** */
-/*
-  ##Device = Desktops
-  ##Screen = 1281px to higher resolution desktops
-*/
-
-@media (min-width: 1281px) {
-  /* */
-}
-
-/*
-  ##Device = Laptops, Desktops
-  ##Screen = B/w 1025px to 1280px
-*/
-
-@media (min-width: 1025px) and (max-width: 1280px) {
-  /* */
-}
-
-/*
-  ##Device = Tablets, Ipads (portrait)
-  ##Screen = B/w 768px to 1024px
-*/
-
-/*
-@media (min-width: 768px) and (max-width: 1024px) {
-*/
+@media (min-width: 1281px) {  }
+@media (min-width: 1025px) and (max-width: 1280px) {  }
 @media (min-width: 320px) and (max-width: 1024px) {
-
-  /*
-  .dealerZone {
-    height: 100%;
-    max-height:20rem;
-    width: 20%;
-    float: right;
-  }
-
-  .dzOne {
-    width: 100%;
-    height: 33%;
-    float: none;
-  }
-
-  .dzTwo {
-    width: 100%;
-    height: 67%;
-    position: relative;
-    float: none;
-  }
-  */
 
   .playerAreaContainer {
     width: 75%;
     height: 100%;
-    /* background-color: blue; */
-    position: relative;
+    position: absolute;
+    right: 0;
     display: inline-block;
+    background: url("../../assets/ui1/blackjacktable_landscape.png") no-repeat;
+    background-size:cover;
+    background-position: center center;
   }
-
-  /*
-  .cardRowDefault {
-    width: 100%;
-    height: 50%;
-    position: relative;
-    display: inherit;
-  }
-
-  .cardBox {
-    min-width: 25px;
-    min-height: 29px;
-    margin-right:0.1rem;
-    float:left;
-  }
-  */
 
   .sitLeave {
     float: none;
@@ -166,52 +53,12 @@
   }
 }
 
-/*
-  ##Device = Tablets, Ipads (landscape)
-  ##Screen = B/w 768px to 1024px
-*/
-
-@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-  /* */
-}
-
-/*
-  ##Device = Low Resolution Tablets, Mobiles (Landscape)
-  ##Screen = B/w 481px to 767px
-*/
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {  }
 
 @media (min-width: 481px) and (max-width: 767px) {
-
-  /*
-  .dealerZone {
-    height: 100%;
-    width: 14%;
-  }
-  */
-
-  /* */
-  .tableHeader {
-    /* display: none; */
-  }
-
   .playerAreaContainer {
     width: 85%;
   }
-
-  /*
-  .cardBox {
-    min-width: 20px;
-    min-height: 25px;
-  }
-  */
-
 }
 
-/*
-  ##Device = Most of the Smartphones Mobiles (Portrait)
-  ##Screen = B/w 320px to 479px
-*/
-
-@media (min-width: 320px) and (max-width: 480px) {
-  /* */
-}
+@media (min-width: 320px) and (max-width: 480px) {  }

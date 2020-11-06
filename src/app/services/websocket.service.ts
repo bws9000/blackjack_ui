@@ -22,8 +22,6 @@ export class WebsocketService {
   constructor(private router: Router,
               private control: ControlService) {
 
-    let that = this;
-
     this.logStuff('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
     this.socketUrl = (environment.production) ?
       'https://calm-eyrie-37824.herokuapp.com/blackjack' : 'http://localhost:3000/blackjack';
@@ -71,6 +69,7 @@ export class WebsocketService {
   }
 
   checkTableSelect(event,data) {
+    console.log('HOWDY');
     if (!CheckIllegalEmits.tableSelect.checkForIllegals(event)) {
       this.startChange.next(false);
       this.socket.emit(event, data);

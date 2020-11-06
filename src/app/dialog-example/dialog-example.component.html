@@ -31,18 +31,31 @@
           Deal Card Mode:
           <mat-slide-toggle
             class="toggle-margin"
-            [(ngModel)]="data.checked"
+            [(ngModel)]="data.dealCardChecked"
             [color]="color"
-            [checked]="checked"
+            [checked]="dealCardChecked"
             [disabled]="disabled"
-            (change)="toggleChange()">
+            (change)="dealCardToggleChange()">
             {{this.getDealCardMode()}}
           </mat-slide-toggle>
         </mat-list-item>
 
+        <mat-list-item style="color:black;" role="listitem">
+          Multiplayer Mode:&nbsp; <strong>Offline</strong>
+<!--          <mat-slide-toggle-->
+<!--            class="toggle-margin"-->
+<!--            [(ngModel)]="data.multiPlayerOption"-->
+<!--            [color]="color"-->
+<!--            [checked]="multiPlayerChecked"-->
+<!--            [disabled]="disabled"-->
+<!--            (change)="multiPlayerToggleChange()">-->
+<!--            {{this.getMultiPlayerMode()}}-->
+<!--          </mat-slide-toggle>-->
+        </mat-list-item>
+
         <mat-list-item>
           <mat-dialog-actions>
-            <button [mat-dialog-close]="[data.checked,data.deckOption,data.shuffle]" class="btn btn-success" mat-dialog-close>
+            <button [mat-dialog-close]="[data.dealCardChecked,data.multiPlayerChecked,data.deckOption,data.shuffle]" class="btn btn-success" mat-dialog-close>
               Create New Table
             </button>
           </mat-dialog-actions>

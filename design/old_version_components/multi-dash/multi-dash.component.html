@@ -1,0 +1,68 @@
+<div [style.visibility]="this.multiDashVisible" class="multiDash">
+
+  <div class="multiDash">
+    <div class="multiDash_box">
+      <div class="multidash_container">
+
+        <div *ngIf="!this.splitActive; else splitResult" class="section">
+          <div class="header">
+            <div class="headercol"><h4>PLAYER&nbsp;{{this.playerStatus}}</h4></div>
+            <div class="headercol">
+              <div class="wlp" [ngClass]="pwlp"></div>
+            </div>
+          </div>
+
+          <div class="cardRowDefault">
+            <div class="cardBox" *ngFor="let card of pCardsArray">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #splitResult>
+        <div class="section">
+          <div class="header">
+            <div class="headercol"><h4>SPLIT ONE&nbsp;{{this.splitHandCount1}}</h4></div>
+            <div class="headercol">
+              <div class="wlp" [ngClass]="split1_pwlp"></div>
+            </div>
+          </div>
+          <div class="cardRowDefault">
+            <div class="cardBox split" *ngFor="let card of split1Hand">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
+          </div>
+
+          <div class="header">
+            <div class="headercol"><h4>SPLIT TWO&nbsp;{{this.splitHandCount2}}</h4></div>
+            <div class="headercol">
+              <div class="wlp" [ngClass]="split2_pwlp"></div>
+            </div>
+          </div>
+          <div class="cardRowDefault">
+            <div class="cardBox split" *ngFor="let card of split2Hand">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
+          </div>
+        </div>
+        </ng-template>
+
+        <div class="section">
+          <div class="header">
+            <div class="headercol"><h4>DEALER&nbsp;{{this.dealerStatus}}</h4></div>
+            <div class="headercol">
+              <div class="wlp" [ngClass]="dwlp"></div>
+            </div>
+          </div>
+
+          <div class="cardRowDefault">
+            <div class="cardBox" *ngFor="let card of dCardsArray">
+              <div class="testCard" [ngClass]="'_'+card"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
