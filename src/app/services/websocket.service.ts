@@ -22,7 +22,6 @@ export class WebsocketService {
   constructor(private router: Router,
               private control: ControlService) {
 
-    this.logStuff('WEBSOCKETSERVICE CONSTRUCTOR CALLED');
     this.socketUrl = (environment.production) ?
       'https://calm-eyrie-37824.herokuapp.com/blackjack' : 'http://localhost:3000/blackjack';
     this.start = false;
@@ -42,10 +41,7 @@ export class WebsocketService {
   }
 
   public emit(event: string, data: any) {
-    // this.logStuff('--------------');
-    // this.logStuff('gamePostion: ' + this.control.gamePosition);
-    // this.logStuff('emit url'+this.router.routerState.snapshot.url);
-    // this.logStuff('--------------');
+
     this.logStuff('EMIT: ' + event);
 
     switch (this.control.gamePosition) {
@@ -69,7 +65,6 @@ export class WebsocketService {
   }
 
   checkTableSelect(event,data) {
-    console.log('HOWDY');
     if (!CheckIllegalEmits.tableSelect.checkForIllegals(event)) {
       this.startChange.next(false);
       this.socket.emit(event, data);
@@ -94,16 +89,14 @@ export class WebsocketService {
         that.emit('authentication', {devuser: environment.devpass});
         this.on('authenticated', function () {
           if (this.connected) {
-            resolve(true);
             this.emit('init', {msg: ''});
-            that.logStuff('socket authenticated');
             that.startChange.next(true);
+            resolve(true);
           }
         });
       });
       //on reconnect
       this.socket.on('reconnect', function () {
-        that.logStuff('you have been reconnected');
         that.reconnected();
       });
     });
@@ -114,7 +107,6 @@ export class WebsocketService {
   }
 
   public initEvents() {
-    //USER EVENTS
     this.eventMap.set('getTablesEmit', new SocketObservable('getTablesEmit', this.socket))
     this.eventMap.set('getHandsEmit', new SocketObservable('getHandsEmit', this.socket));
     this.eventMap.set('initEmit', new SocketObservable('initEmit', this.socket));
@@ -136,7 +128,6 @@ export class WebsocketService {
     this.eventMap.set('initSplitEmit', new SocketObservable('initSplitEmit', this.socket));
     this.eventMap.set('getAllTablesEmit', new SocketObservable('getAllTablesEmit', this.socket));
     this.eventMap.set('getTableStateEmit', new SocketObservable('getTableStateEmit', this.socket));
-    //ENVIRONMENT EVENTS
     this.eventMap.set('tableDetailHeartBeat', new SocketObservable('tableDetailHeartBeat', this.socket));
     this.eventMap.set('socketReconnect', new SocketObservable('socketReconnect', this.socket));
     this.eventMap.set('errorEmit', new SocketObservable('errorEmit', this.socket));

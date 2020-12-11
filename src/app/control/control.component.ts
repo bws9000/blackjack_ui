@@ -3,7 +3,6 @@ import {StatusUpdateService} from "../services/status-update.service";
 import {WebsocketService} from "../services/websocket.service";
 import {environment} from "../../environments/environment";
 import {TableService} from "../services/table.service";
-import {PlaceBetsService} from "../services/place-bets.service";
 import {SeatService} from "../services/seat.service";
 import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Params, Router} from "@angular/router";
@@ -35,7 +34,6 @@ export class ControlComponent implements OnInit, OnDestroy {
   constructor(private statusUpdateService: StatusUpdateService,
               private wss: WebsocketService,
               private tableService: TableService,
-              private placeBetsService: PlaceBetsService,
               private seatService: SeatService,
               private route: ActivatedRoute,
               private router: Router) {
@@ -58,15 +56,13 @@ export class ControlComponent implements OnInit, OnDestroy {
             } else {
               if (+this.controlNum == this.seatService.currentSeat) {
                 this.statusBoxVisible = 'visible';
-                ///////////////////////////////////
-                //this.logStuff('currentSeats: ' + this.seatService.currentSeats);
+
                 if (this.seatService.currentSeats < 2) {
-                  //timer
                   this.status = 'Waiting for players to join:';
                   this.timer = Observable.timer(1000, 1000);
                   this.subTimer = this.timer.subscribe(t => this.timerTest(t));
                 }
-                ///////////////////////////////////
+
               }
             }
           }

@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   devpass: 'bwiley8FGGG',
-  socketurl: 'https://calm-eyrie-37824.herokuapp.com/blackjack',
-  devsocketurl: 'https://calm-eyrie-37824.herokuapp.com/blackjack'
+  socketurl: 'http://localhost:3000/blackjack',
+  devsocketurl: 'http://localhost:3000/blackjack'
 };
 
 /*

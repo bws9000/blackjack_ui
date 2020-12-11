@@ -12,9 +12,7 @@ import {environment} from "../../environments/environment";
 })
 export class InitModule {
 
-  private appUrl = (environment.production) ?
-    'https://blackjackgame.us' : 'http://localhost:5000';
-  env;
+  private appUrl = (environment.production) ? 'https://blackjackgame.us' : 'http://localhost:3000';
 
   constructor(private http: HttpClient) {
   }
@@ -27,16 +25,6 @@ export class InitModule {
       console.log('socketurl ' + environment.socketurl);
       console.log('devsocketurl ' + environment.devsocketurl);
       resolve();
-      // return this.getEnv()
-      //   .subscribe((data: '') => {
-      //     let s = JSON.stringify(data);
-      //     this.env = JSON.parse(s);
-      //     environment.devpass = this.env.devpass;
-      //     environment.socketurl = this.env.socketurl;
-      //     environment.devsocketurl = this.env.devsocketurl;
-      //     resolve();
-      //   });
-
     });
 
   }
