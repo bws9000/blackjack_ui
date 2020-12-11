@@ -58,10 +58,6 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.config.hasBackdrop = true;
     this.config.panelClass = ['custom-dialog'];
 
-    // this.wss.emit('getAllTables', {
-    //   loadTables: true
-    // });
-
     this.wss.emit('tableSelectTables', {
       loadTables: true
     });
@@ -70,21 +66,12 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
       this.tableArray = this.tableService.getTables();
     });
 
-    // _location.onPopState(() => {
-    //   if (!environment.production) {
-    //     window.location.replace(configService.URL_DEV_GAME_HOME);
-    //   }else{
-    //     window.location.replace(configService.URL_PRO_GAME_HOME);
-    //   }
-    // });
-
   }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogExampleComponent, this.config);
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
-        //alert(result);
         this.wss.emit('addTable', {
           socketid: this.wss.socketId,
           add: true,
@@ -97,7 +84,6 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   joinRoom(roomNum) {
-    //this.logStuff('roomNum: ' + roomNum);
     this.tableService.tableNum = roomNum;
     this.wss.emit('joinTable', {room: roomNum});
     this.control.playerLeftGame = false;
@@ -105,11 +91,6 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
 
-    // if (this.wss.start) {
-    // } else {
-    //   this.router.navigate(['/']).then((r) => {
-    //   });
-    // }
   }
 
   logStuff(stuff: any) {
@@ -123,7 +104,7 @@ export class TableSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    //this.wss.emit('getTables', {});
+    //
   }
 
 }

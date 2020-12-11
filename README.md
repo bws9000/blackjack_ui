@@ -1,7 +1,10 @@
+# More info on DevPost
+https://devpost.com/software/multiplayer-blackjack-game-and-service
+
 # Websocket API
 https://calm-eyrie-37824.herokuapp.com
 
-//https://github.com/bws9000/Blackjack-Angular-7-Client/blob/master/src/app/services/websocket.service.ts
+https://github.com/bws9000/Blackjack-Angular-7-Client/blob/master/src/app/services/websocket.service.ts
 
     this.eventMap.set('getTablesEmit', new SocketObservable('getTablesEmit', this.socket))
     this.eventMap.set('getHandsEmit', new SocketObservable('getHandsEmit', this.socket));

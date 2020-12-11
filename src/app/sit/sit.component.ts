@@ -41,7 +41,9 @@ export class SitComponent implements OnInit {
     this.sitOrLeave = false;
     this.localSocket = this.wss.socketId;
     this.table = tableService.tableNum;
-    this.multiPlayerMode = tableService.multiPlayerMode;
+
+    //this.multiPlayerMode = tableService.multiPlayerMode;
+    this.multiPlayerMode = true;
 
     this.seatService.playerStand.subscribe(value => {
 

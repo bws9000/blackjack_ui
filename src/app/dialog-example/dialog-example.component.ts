@@ -64,9 +64,9 @@ export class DialogExampleComponent implements OnInit {
   }
 
   multiPlayerToggleChange() {
-    this.multiPlayerMode = 'off';
-    alert('Multi player mode is temporarily offline. Continuing in' +
-      ' single player mode.');
+    this.multiPlayerMode = 'on';
+    // alert('Multi player mode is temporarily offline. Continuing in' +
+    //   ' single player mode.');
   }
 
   getDealCardMode() {
