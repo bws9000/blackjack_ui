@@ -1,3 +1,5 @@
+A **protype** of an idea I had using HTML5 and CSS3 / Angular for the "moving parts" of a game instead of a canvas. Nodejs game server plays the game, client is static app on netlify communicates via websocket api.
+
 # More info on DevPost
 https://devpost.com/software/multiplayer-blackjack-game-and-service
 

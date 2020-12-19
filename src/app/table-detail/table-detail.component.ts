@@ -17,7 +17,7 @@ import {ControlService} from "../services/control.service";
   styleUrls: ['./table-detail.component.css']
 })
 
-export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class TableDetailComponent implements OnInit, OnDestroy {
 
   @Input() player: string;
 
@@ -50,12 +50,11 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
 
     this.bank = 0;
     this.backButtonVisible = 'hidden';
-    ////////////////////////////////
-    this.control.gamePosition = 2;//
-    ////////////////////////////////
+
+    this.control.gamePosition = 2;
 
     this.playerSeats = {};
-    //this.tableService.setTableInstance();
+
     this.statusUpdateService.hideNavBar(false);
 
     this.userSubscription = this.route.params.subscribe(
@@ -86,69 +85,32 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
               alert('This table is now closed.');
               this.router.navigate(['/tables']).then((r) => {
               });
-            }else{
-              //alert('ok');
             }
           }
         });
 
       });
-    ///////////////////////////////////////////////////////////////////
-    //this.placeBetsService.setVisible(false, this.seatService.currentSeat);
-
-    _location.onPopState(() => {
-      // this.router.navigate(['/tables']).then((r) => {
-      //   let table = this.tableService.tableNum;
-      //   this.wss.emit('leaveTable', {
-      //     table: table,
-      //     socketid:this.wss.socketId
-      //   });
-      //   this.resetTable();
-      // });
-      // this.control.playerLeftGame = true;
-
-      this.leaveTable();
-
-    });
 
 
   }
 
   leaveTable() {
-    this.logStuff('leaveTable() emit: ' + this.router.routerState.snapshot.url);
-    //this._location.back();
     let table = this.tableService.tableNum;
     this.wss.emit('leaveTable', {
       table: table,
       socketid:this.wss.socketId
     });
     this.control.playerLeftGame = true;
-    //window.location.reload();
   }
 
   memberOfRoomEmit(data) {
     this.wss.startChange.next(true);
-    // if (!data.member) {
-    //   this.router.navigate(['/tables']).then((r) => {
-    //     this.logStuff('no longer in room: ' + JSON.stringify(data));
-    //   });
-    // }
   }
 
   ngOnInit() {
-    // if (this.wss.start) {
-    //   //...
-    // } else {
-    //   this.ngOnDestroy();
-    //   let that = this;
-    //   this.router.navigate(['']).then((r) => {
-    //     that.leaveTable();
-    //   })
-    // }
   }
 
   ngOnDestroy() {
-    //leave room/table
     let table = this.tableService.tableNum;
     this.leaveTable();
     this.statusUpdateService.hideNavBar(true);
@@ -159,14 +121,6 @@ export class TableDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     if (!environment.production) {
       console.log(stuff);
     }
-  }
-
-  resetTable(){
-    //
-  }
-
-  ngAfterViewChecked(): void {
-    //console.log('VIEWCHECKED');
   }
 
   getCardCount() {
