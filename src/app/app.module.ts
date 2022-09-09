@@ -41,26 +41,26 @@ export function initialize(initModule: InitModule) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SocketConnectComponent,
-    TableSelectComponent,
-    TableDetailComponent,
-    ControlComponent,
-    PlayerboxComponent,
-    SitComponent,
-    PlayerHandComponent,
-    DealerHandComponent,
-    PlaceBetsComponent,
-    StatusMessageComponent,
-    PlayerDashComponent,
-    MultiDashComponent,
-    GameHomeComponent,
-    SplitDashComponent,
-    MapToIterablePipe,
-    DialogExampleComponent,
-    NotfoundComponent
-  ],
+    declarations: [
+        AppComponent,
+        SocketConnectComponent,
+        TableSelectComponent,
+        TableDetailComponent,
+        ControlComponent,
+        PlayerboxComponent,
+        SitComponent,
+        PlayerHandComponent,
+        DealerHandComponent,
+        PlaceBetsComponent,
+        StatusMessageComponent,
+        PlayerDashComponent,
+        MultiDashComponent,
+        GameHomeComponent,
+        SplitDashComponent,
+        MapToIterablePipe,
+        DialogExampleComponent,
+        NotfoundComponent
+    ],
     imports: [
         InitModule,
         BrowserModule,
@@ -77,12 +77,11 @@ export function initialize(initModule: InitModule) {
         MatCardModule,
         MatListModule
     ],
-  entryComponents:[DialogExampleComponent],
-  providers: [InitModule,
-    //{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},
-    {provide: APP_INITIALIZER, useFactory: initialize, deps: [InitModule], multi: true},
-    WebsocketService],
-  bootstrap: [AppComponent]
+    providers: [InitModule,
+        //{provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},
+        { provide: APP_INITIALIZER, useFactory: initialize, deps: [InitModule], multi: true },
+        WebsocketService],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
