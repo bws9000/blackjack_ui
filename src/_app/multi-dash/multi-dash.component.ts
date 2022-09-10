@@ -11,7 +11,7 @@ import {PlaceBetsService} from "../services/place-bets.service";
 import {PlayerboxService} from "../services/playerbox.service";
 import {StatusMessageService} from "../services/status-message.service";
 import {WinLosePush} from "../WinLosePush";
-import {Router} from "@angular/router";
+//import {Router} from "@angular/router";
 import {PlayerDashService} from "../services/player-dash.service";
 import {HandCount} from "../HandCount";
 
@@ -269,7 +269,7 @@ export class MultiDashComponent implements OnInit, OnDestroy {
           }
         }
       }
-      resolve();
+      //resolve();
     });
 
   }

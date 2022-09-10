@@ -2,7 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {PlaceBetsService} from "../services/place-bets.service";
 import {environment} from "../../environments/environment";
 import {SeatService} from "../services/seat.service";
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {WebsocketService} from "../services/websocket.service";
 import {TableService} from "../services/table.service";
 import {PlayerboxService} from "../services/playerbox.service";
@@ -23,7 +23,7 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
   @Input() bets: string;
 
   betInProgress: boolean;
-  placeBetForm: FormGroup;
+  placeBetForm: UntypedFormGroup;
   placeBetsVisible: string;
   chips: number;
   currentBet: number;
@@ -53,8 +53,8 @@ export class PlaceBetsComponent implements OnInit, OnDestroy {
     this.seatService.currentSeat = undefined;
 
     this.selectedValue = 5;
-    this.placeBetForm = new FormGroup({
-      chips: new FormControl()
+    this.placeBetForm = new UntypedFormGroup({
+      chips: new UntypedFormControl()
     });
 
     this.userSubscription = this.route.params.subscribe(

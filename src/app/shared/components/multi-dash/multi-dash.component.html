@@ -1,0 +1,68 @@
+<!-- <div [style.visibility]="this.multiDashVisible" class="multiDash"> -->
+  <div [style.visibility]=true class="multiDash">
+
+    <div class="multiDashBoxContainer container">
+
+      <div class="row h-100">
+        <div style="width:100%" class="col-sm-12 my-auto">
+          <div class="inner_container container">
+            <div class="result_container">
+
+              <!-- <div *ngIf="!this.splitActive; else splitSectionOne" class="row header">
+                <span class="span_h4">PLAYER&nbsp;{{this.playerStatus}}</span>
+                <span class="span_wlp"><div class="wlp" [ngClass]="pwlp"></div></span>
+              </div>
+              <div *ngIf="!this.splitActive; else splitSectionTwo"  class="cardRow row">
+                <div class="cardBox" *ngFor="let card of pCardsArray">
+                  <div class="testCard" [ngClass]="'_'+card"></div>
+                </div>
+              </div> -->
+
+              <ng-template #splitSectionOne>
+                <div class="row header">
+                  <span class="span_h4">SPLIT ONE&nbsp;{{this.splitHandCount1}}</span>
+                  <span class="span_wlp"><div class="wlp" [ngClass]="split1_pwlp"></div></span>
+                </div>
+                <div class="cardRow row">
+                  <div class="cardBox" *ngFor="let card of split1Hand">
+                    <div class="testCard" [ngClass]="'_'+card"></div>
+                  </div>
+                </div>
+                <div class="clear"></div>
+              </ng-template>
+
+              <ng-template #splitSectionTwo>
+                <div class="row header">
+                  <span class="span_h4">SPLIT TWO&nbsp;{{this.splitHandCount2}}</span>
+                  <span class="span_wlp"><div class="wlp" [ngClass]="split2_pwlp"></div></span>
+                </div>
+                <div class="cardRow row">
+                  <div class="cardBox" *ngFor="let card of split2Hand">
+                    <div class="testCard" [ngClass]="'_'+card"></div>
+                  </div>
+                </div>
+                <div class="clear"></div>
+              </ng-template>
+
+
+
+              <!-- <div class="row header">
+                <span class="span_h4">DEALER&nbsp;{{this.dealerStatus}}</span>
+                <span class="span_wlp"><div class="wlp" [ngClass]="dwlp"></div></span>
+              </div>
+              <div class="cardRow row">
+                <div class="cardBox" *ngFor="let card of dCardsArray">
+                  <div class="testCard" [ngClass]="'_'+card"></div>
+                </div>
+              </div> -->
+              <div class="clear"></div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+</div>

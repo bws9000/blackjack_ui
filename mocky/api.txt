@@ -1,0 +1,3 @@
+# tables one
+api: https://run.mocky.io/v3/66717dcb-9ceb-4a3c-b940-f2698f2b808e
+del: https://designer.mocky.io/manage/delete/66717dcb-9ceb-4a3c-b940-f2698f2b808e/iVZ49hzzF4dI2YP9t3hZNFyJHI63DiFesC6K

@@ -1,0 +1,23 @@
+.inner_stage {
+  background-color: $outer_stage_background;
+  height: inherit;
+  overflow: hidden;
+}
+
+.outer_stage {
+  height: 100%;
+}
+
+.stage_content {
+  overflow: hidden;
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+  width: 99%;
+  height: 98%;
+  background-color: #7d4900;
+  color: #000;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
