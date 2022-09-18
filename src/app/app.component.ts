@@ -1,8 +1,13 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   OnDestroy,
-  OnInit} from '@angular/core';
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ViewContainerRef} from '@angular/core';
 //import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
 import {Location} from '@angular/common';
 import {
@@ -24,6 +29,11 @@ import {environment} from "../environments/environment";
 // import {PlayerDashService} from "./services/player-dash.service";
 // import {DashStatusServiceService} from "./services/dash-status-service.service";
 import {Subscription} from "rxjs";
+import { ModalService } from './shared/modules/modal-dialog/modal.service';
+import { ValidateHumanComponent } from './shared/components/dialogs/validate-human/validate-human.component';
+import { ContainerDirective } from './shared/modules/modal-dialog/container.directive';
+import { ContentContainerComponent } from './shared/modules/modal-dialog/component/content-container.component';
+import { ModalDirective } from './shared/modules/modal-dialog/modal.directive';
 // import {MultiDashService} from "./services/multi-dash.service";
 // import {BetService} from "./services/bet.service";
 // import {ErrorService} from "./services/error.service";
@@ -38,6 +48,8 @@ declare var $: any;
 })
 export class AppComponent implements OnDestroy, AfterViewInit {
 
+  @ViewChild(ContainerDirective, {static: true}) modalHost! : ContainerDirective;
+
   private noActivityTimer;
   private noActivitySubTimer: Subscription;
   private noActivityCount;
@@ -49,11 +61,13 @@ export class AppComponent implements OnDestroy, AfterViewInit {
   private timer;
   private subTimer: Subscription;
 
+
   constructor(// private loadingBar: SlimLoadingBarService,
               // private wss: WebsocketService,
               // private statusUpdateService: StatusUpdateService,
               private router: Router,
               private location: Location,
+              private modalService:ModalService,
               // private seatService: SeatService,
               // private playerboxService: PlayerboxService,
               // private tableService: TableService,
@@ -66,7 +80,9 @@ export class AppComponent implements OnDestroy, AfterViewInit {
               // private betService: BetService,
               // private errorService: ErrorService
               ) {
+    //this.modalService.addContainer();
 
+    //this.modalService.open(ValidateHumanComponent,{"title":"Modal Title", "body":"Modal body message."});
 
     // this.router.events.subscribe((event: Event) => {
     //   this.navigationInterceptor(event);
@@ -84,11 +100,15 @@ export class AppComponent implements OnDestroy, AfterViewInit {
     //   this.isHidden = !value;
     // });
     // this.statusUpdateService.hideNavBar(true);
-
   }
 
-  ngAfterViewInit(): void {
-    //this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = 'black';
+  ngAfterViewInit() {
+    //modal container
+    const viewContainerRef = this.modalHost.viewContainerRef;
+    this.modalService.setContainerHost(viewContainerRef);
+    //test
+    // this.contentContainerComponent.open(ValidateHumanComponent,
+    // {"title":"Modal Title", "body":"Modal body message."});
   }
 
   ///////////////////////////////////////////////////////

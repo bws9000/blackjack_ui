@@ -1,24 +1,20 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {HttpClientModule} from "@angular/common/http";
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MultiDashComponent} from './shared/components/multi-dash/multi-dash.component';
-
-
-export function initialize() {}
-
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { ModalDialogModule } from './shared/modules/modal-dialog/modal-dialog.module';
+//import { ModalService } from './shared/modules/modal-dialog/modal.service';
 @NgModule({
     declarations: [
       AppComponent
     ],
+    exports:[],
     imports: [
         BrowserModule,
         AppRoutingModule,
+        ModalDialogModule,
     ],
-    providers: [],
+    //providers: [ModalService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
