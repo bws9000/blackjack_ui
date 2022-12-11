@@ -28,7 +28,7 @@
     "angular-in-memory-web-api": "^0.9.0",
     "bootstrap": "^4.5.3",
     "core-js": "^2.6.12",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "hammerjs": "^2.0.8",
     "jquery": "^3.4.1",
     "netlify-cli": "^2.69.6",
