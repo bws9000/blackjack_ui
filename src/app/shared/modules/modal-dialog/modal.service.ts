@@ -11,9 +11,10 @@ export class ModalService{
   constructor(){}
 
   public setContainerHost(cRef:ViewContainerRef){
-    this.containerRef = cRef;
-    this.containerRef.clear();
-    this.activeModal = this.containerRef.createComponent(ContentContainerComponent);
+
+      this.containerRef = cRef;
+      this.containerRef.clear();
+      this.activeModal = this.containerRef.createComponent(ContentContainerComponent);
   }
 
   public setData(data:object):void{

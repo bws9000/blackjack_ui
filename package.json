@@ -2,7 +2,7 @@
   "project": "multiplayer_blackjack",
   "version": "1.0.0",
   "engines": {
-    "node": "^v14.20.0"
+    "node": "^v18.13.0"
   },
   "scripts": {
     "ng": "ng",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.2.2",
-    "@angular/cli": "^14.2.2",
+    "@angular/cli": "^15.2.2",
     "@angular/compiler-cli": "^14.2.1",
     "@angular/language-service": "^14.2.1",
     "@babel/compat-data": "7.8.0",
@@ -50,7 +50,6 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "autoprefixer": "^10.4.8",
-    "codelyzer": "^6.0.2",
     "husky": "^3.1.0",
     "jasmine-core": "~4.4.0",
     "jasmine-spec-reporter": "~5.0.0",
@@ -60,7 +59,7 @@
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "^2.0.0",
     "postcss": "^8.4.16",
-    "protractor": "~7.0.0",
+    "protractor": "^7.0.0",
     "tailwindcss": "^3.1.8",
     "ts-node": "~10.9.1",
     "tslint": "~6.1.3",

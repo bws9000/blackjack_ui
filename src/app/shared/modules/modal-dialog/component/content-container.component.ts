@@ -2,8 +2,8 @@ import {
   AfterViewInit,
   Component,
   ComponentRef,
-  ViewChild,
-  ViewContainerRef } from '@angular/core';
+  Input,
+  ViewChild} from '@angular/core';
 import { ValidateHumanComponent } from 'src/app/shared/components/dialogs/validate-human/validate-human.component';
 import { ModalDirective } from '../modal.directive';
 import { ModalService } from '../modal.service';
@@ -22,18 +22,24 @@ export class ContentContainerComponent implements AfterViewInit{
   instance:any;
   testOptions:any;
 
-  private dialogHostLoaded:ViewContainerRef;
-
-  constructor(private modalService: ModalService){
-    this.testOptions = {"title":"Modal Title", "body":"Modal body message."};
-    this.modalService.setData(this.testOptions);
-  }
+  constructor(private modalService: ModalService){}
 
   open(component:any,options:any):void {}
 
   ngAfterViewInit() {
+
     const x = this.dialogHost.viewContainerRef;
     x.clear();
-    x.createComponent(ValidateHumanComponent);
+
+    setTimeout(()=>{
+      this.testOptions = {"title":"Modal Title", "body":"Modal body message."};
+      this.modalService.setData(this.testOptions);
+      x.createComponent(ValidateHumanComponent);
+    },0);
+
   }
+
+  // ngAfterContentChecked() {
+  //   this.cdref.detectChanges();
+  // }
 }
