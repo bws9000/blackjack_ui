@@ -1,0 +1,11 @@
+.modal {
+  display:block;
+}
+.modal-backdrop,
+.modal-backdrop.fade.in{
+opacity: 1;
+background-color:rgba(0, 0, 0, 0.5);
+}
+.modal-dialog{
+  width:300px;
+}
