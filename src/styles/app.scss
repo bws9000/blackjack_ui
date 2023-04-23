@@ -1,0 +1,22 @@
+//https://v2.tailwindcss.com/docs
+@import "./vendors/all";
+@import "./abstracts/all";
+@import "./core/all";
+@import "./components/all";
+@import "./layout/all";
+@import "./sections/all";
+@import "./pages/all";
+
+
+html, body {
+  height: 100%;
+}
+
+/* custom dialog for table-select */
+// .custom-dialog > mat-dialog-container{
+//   color:#000000;
+//   background-color: cornsilk;
+// }
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
